@@ -5,10 +5,46 @@ import {
   Box,
   Link,
   IconButton,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { DownloadSimple, Image } from "phosphor-react";
-import React from "react";
+import { DotsThreeVertical, DownloadSimple, Image } from "phosphor-react";
+import React, { useState } from "react";
+import { Message_options } from "../../data/index";
+
+const MessageOptions = () => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  return (
+    <>
+      <DotsThreeVertical id='three-dots' onClick={handleClick} />
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "three-dots",
+        }}
+      >
+        {Message_options.map((ele, i) => {
+          return (
+            <MenuItem key={i} onClick={handleClose}>
+              {ele.title}
+            </MenuItem>
+          );
+        })}
+      </Menu>
+    </>
+  );
+};
 
 export const DocumentMessage = (props) => {
   const theme = useTheme();
@@ -53,6 +89,7 @@ export const DocumentMessage = (props) => {
             </Typography>
           </Stack>
         </Box>
+        <MessageOptions />
       </Stack>
     </>
   );
@@ -110,6 +147,7 @@ export const LinkMessage = (props) => {
             </Typography>
           </Stack>
         </Box>
+        <MessageOptions />
       </Stack>
     </>
   );
@@ -148,7 +186,10 @@ export const ReplyMessage = (props) => {
                 {props.message}
               </Typography>
             </Stack>
-            <Stack direction={"row"}  justifyContent={props.incoming ? "start" : "end"}>
+            <Stack
+              direction={"row"}
+              justifyContent={props.incoming ? "start" : "end"}
+            >
               <Typography
                 variant="body2"
                 color={props.incoming ? theme.palette.text : "#fff"}
@@ -158,6 +199,7 @@ export const ReplyMessage = (props) => {
             </Stack>
           </Stack>
         </Box>
+        <MessageOptions />
       </Stack>
     </>
   );
@@ -195,6 +237,7 @@ export const MediaMessage = (props) => {
             </Typography>
           </Stack>
         </Box>
+        <MessageOptions />
       </Stack>
     </>
   );
@@ -225,6 +268,7 @@ export const TextMessage = (props) => {
             {props.message}
           </Typography>
         </Box>
+        <MessageOptions />
       </Stack>
     </>
   );

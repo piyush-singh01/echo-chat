@@ -2,12 +2,12 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
-import { Divider, Avatar, Switch } from "@mui/material";
-import { useTheme, styled } from "@mui/material/styles";
+import { Divider, Avatar, Menu, MenuItem } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
 import Logo from "../../assets/Images/logo.ico";
-import { Nav_Buttons } from "../../data/index";
+import { Nav_Buttons, Profile_Menu } from "../../data/index";
 import { Gear } from "phosphor-react";
 import { faker } from "@faker-js/faker";
 
@@ -20,6 +20,16 @@ const Sidebar = () => {
   const [selected, setSelected] = useState(0); // The idx 0 is the default selected.
 
   const { onToggleMode } = useSettings(); // get onToggleMode from useSetting custom hook
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <>
       {/* The SideBar */}
@@ -152,7 +162,41 @@ const Sidebar = () => {
                 )}
               </IconButton>
             </Box>
-            <Avatar src={faker.image.avatar()}></Avatar>
+
+            {/*************/}
+            {/* TODO: make it clickable(mouse pointer changes on hover)*/}
+            <Avatar
+              id="login-avatar"
+              src={faker.image.avatar()}
+              sx={{ cursor: "pointer" }}
+              onClick={handleClick}
+            ></Avatar>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "login-avatar",
+              }}
+              anchorOrigin={{
+                horizontal: "right",
+                vertical: "bottom",
+              }}
+              transformOrigin={{
+                horizontal: "left",
+                vertical: "bottom",
+              }}
+            >
+              {Profile_Menu.map((ele, i) => {
+                return (
+                  <MenuItem key={i} onClick={handleClose}>
+                    {ele.title}
+                  </MenuItem>
+                );
+              })}
+            </Menu>
+            {/*************/}
           </Stack>
         </Stack>
       </Box>

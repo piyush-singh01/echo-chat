@@ -24,7 +24,11 @@ const MessageOptions = () => {
   };
   return (
     <>
-      <DotsThreeVertical id='three-dots' onClick={handleClick} />
+      <DotsThreeVertical
+        id="three-dots"
+        onClick={handleClick}
+        cursor={"pointer"}
+      />
       <Menu
         id="basic-menu"
         anchorEl={anchorEl}
@@ -33,6 +37,7 @@ const MessageOptions = () => {
         MenuListProps={{
           "aria-labelledby": "three-dots",
         }}
+
       >
         {Message_options.map((ele, i) => {
           return (

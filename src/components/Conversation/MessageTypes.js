@@ -64,7 +64,7 @@ export const DocumentMessage = (props) => {
           sx={{
             backgroundColor: props.incoming
               ? theme.palette.background.default
-              : theme.palette.primary.main,
+              : theme.palette.background.default,
             borderRadius: 1.5,
             width: "max-content",
           }}
@@ -94,7 +94,7 @@ export const DocumentMessage = (props) => {
             </Typography>
           </Stack>
         </Box>
-        <MessageOptions />
+        {props.menu && <MessageOptions />}
       </Stack>
     </>
   );
@@ -113,7 +113,7 @@ export const LinkMessage = (props) => {
           sx={{
             backgroundColor: props.incoming
               ? theme.palette.background.default
-              : theme.palette.primary.main,
+              : theme.palette.background.default,
             borderRadius: 1.5,
             width: "max-content",
           }}
@@ -152,7 +152,7 @@ export const LinkMessage = (props) => {
             </Typography>
           </Stack>
         </Box>
-        <MessageOptions />
+        {props.menu && <MessageOptions />}
       </Stack>
     </>
   );
@@ -204,7 +204,7 @@ export const ReplyMessage = (props) => {
             </Stack>
           </Stack>
         </Box>
-        <MessageOptions />
+        {props.menu && <MessageOptions />}
       </Stack>
     </>
   );
@@ -242,7 +242,7 @@ export const MediaMessage = (props) => {
             </Typography>
           </Stack>
         </Box>
-        <MessageOptions />
+        {props.menu && <MessageOptions />}
       </Stack>
     </>
   );
@@ -273,7 +273,7 @@ export const TextMessage = (props) => {
             {props.message}
           </Typography>
         </Box>
-        <MessageOptions />
+        {props.menu && <MessageOptions />}
       </Stack>
     </>
   );

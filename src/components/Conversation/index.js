@@ -14,7 +14,7 @@ const Conversation = () => {
         <Header />
         <Scrollbars>
           <Box width={"100%"} sx={{ flexGrow: 1, height: "100%" }}>
-            <Message />
+            <Message menu={true} />
           </Box>
         </Scrollbars>
         <Footer />

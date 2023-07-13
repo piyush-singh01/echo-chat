@@ -2,7 +2,7 @@ import { Switch } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 
-// TODO: Colors not hardcoded but from pallete.
+// TODO: Colors not hardcoded but from palette.
 const AntSwitch = styled(Switch)(({ theme }) => ({
   width: 40,
   height: 20,

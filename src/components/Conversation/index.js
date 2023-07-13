@@ -12,14 +12,11 @@ const Conversation = () => {
     <>
       <Stack height={"100%"} maxHeight={"100vh"} width={"100%"}>
         <Header />
-        <Box
-          width={"100%"}
-          sx={{ flexGrow: 1, height: "100%"}}
-        >
-          <Scrollbars>
+        <Scrollbars>
+          <Box width={"100%"} sx={{ flexGrow: 1, height: "100%" }}>
             <Message />
-          </Scrollbars>
-        </Box>
+          </Box>
+        </Scrollbars>
         <Footer />
       </Stack>
     </>

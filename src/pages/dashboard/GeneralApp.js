@@ -4,16 +4,19 @@ import { Box, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Conversation from "../../components/Conversation";
 import Contact from "../../components/Contact";
+import { useSelector } from "react-redux";
 
 const GeneralApp = () => {
   const theme = useTheme();
+  const { sidebar } = useSelector((store) => store.app);     //Just using the sidebar from app. Get the 'app' slice from store from useSelector hook. Can access a specific slice from the store this way
+
   return (
     <Stack direction={"row"} sx={{ width: "100%" }}>
       <Chats />
       <Box
         sx={{
           height: "100%",
-          width: `calc(100vw - 420px)`,
+          width: sidebar.open ? `calc(100vw - 740px)`: `calc(100vw - 420px)`,
           backgroundColor:
             theme.palette.mode === "dark"
               ? theme.palette.background.paper
@@ -25,7 +28,7 @@ const GeneralApp = () => {
       </Box>
 
       {/* Render the Contact info here now */}
-      {/* <Contact /> */}
+      {sidebar.open && <Contact />}
     </Stack>
   );
 };

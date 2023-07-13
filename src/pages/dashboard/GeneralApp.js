@@ -3,6 +3,7 @@ import Chats from "./Chats";
 import { Box, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Conversation from "../../components/Conversation";
+import Contact from "../../components/Contact";
 
 const GeneralApp = () => {
   const theme = useTheme();
@@ -22,6 +23,9 @@ const GeneralApp = () => {
         {/* Render conversation here, or something else depending on the page */}
         <Conversation />
       </Box>
+
+      {/* Render the Contact info here now */}
+      {/* <Contact /> */}
     </Stack>
   );
 };

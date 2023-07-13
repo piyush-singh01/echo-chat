@@ -60,6 +60,7 @@ const ChatElement = (props) => {
       }}
       p={2}
     >
+      {/*TODO: Fix overflow*/}
       <Stack
         direction={"row"}
         alignItems={"center"}

@@ -1,25 +1,27 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 // contexts
 import SettingsProvider from "./contexts/SettingsContext";
-
+import { store } from "./redux/store";
+import { Provider as ReduxProvider } from "react-redux";
 const root = ReactDOM.createRoot(document.getElementById("root"));
-
 
 // index file
 root.render(
   <React.StrictMode>
     <HelmetProvider>
-      <SettingsProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </SettingsProvider>
+      <ReduxProvider store={store}>{/*Redux Provider*/}
+        <SettingsProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </SettingsProvider>
+      </ReduxProvider>
     </HelmetProvider>
   </React.StrictMode>
 );

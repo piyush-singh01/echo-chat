@@ -34,6 +34,9 @@ export default function Router() {
         { element: <Navigate to={DEFAULT_PATH} replace />, index: true }, // refirects to /app. This is an indexed route, it doesn't have a path. Renders by default for '/' (in this case it redirects to '/app'). See index routes for more details. Since 
         { path: "app", element: <GeneralApp /> }, // '/app'
         
+        // Add path for settings
+        {path:"settings", element: <Settings />},
+
         { path: "404", element: <Page404 /> },    // '/404'
         { path: "*", element: <Navigate to="/404" replace /> }, // go to 404 if any other 
       ],
@@ -45,6 +48,11 @@ export default function Router() {
 const GeneralApp = Loadable(  
   lazy(() => import("../pages/dashboard/GeneralApp")),  // lazy import : lazy lets you defer loading component’s code until it is rendered for the first time.
 );
+
+const Settings = Loadable(
+  lazy(() => import('../pages/dashboard/Settings')),
+)
+
 const Page404 = Loadable(lazy(() => import("../pages/Page404")));
 
 /*

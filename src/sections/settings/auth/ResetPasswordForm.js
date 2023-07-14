@@ -16,30 +16,19 @@ import {
 } from "@mui/material";
 import { Eye, EyeSlash } from "phosphor-react";
 
-const RegisterForm = () => {
-  const [showPassword, setShowPassword] = useState(false);
-
-  const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string().required("First Name is Required"),
-
-    lastName: Yup.string().required("Last Name is Required"), //TODO: Make it unrequired in the future
-
+const ResetPasswordForm = () => {
+  const ResetPasswordSchema = Yup.object().shape({
     email: Yup.string()
       .required("Email is Required")
       .email("Not a valid email address"),
-
-    password: Yup.string().required("Password is Required"),
   });
 
   const defaultValues = {
-    firstName: "",
-    lastName: "",
     email: "",
-    password: "",
   };
 
   const methods = useForm({
-    resolver: yupResolver(RegisterSchema),
+    resolver: yupResolver(ResetPasswordSchema),
     defaultValues,
   });
 
@@ -70,31 +59,8 @@ const RegisterForm = () => {
           <Alert severity="error">{errors.afterSubmit.message}</Alert>
         )}
 
-        <Stack direction={{ xs: "row", sm: "row" }} spacing={2}>
-          <RHFTextField name="firstName" label="First Name" />
-          <RHFTextField name="lastName" label="Last Name" />
-        </Stack>
         <RHFTextField name="email" label="Email address" />
-
-        <RHFTextField
-          name="password"
-          label="Password"
-          type={showPassword ? "text" : "password"}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
-                  {showPassword ? <Eye /> : <EyeSlash />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
       </Stack>
-
       <Button
         fullWidth
         color="inherit"
@@ -112,10 +78,10 @@ const RegisterForm = () => {
           },
         }}
       >
-        Login
+        Reset Password
       </Button>
     </FormProvider>
   );
 };
 
-export default RegisterForm;
+export default ResetPasswordForm;

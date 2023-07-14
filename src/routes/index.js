@@ -7,11 +7,9 @@ import DashboardLayout from "../layouts/dashboard";
 // config
 import { DEFAULT_PATH } from "../config";
 import LoadingScreen from "../components/LoadingScreen";
-import LoginPage from "../pages/auth/Login";
 import { Outlet } from "react-router-dom";
 
 import MainLayout from "../layouts/main";
-import RegisterPage from "../pages/auth/Register";
 
 // This loadable is essentially a wrapper, which accepts a component.
 // Normally const SomeComponent = lazy(load)
@@ -37,6 +35,7 @@ export default function Router() {
       children: [
         { path: "login", element: <LoginPage /> },
         { path: "register", element: <RegisterPage /> },
+        { path: "reset-password", element: <ResetPasswordPage /> },
       ],
     },
 
@@ -63,7 +62,9 @@ const GeneralApp = Loadable(
   lazy(() => import("../pages/dashboard/GeneralApp")) // lazy import : lazy lets you defer loading component’s code until it is rendered for the first time.
 );
 
-// const LoginPage = Loadable(lazy(() => import("../pages/dashboard/LoginPage")));
+const LoginPage = Loadable(lazy(() => import("../pages/auth/Login")));
+const RegisterPage = Loadable(lazy(() => import("../pages/auth/Register")));
+const ResetPasswordPage = Loadable(lazy(() => import('../pages/auth/ResetPassword')));
 
 const Settings = Loadable(lazy(() => import("../pages/dashboard/Settings")));
 

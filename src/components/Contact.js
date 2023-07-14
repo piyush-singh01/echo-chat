@@ -43,7 +43,7 @@ const BlockDialogue = ({ open, handleClose }) => {
       onClose={handleClose}
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle>{"Block This Contact"}</DialogTitle>
+      <DialogTitle>{"Block Contact"}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-slide-description">
           Are you sure you want to block this contact?

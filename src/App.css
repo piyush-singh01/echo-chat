@@ -1,18 +1,4 @@
-/* * {
-  -ms-overflow-style: none;
-}
-::-webkit-scrollbar {
-  display: none;
-} */
-
-/* .scroll-bar > div:first-child {
-  overflow-x: hidden !important;
-}
-.scroll-bar > div:first-child::-webkit-scrollbar {
-  background: transparent;
-} */
-
-/* * {
+* {
   box-sizing: border-box;
-  border: thin solid red;
-}  */
+  /* border: thin solid red; */
+} 

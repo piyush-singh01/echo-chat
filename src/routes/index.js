@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";     // Suspense and lazy for lazy loading
+import { Suspense, lazy } from "react"; // Suspense and lazy for lazy loading
 import { Navigate, useRoutes } from "react-router-dom";
 
 // layouts
@@ -7,16 +7,20 @@ import DashboardLayout from "../layouts/dashboard";
 // config
 import { DEFAULT_PATH } from "../config";
 import LoadingScreen from "../components/LoadingScreen";
+import LoginPage from "../pages/auth/Login";
+import { Outlet } from "react-router-dom";
 
+import MainLayout from "../layouts/main";
 
 // This loadable is essentially a wrapper, which accepts a component.
 // Normally const SomeComponent = lazy(load)
 // THis someComponent is then wrapped around suspense, which is what we are doing with the Loadable function
-const Loadable = (Component) => (props) => 
-{ 
+const Loadable = (Component) => (props) => {
   //Wrap it around Suspense, which excepts a fallback prop.
   return (
-    <Suspense fallback={<LoadingScreen />}>     {/* fallback till the original component is loading */}
+    <Suspense fallback={<LoadingScreen />}>
+      {" "}
+      {/* fallback till the original component is loading */}
       <Component {...props} /> {/*The original Component (children)*/}
     </Suspense>
   );
@@ -27,31 +31,37 @@ export default function Router() {
   // Takes in an array of routes. See below
   return useRoutes([
     {
+      path: "/auth",
+      element: <MainLayout />,
+      children: [{ path: "login", element: <LoginPage /> }],
+    },
+
+    {
       path: "/",
       element: <DashboardLayout />,
       //The rendered children will be wrapped inside the parent element, that is the dashboard layout here.
       children: [
-        { element: <Navigate to={DEFAULT_PATH} replace />, index: true }, // refirects to /app. This is an indexed route, it doesn't have a path. Renders by default for '/' (in this case it redirects to '/app'). See index routes for more details. Since 
+        { element: <Navigate to={DEFAULT_PATH} replace />, index: true }, // refirects to /app. This is an indexed route, it doesn't have a path. Renders by default for '/' (in this case it redirects to '/app'). See index routes for more details. Since
         { path: "app", element: <GeneralApp /> }, // '/app'
-        
-        // Add path for settings
-        {path:"settings", element: <Settings />},
 
-        { path: "404", element: <Page404 /> },    // '/404'
-        { path: "*", element: <Navigate to="/404" replace /> }, // go to 404 if any other 
+        // Add path for settings
+        { path: "settings", element: <Settings /> },
+
+        { path: "404", element: <Page404 /> }, // '/404'
+        { path: "*", element: <Navigate to="/404" replace /> }, // go to 404 if any other
       ],
     },
     { path: "*", element: <Navigate to="/404" replace /> }, // Navigate: see below
   ]);
 }
 
-const GeneralApp = Loadable(  
-  lazy(() => import("../pages/dashboard/GeneralApp")),  // lazy import : lazy lets you defer loading component’s code until it is rendered for the first time.
+const GeneralApp = Loadable(
+  lazy(() => import("../pages/dashboard/GeneralApp")) // lazy import : lazy lets you defer loading component’s code until it is rendered for the first time.
 );
 
-const Settings = Loadable(
-  lazy(() => import('../pages/dashboard/Settings')),
-)
+// const LoginPage = Loadable(lazy(() => import("../pages/dashboard/LoginPage")));
+
+const Settings = Loadable(lazy(() => import("../pages/dashboard/Settings")));
 
 const Page404 = Loadable(lazy(() => import("../pages/Page404")));
 

@@ -5,6 +5,7 @@ import { TextField } from "@mui/material";
 // Prop types validator
 RHFTextField.propTypes = {
   name: PropTypes.string,
+  label: PropTypes.string,
   helperText: PropTypes.node, // can accept any valid react node as its value. node is a single <></>
 };
 

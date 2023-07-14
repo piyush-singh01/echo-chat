@@ -16,19 +16,29 @@ import {
 } from "@mui/material";
 import { Eye, EyeSlash } from "phosphor-react";
 
-const ResetPasswordForm = () => {
-  const ResetPasswordSchema = Yup.object().shape({
-    email: Yup.string()
-      .required("Email is Required")
-      .email("Not a valid email address"),
+const NewPasswordForm = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const NewPasswordSchema = Yup.object().shape({
+    newPassword: Yup.string()
+      .min(6, "Password must at least 6 charachters")
+      .max(20, "Password must be atmost 20 charachters")
+      .required("Password is Required"),
+    confirmPassword: Yup.string()
+      .required("Password is Required")
+      .oneOf(
+        [Yup.ref("newPassword"), null],
+        "Confirm Password and Password do not match"
+      ),
   });
 
   const defaultValues = {
     email: "",
+    password: "",
   };
 
   const methods = useForm({
-    resolver: yupResolver(ResetPasswordSchema),
+    resolver: yupResolver(NewPasswordSchema),
     defaultValues,
   });
 
@@ -59,8 +69,43 @@ const ResetPasswordForm = () => {
           <Alert severity="error">{errors.afterSubmit.message}</Alert>
         )}
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField
+          name="newPassword"
+          label="New Password"
+          type={showPassword ? "text" : "password"}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <Eye /> : <EyeSlash />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        <RHFTextField
+          name="confirmPassword"
+          label="Confirm Password"
+          type={showPassword ? "text" : "password"}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <Eye /> : <EyeSlash />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
       </Stack>
+
       <Button
         fullWidth
         color="inherit"
@@ -78,10 +123,10 @@ const ResetPasswordForm = () => {
           },
         }}
       >
-        Send Verification Email
+        Reset Password
       </Button>
     </FormProvider>
   );
 };
 
-export default ResetPasswordForm;
+export default NewPasswordForm;

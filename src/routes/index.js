@@ -11,6 +11,7 @@ import LoginPage from "../pages/auth/Login";
 import { Outlet } from "react-router-dom";
 
 import MainLayout from "../layouts/main";
+import RegisterPage from "../pages/auth/Register";
 
 // This loadable is essentially a wrapper, which accepts a component.
 // Normally const SomeComponent = lazy(load)
@@ -33,7 +34,10 @@ export default function Router() {
     {
       path: "/auth",
       element: <MainLayout />,
-      children: [{ path: "login", element: <LoginPage /> }],
+      children: [
+        { path: "login", element: <LoginPage /> },
+        { path: "register", element: <RegisterPage /> },
+      ],
     },
 
     {

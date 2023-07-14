@@ -51,6 +51,8 @@ export default function Router() {
         // Add path for settings
         { path: "settings", element: <Settings /> },
 
+        { path: "group", element: <GroupPage /> },
+
         { path: "404", element: <Page404 /> }, // '/404'
         { path: "*", element: <Navigate to="/404" replace /> }, // go to 404 if any other
       ],
@@ -67,6 +69,8 @@ const LoginPage = Loadable(lazy(() => import("../pages/auth/Login")));
 const RegisterPage = Loadable(lazy(() => import("../pages/auth/Register")));
 const ResetPasswordPage = Loadable(lazy(() => import('../pages/auth/ResetPassword')));
 const NewPasswordPage = Loadable(lazy(() => import('../pages/auth/NewPassword')));
+
+const GroupPage = Loadable(lazy(() => import('../pages/dashboard/Group')));
 
 const Settings = Loadable(lazy(() => import("../pages/dashboard/Settings")));
 

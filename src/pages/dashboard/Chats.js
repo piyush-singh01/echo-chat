@@ -10,16 +10,11 @@ import {
   Avatar,
   Badge,
 } from "@mui/material";
-import {
-  ArchiveBox,
-  CircleDashed,
-  MagnifyingGlass,
-} from "phosphor-react";
+import { ArchiveBox, CircleDashed, MagnifyingGlass } from "phosphor-react";
 import React from "react";
 import { ChatList } from "../../data";
-import { Scrollbars } from 'react-custom-scrollbars-2';
+import { Scrollbars } from "react-custom-scrollbars-2";
 import StyledBadge from "../../components/StyledBadge";
- 
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -56,11 +51,13 @@ const ChatElement = (props) => {
       sx={{
         width: "100%",
         borderRadius: 1,
-        backgroundColor: theme.palette.mode === 'dark'? theme.palette.background.paper :"#FFF",
+        backgroundColor:
+          theme.palette.mode === "dark"
+            ? theme.palette.background.paper
+            : "#FFF",
       }}
       p={2}
     >
-      {/*TODO: Fix overflow*/}
       <Stack
         direction={"row"}
         alignItems={"center"}
@@ -102,7 +99,10 @@ const Chats = () => {
       sx={{
         position: "relative",
         width: 320,
-        backgroundColor: theme.palette.mode === 'dark'? theme.palette.background.default :"#F8FAFF",
+        backgroundColor:
+          theme.palette.mode === "dark"
+            ? theme.palette.background.default
+            : "#F8FAFF",
         boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
       }}
     >
@@ -138,26 +138,41 @@ const Chats = () => {
         </Stack>
         {/* **** */}
 
-        <Scrollbars className="scroll-bars" autoHide autoHideTimeout={500} autoHideDuration={100}>
-        <Stack spacing={2} direction={"column"} sx={{ flexGrow: 1, height: "100%" }}>
-          <Stack spacing={2.4}>
-            <Typography variant="subtitle2" sx={{ color: theme.palette.text.default }}>
-              Pinned Chats
-            </Typography>
-            {ChatList.filter((ele) => ele.pinned).map((ele) => {
-              return <ChatElement {...ele} />;
-            })}
+        <Scrollbars
+          className="scroll-bars"
+          autoHide
+          autoHideTimeout={500}
+          autoHideDuration={100}
+        >
+          <Stack
+            spacing={2}
+            direction={"column"}
+            sx={{ flexGrow: 1, height: "100%" }}
+          >
+            <Stack spacing={2.4}>
+              <Typography
+                variant="subtitle2"
+                sx={{ color: theme.palette.text.default }}
+              >
+                Pinned Chats
+              </Typography>
+              {ChatList.filter((ele) => ele.pinned).map((ele) => {
+                return <ChatElement {...ele} />;
+              })}
+            </Stack>
+            {/**/}
+            <Stack spacing={2.4}>
+              <Typography
+                variant="subtitle2"
+                sx={{ color: theme.palette.text.default }}
+              >
+                All Chats
+              </Typography>
+              {ChatList.filter((ele) => !ele.pinned).map((ele) => {
+                return <ChatElement {...ele} />;
+              })}
+            </Stack>
           </Stack>
-          {/**/}
-          <Stack spacing={2.4}>
-            <Typography variant="subtitle2" sx={{ color: theme.palette.text.default }}>
-              All Chats
-            </Typography>
-            {ChatList.filter((ele) => !ele.pinned).map((ele) => {
-              return <ChatElement {...ele} />;
-            })}
-          </Stack>
-        </Stack>
         </Scrollbars>
 
         {/* **** */}

@@ -78,7 +78,17 @@ const ChatElement = (props) => {
 
           <Stack spacing={0.3}>
             <Typography variant="subtitle2">{props.name}</Typography>
-            <Typography variant="caption">{props.msg}</Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                maxWidth: "150px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {props.msg}
+            </Typography>
           </Stack>
         </Stack>
         <Stack spacing={2} alignItems={"center"}>

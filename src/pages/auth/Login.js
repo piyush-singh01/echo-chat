@@ -7,7 +7,7 @@ import LoginForm from "../../sections/settings/auth/LoginForm";
 const LoginPage = () => {
   return (
     <>
-      <Stack spacing={1} sx={{ mb: 5, position: "relative" }}>
+      <Stack spacing={1} sx={{ mb: 4, position: "relative" }}>
         <Typography variant="h4">Login to Tawk</Typography>
         <Stack direction="row" spacing={0.5}>
           <Typography variant="body2">New user?</Typography>

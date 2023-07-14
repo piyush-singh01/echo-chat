@@ -20,7 +20,7 @@ const AuthSocial = () => {
       >
         OR
       </Divider>
-      <Stack direction="row" justifyContent="center" spacing={2}>
+      <Stack direction="row" justifyContent="center" spacing={2} sx={{ pb: 3 }}>
         <IconButton onClick={handleGoogleLogin}>
           <GoogleLogo color="#DF3E30" />
         </IconButton>

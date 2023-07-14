@@ -2,11 +2,12 @@ import { Stack, Typography, Box, Link } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import React from "react";
 import AuthSocial from "../../sections/settings/auth/AuthSocial";
+import RegisterForm from "../../sections/settings/auth/RegisterForm";
 
 const RegisterPage = () => {
   return (
     <>
-      <Stack spacing={2} sx={{ mb: 5, position: "relative" }}>
+      <Stack spacing={2} sx={{ mb: 4, position: "relative" }}>
         <Typography variant="h4">Get started with Tawk.</Typography>
 
         <Stack direction="row" spacing={0.5}>
@@ -17,7 +18,7 @@ const RegisterPage = () => {
           </Link>
         </Stack>
       </Stack>
-      {/* The Register Form here */}
+      <RegisterForm />
       <Typography
         component="div"
         sx={{

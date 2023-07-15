@@ -2,7 +2,7 @@ import React from "react";
 import { Stack, Typography, Box, Link } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { CaretLeft } from "phosphor-react";
-import NewPasswordForm from "../../sections/settings/auth/NewPasswordForm";
+import NewPasswordForm from "../../sections/auth/NewPasswordForm";
 
 const NewPassword = () => {
   return (

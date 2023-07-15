@@ -1,8 +1,8 @@
 import { Stack, Typography, Box, Link } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import React from "react";
-import AuthSocial from "../../sections/settings/auth/AuthSocial";
-import RegisterForm from "../../sections/settings/auth/RegisterForm";
+import AuthSocial from "../../sections/auth/AuthSocial";
+import RegisterForm from "../../sections/auth/RegisterForm";
 
 const RegisterPage = () => {
   return (

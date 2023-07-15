@@ -1,6 +1,6 @@
 import React from "react";
-import FormProvider from "../../../components/hook-form/FormProvider"; // import from that index js file?
-import RHFTextField from "../../../components/hook-form/RHFTextField";
+import FormProvider from "../../components/hook-form/FormProvider"; // import from that index js file?
+import RHFTextField from "../../components/hook-form/RHFTextField";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link as RouterLink } from "react-router-dom";

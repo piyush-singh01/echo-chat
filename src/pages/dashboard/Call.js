@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Stack,
@@ -14,14 +14,16 @@ import { useTheme, styled, alpha } from "@mui/material/styles";
 import { CircleDashed, MagnifyingGlass, Plus } from "phosphor-react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import StyledBadge from "../../components/StyledBadge";
-import { CallList, ChatList } from "../../data";
+import { CallList} from "../../data";
 import CallLogElement from "../../components/CallLogElement";
+import StartCall from "../../sections/main/StartCall";
 
 // TODO: make it in a common file, in a new folder called Search in components and import
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: 20,
   backgroundColor: alpha(theme.palette.background.paper, 1),
+  border:"thin solid",  // TODO: Need to add this here while refactoring
   marginRight: theme.spacing(2),
   marginLeft: 0,
   width: "100%",
@@ -96,6 +98,15 @@ const ChatElement = (props) => {
 
 const Call = () => {
   const theme = useTheme();
+
+  const [isStartCallDialogueOpen, setIsStartCallDialogueOpen] = useState(false);
+  const handleOpenCallDialogue = () => {
+    setIsStartCallDialogueOpen(true);
+  };
+  const handleCloseCallDialogue = () => {
+    setIsStartCallDialogueOpen(false);
+  };
+
   return (
     <>
       <Stack direction="row" sx={{ width: "100%" }}>
@@ -143,7 +154,7 @@ const Call = () => {
                 <Typography variant="subtitle2" sx={{}} component={Link}>
                   New Call
                 </Typography>
-                <IconButton onClick={() => {}}>
+                <IconButton onClick={handleOpenCallDialogue}>
                   <Plus style={{ color: theme.palette.primary.main }} />
                 </IconButton>
               </Stack>
@@ -173,6 +184,7 @@ const Call = () => {
           </Stack>
         </Box>
       </Stack>
+      {isStartCallDialogueOpen && <StartCall open={isStartCallDialogueOpen} handleClose={handleCloseCallDialogue} />}
     </>
   );
 };

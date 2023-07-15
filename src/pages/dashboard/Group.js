@@ -21,6 +21,7 @@ import CreateGroup from "../../sections/main/CreateGroup";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: 20,
+  border: "thin solid", // TODO: Need to add this here while refactoring
   backgroundColor: alpha(theme.palette.background.paper, 1),
   marginRight: theme.spacing(2),
   marginLeft: 0,
@@ -208,6 +209,18 @@ const Group = () => {
             {/*  */}
           </Stack>
         </Box>
+        {/* Right Pane */}
+        <Box
+          sx={{
+            height: "100%",
+            width: "calc(100vw - 420px )",
+            backgroundColor:
+              theme.palette.mode === "light"
+                ? "#FFF"
+                : theme.palette.background.paper,
+            borderBottom: "6px solid #0162C4",
+          }}
+        ></Box>
       </Stack>
       {isOpenNewGroupDialogue && (
         <CreateGroup

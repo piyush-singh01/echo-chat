@@ -19,6 +19,7 @@ import StyledBadge from "../../components/StyledBadge";
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: 20,
+  border:"thin solid",  // TODO: Need to add this here while refactoring
   backgroundColor: alpha(theme.palette.background.paper, 1),
   marginRight: theme.spacing(2),
   marginLeft: 0,

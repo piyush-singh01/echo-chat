@@ -14,7 +14,7 @@ import { useTheme, styled, alpha } from "@mui/material/styles";
 import { CircleDashed, MagnifyingGlass, Plus } from "phosphor-react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import StyledBadge from "../../components/StyledBadge";
-import { CallList} from "../../data";
+import { CallList } from "../../data";
 import CallLogElement from "../../components/CallLogElement";
 import StartCall from "../../sections/main/StartCall";
 
@@ -23,7 +23,7 @@ const Search = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: 20,
   backgroundColor: alpha(theme.palette.background.paper, 1),
-  border:"thin solid",  // TODO: Need to add this here while refactoring
+  border: "thin solid", // TODO: Need to add this here while refactoring
   marginRight: theme.spacing(2),
   marginLeft: 0,
   width: "100%",
@@ -183,8 +183,25 @@ const Call = () => {
             {/*  */}
           </Stack>
         </Box>
+        {/* Right Pane */}
+        <Box
+          sx={{
+            height: "100%",
+            width: "calc(100vw - 420px )",
+            backgroundColor:
+              theme.palette.mode === "light"
+                ? "#FFF"
+                : theme.palette.background.paper,
+            borderBottom: "6px solid #0162C4",
+          }}
+        ></Box>
       </Stack>
-      {isStartCallDialogueOpen && <StartCall open={isStartCallDialogueOpen} handleClose={handleCloseCallDialogue} />}
+      {isStartCallDialogueOpen && (
+        <StartCall
+          open={isStartCallDialogueOpen}
+          handleClose={handleCloseCallDialogue}
+        />
+      )}
     </>
   );
 };

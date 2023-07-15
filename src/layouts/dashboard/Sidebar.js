@@ -12,9 +12,11 @@ import { Gear } from "phosphor-react";
 import { faker } from "@faker-js/faker";
 
 import useSettings from "../../hooks/useSettings";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
   // console.log(theme);   // is an object
 
   const [selected, setSelected] = useState(0); // The idx 0 is the default selected.
@@ -28,6 +30,21 @@ const Sidebar = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const getPath = (index) => {
+    switch (index) {
+      case 0:
+        return "/app";
+      case 1:
+        return "/group";
+      case 2:
+        return "/call";
+      case 3:
+        return "/settings";
+      default:
+        return "/app";
+    }
   };
 
   return (
@@ -79,6 +96,7 @@ const Sidebar = () => {
                 // Wrap it around a box, for selected icon.
                 ele.index === selected ? (
                   <Box
+                    key={ele.index}
                     p={1}
                     sx={{
                       backgroundColor: theme.palette.primary.main,
@@ -103,7 +121,10 @@ const Sidebar = () => {
                           ? theme.palette.text.primary
                           : "#000",
                     }}
-                    onClick={() => setSelected(ele.index)}
+                    onClick={() => {
+                      setSelected(ele.index);
+                      navigate(getPath(ele.index));
+                    }}
                   >
                     {ele.icon}
                   </IconButton>
@@ -133,7 +154,10 @@ const Sidebar = () => {
                         ? theme.palette.text.primary
                         : "#000",
                   }}
-                  onClick={() => setSelected(3)}
+                  onClick={() => {
+                    setSelected(3);
+                    navigate(getPath(3));
+                  }}
                 >
                   <Gear />
                 </IconButton>

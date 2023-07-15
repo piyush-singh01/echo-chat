@@ -15,7 +15,7 @@ import { CircleDashed, MagnifyingGlass, Plus } from "phosphor-react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import StyledBadge from "../../components/StyledBadge";
 import { ChatList } from "../../data";
-import CreateGroup from "../../sections/settings/main/CreateGroup";
+import CreateGroup from "../../sections/main/CreateGroup";
 
 // TODO: make it in a common file, in a new folder called Search in components and import
 const Search = styled("div")(({ theme }) => ({
@@ -80,7 +80,17 @@ const ChatElement = (props) => {
 
           <Stack spacing={0.3}>
             <Typography variant="subtitle2">{props.name}</Typography>
-            <Typography variant="caption">{props.msg}</Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                maxWidth: "150px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {props.msg}
+            </Typography>
           </Stack>
         </Stack>
         <Stack spacing={2} alignItems={"center"}>
@@ -199,7 +209,12 @@ const Group = () => {
           </Stack>
         </Box>
       </Stack>
-      {isOpenNewGroupDialogue && <CreateGroup open={isOpenNewGroupDialogue} handleClose={handleCloseGroupDialogue} />}
+      {isOpenNewGroupDialogue && (
+        <CreateGroup
+          open={isOpenNewGroupDialogue}
+          handleClose={handleCloseGroupDialogue}
+        />
+      )}
     </>
   );
 };

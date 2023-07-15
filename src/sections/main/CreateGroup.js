@@ -30,9 +30,9 @@ import { Link as RouterLink } from "react-router-dom";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Scrollbars from "react-custom-scrollbars-2";
-import FormProvider from "../../../components/hook-form/FormProvider";
-import RHFTextField from "../../../components/hook-form/RHFTextField";
-import RHFAutoComplete from "../../../components/hook-form/RHFAutoComplete";
+import FormProvider from "../../components/hook-form/FormProvider";
+import RHFTextField from "../../components/hook-form/RHFTextField";
+import RHFAutoComplete from "../../components/hook-form/RHFAutoComplete";
 
 const MEMBERS = [
   "Toy Story 3",

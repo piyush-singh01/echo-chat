@@ -116,7 +116,7 @@ const ProfileForm = () => {
           },
         }}
       >
-        Submit
+        Save
       </Button>
     </FormProvider>
   );

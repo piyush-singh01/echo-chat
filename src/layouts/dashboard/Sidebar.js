@@ -14,6 +14,7 @@ import { faker } from "@faker-js/faker";
 import useSettings from "../../hooks/useSettings";
 import { useNavigate } from "react-router-dom";
 
+// TODO: if someone manually enters a url, then the button is not updated as such.
 const Sidebar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -46,6 +47,19 @@ const Sidebar = () => {
         return "/app";
     }
   };
+
+  const getMenuPath = (index) => {
+    switch(index) {
+      case 0:
+        return '/profile'
+      case 1:
+        return '/settings'
+      case 2:
+        return '/auth/login'  //TODO: update token and set isAuthenticated to false
+      default:
+        break;
+    }
+  }
 
   return (
     <>
@@ -214,7 +228,13 @@ const Sidebar = () => {
             >
               {Profile_Menu.map((ele, i) => {
                 return (
-                  <MenuItem key={i} onClick={handleClose}>
+                  <MenuItem
+                    key={i}
+                    onClick={() => {
+                      handleClick(i);
+                      navigate(getMenuPath(i));
+                    }}
+                  >
                     {ele.title}
                   </MenuItem>
                 );

@@ -16,9 +16,13 @@ import { useTheme, styled, alpha } from "@mui/material/styles";
 import { faker } from "@faker-js/faker";
 
 import StyledBadge from "./StyledBadge";
-import { ArrowDownLeft, ArrowUpRight, Phone } from "phosphor-react";
+import {
+  ArrowDownLeft,
+  ArrowUpRight,
+  Phone,
+  VideoCamera,
+} from "phosphor-react";
 import { CallList } from "../data";
-
 
 const CallLogElement = (props) => {
   const theme = useTheme();
@@ -58,7 +62,7 @@ const CallLogElement = (props) => {
               <Typography
                 variant="subtitle2"
                 sx={{
-                  maxWidth: "150px",
+                  maxWidth: "125px",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
@@ -90,8 +94,11 @@ const CallLogElement = (props) => {
               </Typography> */}
             </Stack>
           </Stack>
-          <IconButton>
+          <IconButton size="small">
             <Phone color="green" />
+          </IconButton>
+          <IconButton size="small" color="primary">
+            <VideoCamera />
           </IconButton>
         </Stack>
       </Box>

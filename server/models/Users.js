@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import crypto from 'crypto';
+import crypto from "crypto";
 
 const userSchema = new mongoose.Schema({
   firstName: {
@@ -33,9 +33,15 @@ const userSchema = new mongoose.Schema({
       message: (props) => `Email ${props.value} is invalid`,
     },
   },
+
   password: {
     type: String,
   },
+
+  confirmPassword: {
+    type: String,
+  },
+
   passwordChangedAt: {
     type: Date,
   },
@@ -46,6 +52,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
   },
 
+  // ?  instead of using createdAt and updatedAt in userSchema, can we just write timestamps:true.
   createdAt: {
     type: Date,
   },
@@ -74,9 +81,9 @@ otp: {
     },
 */
 
-
 // the pre hook with save.
-userSchema.pre("save", async function(next) { //! should we remove async from here, since we are not returning The await operator is used to wait for a Promise and get its fulfillment value. It can only be used inside an async function or at the top level of a module.2
+userSchema.pre("save", async function (next) {
+  //! should we remove async from here, since we are not returning The await operator is used to wait for a Promise and get its fulfillment value. It can only be used inside an async function or at the top level of a module.2
   // this will run on every save, so
   // only run when the otp is modified
   if (this.isModified("otp")) {
@@ -86,6 +93,10 @@ userSchema.pre("save", async function(next) { //! should we remove async from he
 
   next();
 });
+
+userSchema.methods.changedPasswordAfter = function (timestamp) {
+  return timestamp < this.passwordChangedAt;
+};
 
 userSchema.methods.correctPassword = async (
   candidatePassword,
@@ -98,11 +109,16 @@ userSchema.methods.correctOTP = async (candidateOTP, userOTP) => {
   return await bcrypt.compare(candidateOTP, userOTP);
 };
 
-userSchema.methods.createPasswordResetToken = function() {
-  const resetToken = crypto.randomBytes(32).toString('hex');
-  this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex'); // save the hashed value of reset token in db
-  return resetToken;
-}
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString("hex");
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex"); // save the hashed value of reset token in db
 
+  this.passwordResetExpire = Date.now() + 10 * 60 * 1000; // also create a function for this(?)
+
+  return resetToken;
+};
 
 export default User = new mongoose.model("User", userSchema);

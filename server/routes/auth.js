@@ -6,7 +6,7 @@ import {
   resetPassword,
   sendOTP,
   verifyOTP,
-} from "../controllers/auth";
+} from "../controllers/auth.js";
 
 const router = Router();
 

@@ -1,5 +1,5 @@
-import Users from "../models/Users";
-import filterObj from "../utils/filterObj";
+import User from "../models/Users.js";
+import filterObj from "../utils/filterObj.js";
 
 //* all user controllers are protected, the auth middleware is mounted before user.
 

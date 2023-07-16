@@ -7,6 +7,8 @@ import bodyParser from "body-parser";
 import xss from "xss";
 import cors from "cors";
 
+import routes from "./routes/index.js";
+
 const app = express();
 
 app.use(express.json({ limit: "10kb" }));
@@ -25,7 +27,7 @@ const limiter = rateLimit({
   message: "Too many requests. Please try again later",
 });
 
-app.use("/tawk", limiter); // for any path starting with tawk, this middleware will be implemented
+app.use("/tawk", limiter); // for any path starting with tawk, this middleware will be implemented.
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
@@ -38,5 +40,7 @@ app.use(
 
 app.use(expressMongoSanitize());
 app.use(xss);
+
+app.use(routes);
 
 export default app;

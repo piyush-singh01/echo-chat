@@ -1,6 +1,8 @@
 import Users from "../models/Users";
 import filterObj from "../utils/filterObj";
 
+//* all user controllers are protected, the auth middleware is mounted before user.
+
 export const updateMe = async (req, res, next) => {
   // this updateMe middleware or endpoint will be protected, as we are passing control to the next middleware, in the protect. you need to be authorized to make changes to you profile.
 

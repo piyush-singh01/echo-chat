@@ -91,6 +91,13 @@ userSchema.pre("save", async function (next) {
     this.otp = bcrypt.hash(this.otp, 12); // this 12 is the salt(?) //! THis doesn't need await right?
   }
 
+  next(); 
+});
+
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
+    this.password = bcrypt.hash(this.password, 12); //Hash the password every time password is updated or is created for the first time.
+  }
   next();
 });
 

@@ -9,3 +9,4 @@ router.use("/auth", authRoute);
 router.use("/user", userRoute);
 
 
+export default router;

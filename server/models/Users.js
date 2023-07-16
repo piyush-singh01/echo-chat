@@ -1,0 +1,108 @@
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import crypto from 'crypto';
+
+const userSchema = new mongoose.Schema({
+  firstName: {
+    type: String,
+    require: [true, "First Name is Required"],
+    min: 2,
+    max: 20,
+  },
+  lastName: {
+    type: String,
+    require: [true, "Last Name is Required"],
+    min: 1,
+    max: 20,
+  },
+  avatar: {
+    type: String,
+  },
+  email: {
+    type: String,
+    require: [true, "Email is Required"],
+    unique: [true, "Account with this email already exists"],
+    validate: {
+      validator: function (email) {
+        return String(email)
+          .toLowerCase()
+          .match(
+            /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/
+          );
+      },
+      message: (props) => `Email ${props.value} is invalid`,
+    },
+  },
+  password: {
+    type: String,
+  },
+  passwordChangedAt: {
+    type: Date,
+  },
+  passwordResetToken: {
+    type: String,
+  },
+  passwordResetExpire: {
+    type: Date,
+  },
+
+  createdAt: {
+    type: Date,
+  },
+  updatedAt: {
+    type: Date,
+  },
+
+  otp: {
+    type: Number,
+  },
+
+  otpExpiryTime: {
+    type: Date,
+  },
+});
+
+// ! see this
+/* 
+otp: {
+      type: Number,
+      set: (v) => {
+        const salt = bcrypt.genSaltSync();
+        const hashedOTP = bcrypt.hashSync(v, salt);
+        return hashedOTP;
+      },
+    },
+*/
+
+
+// the pre hook with save.
+userSchema.pre("save", async function(next) { //! should we remove async from here, since we are not returning The await operator is used to wait for a Promise and get its fulfillment value. It can only be used inside an async function or at the top level of a module.2
+  // this will run on every save, so
+  // only run when the otp is modified
+  if (this.isModified("otp")) {
+    // hash the otp
+    this.otp = bcrypt.hash(this.otp, 12); // this 12 is the salt(?) //! THis doesn't need await right?
+  }
+
+  next();
+});
+
+userSchema.methods.correctPassword = async (
+  candidatePassword,
+  userPassword
+) => {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+userSchema.methods.correctOTP = async (candidateOTP, userOTP) => {
+  return await bcrypt.compare(candidateOTP, userOTP);
+};
+
+userSchema.methods.createPasswordResetToken = function() {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex'); // save the hashed value of reset token in db
+  return resetToken;
+}
+
+
+export default User = new mongoose.model("User", userSchema);

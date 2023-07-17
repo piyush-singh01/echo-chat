@@ -27,7 +27,7 @@ const limiter = rateLimit({
   message: "Too many requests. Please try again later",
 });
 
-app.use("/tawk", limiter); // for any path starting with tawk, this middleware will be implemented.
+app.use("/echo", limiter); // for any path starting with tawk, this middleware will be implemented.
 app.use(express.urlencoded({ extended: true }));
 
 app.use(

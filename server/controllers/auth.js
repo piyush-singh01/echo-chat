@@ -3,6 +3,8 @@ import otpGenerator from "otp-generator";
 import { promisify } from "util";
 import User from "../models/Users.js";
 import filterObj from "../utils/filterObj.js";
+import "dotenv/config";
+import * as mailService from "../services/mailer.js";
 
 // token based authorization on the client side, look more into jwt and so later on
 const signToken = (userId) => {
@@ -87,7 +89,15 @@ export const sendOTP = async (req, res, next) => {
     otpExpiryTime,
   });
 
-  // TODO: Send mail
+  mailService
+    .sendEmail({
+      from: "email@gmail.com",
+      to: "example@gmail.com",
+      subject: "Login OTP for Chat Application",
+      text: `Your OTP is ${OTP} and is valid for 10 minutes.`,
+    })
+    .then(() => {})
+    .catch((err) => {});
 
   res.send(200).json({
     status: "Success",

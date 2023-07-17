@@ -6,7 +6,7 @@ import expressMongoSanitize from "express-mongo-sanitize";
 import bodyParser from "body-parser";
 import xss from "xss";
 import cors from "cors";
-
+import "dotenv/config";
 import routes from "./routes/index.js";
 
 const app = express();

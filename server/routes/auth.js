@@ -11,7 +11,7 @@ import {
 const router = Router();
 
 router.post("/login", login);
-router.post("/register", register);
+router.post("/register", register, sendOTP);
 router.post("/send-otp", sendOTP); // we are creating this end point to resent otp in case it wasn't delivered.
 router.post("/verify-otp", verifyOTP);
 router.post("/forgot-password", forgotPassword);

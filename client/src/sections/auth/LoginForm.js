@@ -15,8 +15,12 @@ import {
   Stack,
 } from "@mui/material";
 import { Eye, EyeSlash } from "phosphor-react";
+import { LoginUser } from "../../redux/slices/auth.js";
+import { useDispatch } from "react-redux";
 
 const LoginForm = () => {
+  const dispatch = useDispatch();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -46,6 +50,7 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     try {
       // make an api call to server
+      dispatch(LoginUser(data));
     } catch (err) {
       console.log(err);
       reset();

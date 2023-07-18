@@ -64,7 +64,6 @@ export const sendOTP = async (req, res, next) => {
   user.otp = newOTP.OTP.toString();
   await user.save({ new: true, validateModifiedOnly: true });
 
-
   mailService
     .sendEmail({
       from: "echochat.automail@gmail.com",
@@ -160,6 +159,14 @@ export const login = async (req, res, next) => {
       res.status(400).json({
         status: "Error",
         message: "Invalid Credentials",
+      });
+      return;
+    }
+
+    if (!user.verified) {
+      res.status(400).json({
+        status: "error",
+        message: "Account is not verified.",
       });
       return;
     }
@@ -290,7 +297,7 @@ export const resetPassword = async (req, res, next) => {
 
   //* 3)
   user.password = req.body.password;
-  user.confirmPassword = undefined;       //! shuold this not be on client side, besides where are we even comparing it with the password?
+  user.confirmPassword = undefined; //! shuold this not be on client side, besides where are we even comparing it with the password?
   user.passwordResetToken = undefined;
   user.passwordResetExpire = undefined;
 

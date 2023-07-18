@@ -74,6 +74,7 @@ const userSchema = new mongoose.Schema({
 });
 
 // ! see this
+//* dont think need to do this
 /* 
 otp: {
       type: Number,
@@ -92,7 +93,8 @@ userSchema.pre("save", async function (next) {
   // only run when the otp is modified
   if (this.isModified("otp")) {
     // hash the otp
-    this.otp = await bcrypt.hash(this.otp.toString(), 12); // this 12 is the salt(?) //! THis doesn't need await right?
+    const salt = await bcrypt.genSalt(10);
+    this.otp = await bcrypt.hash(this.otp.toString(), salt); // this 12 is the salt(?)
   }
 
   next();
@@ -100,7 +102,8 @@ userSchema.pre("save", async function (next) {
 
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    this.password = await bcrypt.hash(this.password.toString(), 12); //Hash the password every time password is updated or is created for the first time.
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password.toString(), salt); //Hash the password every time password is updated or is created for the first time.
   }
   next();
 });

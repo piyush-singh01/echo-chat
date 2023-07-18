@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import otpGenerator from "otp-generator";
+import OTP from "../utils/OTPGenerator.js";
 import { promisify } from "util";
 import User from "../models/Users.js";
 import filterObj from "../utils/filterObj.js";
@@ -9,13 +9,13 @@ import otpMail from "../mails/otpMail.js";
 
 // token based authorization on the client side, look more into jwt and so later on
 const signToken = (userId) => {
-  jwt.sign({ userId }, process.env.JWT_SECRET_KEY); // header is the default header here. we can also supply header as the third argument.
+  return jwt.sign({ userId }, process.env.JWT_SECRET_KEY); // header is the default header here. we can also supply header as the third argument.
   // We are using the userId to create the token
 };
 
 export const register = async (req, res, next) => {
   try {
-    const { firstName, lastName, email, password } = req.body;
+    const { email } = req.body;
 
     // note we can not simply destructure the request body in the db.update() function, say a user can provide req.body.verify=true from the client side then the user will get updated.
     // So we need to filter the body.
@@ -53,45 +53,19 @@ export const register = async (req, res, next) => {
   }
 };
 
-// ! See this
-/*
-class OTP {
-  constructor() {
-    this.code = otp.generate(6, {
-      digits: true,
-      lowerCaseAlphabets: false,
-      specialChars: false,
-      upperCaseAlphabets: false,
-    });
-    this.expireDate = Date.now() + 10 * 60 * 1000;
-    this.generatedAt = Date.now();
-  }
-  get isExpired() {
-    return Date.now() > this.expireDate;
-  }
-}
-const x = new OTP();
-console.log(x);
-console.log(x.isExpired);
-*/
-
 export const sendOTP = async (req, res, next) => {
   const { userId } = req;
   const { firstName, lastName } = req.body;
-  const OTP = otpGenerator.generate(6, {
-    upperCaseAlphabets: false,
-    lowerCaseAlphabets: false,
-    specialChars: false,
-  });
+  const newOTP = new OTP();
 
-  const otpExpiryTime = Date.now() + 10 * 60 * 1000; //after 10 minutes
+  const otpExpiryTime = newOTP.expiryTime; //after 10 minutes
 
   const user = await User.findByIdAndUpdate(userId, {
     // hash the otp and store?
     otpExpiryTime,
   });
 
-  user.otp = OTP.toString();
+  user.otp = newOTP.toString();
   await user.save({ new: true, validateModifiedOnly: true });
 
   mailService
@@ -99,12 +73,12 @@ export const sendOTP = async (req, res, next) => {
       from: "echochat.automail@gmail.com",
       recipient: user.email,
       subject: "Login OTP for Echo Chat",
-      text: `Your OTP is ${OTP} and is valid for 10 minutes.`,
+      text: `Your OTP is ${newOTP} and is valid for 10 minutes.`,
       html: otpMail(firstName + " " + lastName, OTP),
       attachments: [],
     })
     .then(() => {
-      console.log("send email to user.email");
+      console.log(`Sent Mail to ${user.email}`);
     })
     .catch((err) => {
       console.log(err);
@@ -173,7 +147,7 @@ export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      // TODO: See standard ways of doing this.
+      // TODO: See standard ways of doing this(the below thing).
       res.status(400).json({
         status: "Error",
         message: "Both Email and Password are required",
@@ -181,7 +155,7 @@ export const login = async (req, res, next) => {
       return;
     }
 
-    const user = await User.findOne({ email: email }).select("+password"); // The + here explicitly includes the password field, even if it was originally set to select: false, in Schema.
+    const user = await User.findOne({ email: email }).select("+password"); // The + here explicitly includes the password field, even if it was originally set to select: false, in Schema. THis is a select statement essentially.(select . from .)
 
     if (!user || !(await user.correctPassword(password, user.password))) {
       res.status(400).json({
@@ -194,16 +168,16 @@ export const login = async (req, res, next) => {
     // https://stackoverflow.com/questions/37582444/jwt-vs-cookies-for-token-based-authentication
     // npm i jose --> use this?
     // see more on jwt, see standard codes of apps.
-    const token = signToken(user._id);
+    // ? add check to see if already logged in?
 
+    const token = signToken(user._id);
     res.status(200).json({
       status: "OK",
       message: "Succesfully logged in",
       token, //token is sent along
     });
   } catch (ex) {
-    // next(ex);
-    // console.log(ex);
+    console.log(ex);
   }
 };
 

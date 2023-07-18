@@ -12,7 +12,7 @@ const sendSGMail = async ({
   attachments,
 }) => {
   try {
-    const from = sender || "echochat.automail@gmail.com"; //TODO: add an actual verified(by sg) email here.
+    const from = sender || "echochat.automail@gmail.com";
     const msg = {
       to: recipient, // email of recipient
       from: from, // verified sender
@@ -21,7 +21,6 @@ const sendSGMail = async ({
       text: text,
       attachments,
     };
-    console.log(msg);
     return sgMail.send(msg);
   } catch (err) {
     console.log(err);

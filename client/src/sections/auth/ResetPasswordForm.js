@@ -15,8 +15,12 @@ import {
   Stack,
 } from "@mui/material";
 import { Eye, EyeSlash } from "phosphor-react";
+import { useDispatch } from "react-redux";
+import { ForgotPassword } from "../../redux/slices/auth.js";
 
 const ResetPasswordForm = () => {
+  const dispatch = useDispatch();
+
   const ResetPasswordSchema = Yup.object().shape({
     email: Yup.string()
       .required("Email is Required")
@@ -42,6 +46,7 @@ const ResetPasswordForm = () => {
   const onSubmit = async (data) => {
     try {
       // make an api call to server
+      dispatch(ForgotPassword(data));
     } catch (err) {
       console.log(err);
       reset();

@@ -13,11 +13,15 @@ import { faker } from "@faker-js/faker";
 
 import useSettings from "../../hooks/useSettings";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { LogoutUser } from "../../redux/slices/auth.js";
 
 // TODO: if someone manually enters a url, then the button is not updated as such.
+
 const Sidebar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   // console.log(theme);   // is an object
 
   const [selected, setSelected] = useState(0); // The idx 0 is the default selected.
@@ -49,17 +53,17 @@ const Sidebar = () => {
   };
 
   const getMenuPath = (index) => {
-    switch(index) {
+    switch (index) {
       case 0:
-        return '/profile'
+        return "/profile";
       case 1:
-        return '/settings'
+        return "/settings";
       case 2:
-        return '/auth/login'  //TODO: update token and set isAuthenticated to false
+        return "/auth/login"; //TODO: update token and set isAuthenticated to false
       default:
         break;
     }
-  }
+  };
 
   return (
     <>
@@ -202,7 +206,6 @@ const Sidebar = () => {
             </Box>
 
             {/*************/}
-            {/* TODO: make it clickable(mouse pointer changes on hover)*/}
             <Avatar
               id="login-avatar"
               src={faker.image.avatar()}
@@ -232,7 +235,11 @@ const Sidebar = () => {
                     key={i}
                     onClick={() => {
                       handleClick(i);
-                      navigate(getMenuPath(i));
+                      if(i === 2) { // TODO: Replace this 2 with a constant.
+                        dispatch(LogoutUser());
+                      } else {
+                        navigate(getMenuPath(i));
+                      }
                     }}
                   >
                     {ele.title}

@@ -3,7 +3,7 @@ import FormProvider from "../../components/hook-form/FormProvider"; // import fr
 import RHFTextField from "../../components/hook-form/RHFTextField";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useSearchParams } from "react-router-dom";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -15,19 +15,23 @@ import {
   Stack,
 } from "@mui/material";
 import { Eye, EyeSlash } from "phosphor-react";
+import { useDispatch } from "react-redux";
+import { ResetPassword } from "../../redux/slices/auth";
 
 const NewPasswordForm = () => {
+  const [queryParams] = useSearchParams();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const NewPasswordSchema = Yup.object().shape({
-    newPassword: Yup.string()
+    password: Yup.string()
       .min(6, "Password must at least 6 charachters")
       .max(20, "Password must be atmost 20 charachters")
       .required("Password is Required"),
     confirmPassword: Yup.string()
       .required("Password is Required")
       .oneOf(
-        [Yup.ref("newPassword"), null],
+        [Yup.ref("password"), null],
         "Confirm Password and Password do not match"
       ),
   });
@@ -52,6 +56,7 @@ const NewPasswordForm = () => {
   const onSubmit = async (data) => {
     try {
       // make an api call to server
+      dispatch(ResetPassword({ ...data, token: queryParams.get("verify") }));
     } catch (err) {
       console.log(err);
       reset();
@@ -70,7 +75,7 @@ const NewPasswordForm = () => {
         )}
 
         <RHFTextField
-          name="newPassword"
+          name="password"
           label="New Password"
           type={showPassword ? "text" : "password"}
           InputProps={{

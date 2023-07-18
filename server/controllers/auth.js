@@ -251,7 +251,7 @@ export const forgotPassword = async (req, res, next) => {
   // * Generate a random reset token.
   // https://...?code=9u38xeuwe
   const resetToken = await user.createPasswordResetToken();
-  const resetUrl = `https://localhost:5000/auth/reset-password?verify=${resetToken}`;
+  const resetUrl = `http://localhost:3000/auth/new-password?verify=${resetToken}`;
 
   console.log(resetToken);
   try {

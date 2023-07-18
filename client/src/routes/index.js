@@ -36,7 +36,7 @@ export default function Router() {
         { path: "login", element: <LoginPage /> },
         { path: "register", element: <RegisterPage /> },
         { path: "reset-password", element: <ResetPasswordPage /> },
-        { path: "new-password", element: <NewPasswordPage /> },
+        { path: "new-password", element: <NewPasswordPage /> }, // TODO: Change this to reset-password and above to forgot-password
       ],
     },
 

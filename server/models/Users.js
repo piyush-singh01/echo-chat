@@ -123,7 +123,7 @@ userSchema.methods.correctOTP = async (candidateOTP, userOTP) => {
   return await bcrypt.compare(candidateOTP, userOTP);
 };
 
-userSchema.methods.createPasswordResetToken = function () {
+userSchema.methods.createPasswordResetToken = async function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
   this.passwordResetToken = crypto
     .createHash("sha256")
@@ -131,7 +131,7 @@ userSchema.methods.createPasswordResetToken = function () {
     .digest("hex"); // save the hashed value of reset token in db
 
   this.passwordResetExpire = Date.now() + 10 * 60 * 1000; // also create a function for this(?)
-  this.save({ new: true, validateModifiedOnly: true });
+  await this.save({ new: true, validateModifiedOnly: true });
   return resetToken;
 };
 

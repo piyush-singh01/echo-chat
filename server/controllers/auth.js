@@ -7,6 +7,7 @@ import "dotenv/config";
 import * as mailService from "../services/mailer.js";
 import otpMail from "../mails/otpMail.js";
 import crypto from "crypto";
+import resetPasswordMail from "../mails/resetPasswordMail.js";
 
 // token based authorization on the client side, look more into jwt and so later on
 const signToken = (userId) => {
@@ -249,22 +250,39 @@ export const forgotPassword = async (req, res, next) => {
 
   // * Generate a random reset token.
   // https://...?code=9u38xeuwe
-  const resetToken = user.createPasswordResetToken();
-  const resetUrl = `https://localhost:5000/auth/reset-password?code=${resetToken}`;
+  const resetToken = await user.createPasswordResetToken();
+  const resetUrl = `https://localhost:5000/auth/reset-password?verify=${resetToken}`;
 
   console.log(resetToken);
   try {
     // TODO: send email with reset URL
+    mailService
+      .sendEmail({
+        from: "echochat.automail@gmail.com",
+        recipient: user.email,
+        subject: "Reset Password link for Echo Chat",
+        text: `The reset password link is valid for 10 minutes.`,
+        html: resetPasswordMail(user.name, resetUrl),
+        attachments: [],
+      })
+      .then(() => {
+        console.log(`Sent Mail to ${user.email}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     res.status(200).json({
       status: "success",
       message: "reset password link sent",
     });
+    //
   } catch (ex) {
     // !similar catch block for all others?
     user.passwordResetToken = undefined;
     user.passwordResetExpire = undefined;
-    user.save({ validateBeforeSave: false });
-
+    await user.save({ new: true, validateModifiedOnly: true });
+    
     res.status(500).json({
       status: "Error",
       message: "There was an error sending the email, please try again later.",

@@ -58,23 +58,19 @@ export const sendOTP = async (req, res, next) => {
   const { firstName, lastName } = req.body;
   const newOTP = new OTP();
 
-  const otpExpiryTime = newOTP.expiryTime; //after 10 minutes
-
-  const user = await User.findByIdAndUpdate(userId, {
-    // hash the otp and store?
-    otpExpiryTime,
-  });
-
-  user.otp = newOTP.toString();
+  const user = await User.findById(userId);
+  user.otpExpiryTime = newOTP.expiryTime;
+  user.otp = newOTP.OTP.toString();
   await user.save({ new: true, validateModifiedOnly: true });
+
 
   mailService
     .sendEmail({
       from: "echochat.automail@gmail.com",
       recipient: user.email,
       subject: "Login OTP for Echo Chat",
-      text: `Your OTP is ${newOTP} and is valid for 10 minutes.`,
-      html: otpMail(firstName + " " + lastName, OTP),
+      text: `Your OTP is ${newOTP.OTP} and is valid for 10 minutes.`,
+      html: otpMail(firstName + " " + lastName, newOTP.OTP),
       attachments: [],
     })
     .then(() => {
@@ -94,6 +90,7 @@ export const verifyOTP = async (req, res, next) => {
   try {
     // verify OTP and update user record accordingly.
     const { email, otp } = req.body;
+
     const user = await User.findOne({
       email,
       otpExpiryTime: { $gt: Date.now() },

@@ -12,6 +12,10 @@ export default class OTP {
     this.OTPExpiryTime = this.OTPGenerationTime + 10 * 60 * 1000;
   }
 
+  get OTP() {
+    return this.otp;
+  }
+
   get expiryTime() {
     return this.OTPExpiryTime;
   }

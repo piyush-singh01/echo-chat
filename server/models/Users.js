@@ -91,7 +91,7 @@ userSchema.pre("save", async function (next) {
   //! should we remove async from here, since we are not returning The await operator is used to wait for a Promise and get its fulfillment value. It can only be used inside an async function or at the top level of a module.2
   // this will run on every save, so
   // only run when the otp is modified
-  if (this.isModified("otp")) {
+  if (this.otp && this.isModified("otp")) {
     // hash the otp
     const salt = await bcrypt.genSalt(10);
     this.otp = await bcrypt.hash(this.otp.toString(), salt); // this 12 is the salt(?)

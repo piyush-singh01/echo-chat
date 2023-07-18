@@ -95,7 +95,6 @@ export const verifyOTP = async (req, res, next) => {
       email,
       otpExpiryTime: { $gt: Date.now() },
     });
-
     if (!user) {
       res.status(400).json({
         status: "error",
@@ -112,6 +111,7 @@ export const verifyOTP = async (req, res, next) => {
       return;
     }
 
+    console.log("here i am");
     // We can not simply store the OTP as plain text and compare them, as the backend devs would have access to the user otp and which would not be a good thing
     if (!(await user.correctOTP(otp, user.otp))) {
       res.status(400).json({
@@ -125,6 +125,7 @@ export const verifyOTP = async (req, res, next) => {
     // if otp is correct
     user.verified = true;
     user.otp = undefined; // save otp as undefined after it has been verified
+    user.otpExpiryTime = undefined;
 
     await user.save({ new: true, validateModifiedOnly: true });
 

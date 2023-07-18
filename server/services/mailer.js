@@ -3,7 +3,7 @@ import 'dotenv/config'
 
 sgMail.setApiKey(process.env.SEND_GRID_KEY);
 
-const sendSGMail = (async = ({
+const sendSGMail = async ({
   recipient,
   sender,
   subject,
@@ -12,7 +12,7 @@ const sendSGMail = (async = ({
   attachments,
 }) => {
   try {
-    const from = sender || "myemail@email.com"; //TODO: add an actual verified(by sg) email here.
+    const from = sender || "echochat.automail@gmail.com"; //TODO: add an actual verified(by sg) email here.
     const msg = {
       to: recipient, // email of recipient
       from: from, // verified sender
@@ -21,13 +21,14 @@ const sendSGMail = (async = ({
       text: text,
       attachments,
     };
+    console.log(msg);
     return sgMail.send(msg);
   } catch (err) {
     console.log(err);
   }
-});
+};
 
-const sendEmail = async (args) => {
+export const sendEmail = async (args) => {
   if (process.env.NODE_ENV === "development") {
     return new Promise.resolve(); //if in development mode, we will get a promise that will be immediately resolved, but the actual email is not gonna be send.
   } else {

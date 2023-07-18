@@ -61,11 +61,15 @@ const userSchema = new mongoose.Schema({
   },
 
   otp: {
-    type: Number,
+    type: String,
   },
 
   otpExpiryTime: {
     type: Date,
+  },
+  verified: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -88,15 +92,15 @@ userSchema.pre("save", async function (next) {
   // only run when the otp is modified
   if (this.isModified("otp")) {
     // hash the otp
-    this.otp = bcrypt.hash(this.otp, 12); // this 12 is the salt(?) //! THis doesn't need await right?
+    this.otp = await bcrypt.hash(this.otp.toString(), 12); // this 12 is the salt(?) //! THis doesn't need await right?
   }
 
-  next(); 
+  next();
 });
 
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    this.password = bcrypt.hash(this.password, 12); //Hash the password every time password is updated or is created for the first time.
+    this.password = await bcrypt.hash(this.password.toString(), 12); //Hash the password every time password is updated or is created for the first time.
   }
   next();
 });

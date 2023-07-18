@@ -5,6 +5,7 @@ import User from "../models/Users.js";
 import filterObj from "../utils/filterObj.js";
 import "dotenv/config";
 import * as mailService from "../services/mailer.js";
+import otpMail from "../mails/otpMail.js";
 
 // token based authorization on the client side, look more into jwt and so later on
 const signToken = (userId) => {
@@ -28,16 +29,16 @@ export const register = async (req, res, next) => {
     const existing_user = await User.findOne({ email: email });
 
     if (existing_user && existing_user.verified) {
-      res.send(400).json({
+      res.status(400).json({
         //sure you want it to send this status code?
         status: "error",
         message: "Email already in use. Please Login",
       });
     } else if (existing_user) {
-      await User.findOneAndUpdate({ email: email }, filteredBody, {
-        new: true, // causes the value to be returned after the update, else the old value will be returned
-        validateModifiedOnly: true, // onluy validate the fields again that are modified
-      });
+      existing_user.password = filteredBody.password;
+      existing_user.save({ new: true, validateModifiedOnly: true });
+
+      //
       req.userId = existing_user._id; // add the user id to the request body
       next(); // pass control to the next middleware, which will be generate otp and send to user.
     } else {
@@ -76,6 +77,7 @@ console.log(x.isExpired);
 
 export const sendOTP = async (req, res, next) => {
   const { userId } = req;
+  const { firstName, lastName } = req.body;
   const OTP = otpGenerator.generate(6, {
     upperCaseAlphabets: false,
     lowerCaseAlphabets: false,
@@ -84,22 +86,31 @@ export const sendOTP = async (req, res, next) => {
 
   const otpExpiryTime = Date.now() + 10 * 60 * 1000; //after 10 minutes
 
-  await User.findByIdAndUpdate(userId, {
-    otp: OTP,
+  const user = await User.findByIdAndUpdate(userId, {
+    // hash the otp and store?
     otpExpiryTime,
   });
 
+  user.otp = OTP.toString();
+  await user.save({ new: true, validateModifiedOnly: true });
+
   mailService
     .sendEmail({
-      from: "email@gmail.com",
-      to: "example@gmail.com",
-      subject: "Login OTP for Chat Application",
+      from: "echochat.automail@gmail.com",
+      recipient: user.email,
+      subject: "Login OTP for Echo Chat",
       text: `Your OTP is ${OTP} and is valid for 10 minutes.`,
+      html: otpMail(firstName + " " + lastName, OTP),
+      attachments: [],
     })
-    .then(() => {})
-    .catch((err) => {});
+    .then(() => {
+      console.log("send email to user.email");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
-  res.send(200).json({
+  res.status(200).json({
     status: "Success",
     message: "OTP Sent succesfully",
   });
@@ -122,6 +133,14 @@ export const verifyOTP = async (req, res, next) => {
       return;
     }
 
+    if (user.verified) {
+      res.status(400).json({
+        status: "error",
+        message: "Email is already verified",
+      });
+      return;
+    }
+
     // We can not simply store the OTP as plain text and compare them, as the backend devs would have access to the user otp and which would not be a good thing
     if (!(await user.correctOTP(otp, user.otp))) {
       res.status(400).json({
@@ -140,7 +159,7 @@ export const verifyOTP = async (req, res, next) => {
 
     const token = signToken(user._id);
 
-    res.send(200).json({
+    res.status(200).json({
       status: "OK",
       message: "OTP Verification Succesful",
       token, //token is sent along
@@ -165,10 +184,11 @@ export const login = async (req, res, next) => {
     const user = await User.findOne({ email: email }).select("+password"); // The + here explicitly includes the password field, even if it was originally set to select: false, in Schema.
 
     if (!user || !(await user.correctPassword(password, user.password))) {
-      res.send(400).json({
+      res.status(400).json({
         status: "Error",
         message: "Invalid Credentials",
       });
+      return;
     }
 
     // https://stackoverflow.com/questions/37582444/jwt-vs-cookies-for-token-based-authentication
@@ -176,13 +196,14 @@ export const login = async (req, res, next) => {
     // see more on jwt, see standard codes of apps.
     const token = signToken(user._id);
 
-    res.send(200).json({
+    res.status(200).json({
       status: "OK",
       message: "Succesfully logged in",
       token, //token is sent along
     });
   } catch (ex) {
-    next(ex);
+    // next(ex);
+    // console.log(ex);
   }
 };
 
@@ -229,6 +250,7 @@ export const protect = async (req, res, next) => {
       status: "error",
       message: "password was changed recently, please login again",
     });
+    return;
     // ! shuold we not return?
   }
   req.user = this_user;
@@ -262,7 +284,7 @@ export const forgotPassword = async (req, res, next) => {
     user.passwordResetExpire = undefined;
     user.save({ validateBeforeSave: false });
 
-    res.send(500).json({
+    res.status(500).json({
       status: "Error",
       message: "There was an error sending the email, please try again later.",
     });
@@ -303,7 +325,7 @@ export const resetPassword = async (req, res, next) => {
   //* 4) Log in and send JWT.
   // TODO: Send an email to user informing about password reset
   const token = signToken(user._id);
-  res.send(200).json({
+  res.status(200).json({
     status: "success",
     message: "Password Reseted Successfully",
     token,

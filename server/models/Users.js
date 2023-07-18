@@ -131,7 +131,7 @@ userSchema.methods.createPasswordResetToken = function () {
     .digest("hex"); // save the hashed value of reset token in db
 
   this.passwordResetExpire = Date.now() + 10 * 60 * 1000; // also create a function for this(?)
-
+  this.save({ new: true, validateModifiedOnly: true });
   return resetToken;
 };
 

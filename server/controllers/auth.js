@@ -6,6 +6,7 @@ import filterObj from "../utils/filterObj.js";
 import "dotenv/config";
 import * as mailService from "../services/mailer.js";
 import otpMail from "../mails/otpMail.js";
+import crypto from "crypto";
 
 // token based authorization on the client side, look more into jwt and so later on
 const signToken = (userId) => {
@@ -242,8 +243,9 @@ export const forgotPassword = async (req, res, next) => {
   // * Generate a random reset token.
   // https://...?code=9u38xeuwe
   const resetToken = user.createPasswordResetToken();
-  const resetUrl = `https://domain.com/auth/reset-password?code=${resetToken}`;
+  const resetUrl = `https://localhost:5000/auth/reset-password?code=${resetToken}`;
 
+  console.log(resetToken);
   try {
     // TODO: send email with reset URL
     res.status(200).json({
@@ -267,7 +269,7 @@ export const resetPassword = async (req, res, next) => {
   //* 1) Get the user based on token
   const hashedToken = crypto
     .createHash("sha256")
-    .update(req.params.token)
+    .update(req.body.token)
     .digest("hex"); // we will be getting it as a param, why?
 
   // ? Are we querying with the hashed token, really?
@@ -288,7 +290,7 @@ export const resetPassword = async (req, res, next) => {
 
   //* 3)
   user.password = req.body.password;
-  user.confirmPassword = req.body.confirmPassword;
+  user.confirmPassword = undefined;       //! shuold this not be on client side, besides where are we even comparing it with the password?
   user.passwordResetToken = undefined;
   user.passwordResetExpire = undefined;
 

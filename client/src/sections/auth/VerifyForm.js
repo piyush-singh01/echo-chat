@@ -7,11 +7,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert, Button, Stack, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
 import RHFCodes from "../../components/hook-form/RHFCodes";
+import { VerifyEmail } from "../../redux/slices/auth";
 
 // TODO: This verify page should not be visible if we have not send any OTP.
-const VerifyForm = () => {
+const VerifyForm = ({ email }) => {
   const dispatch = useDispatch();
 
+  // ? should this not better be an array?
   const VerifyFormSchema = Yup.object().shape({
     code1: Yup.string().required("Fill the complete OTP"),
     code2: Yup.string().required("Fill the complete OTP"),
@@ -46,6 +48,14 @@ const VerifyForm = () => {
   const onSubmit = async (data) => {
     try {
       // make an api call to server
+      console.log("dispatching email");
+      dispatch(
+        VerifyEmail({
+          // TODO: encapsulate this otp soup with some higher order logic
+          email: email,
+          otp: `${data.code1}${data.code2}${data.code3}${data.code4}${data.code5}${data.code6}`,
+        })
+      );
     } catch (err) {
       console.log(err);
       reset();
@@ -64,8 +74,8 @@ const VerifyForm = () => {
         )}
         {/* Add a custom OTP input instead of a Text Field */}
         <RHFCodes
-          keyName="codes"
-          inputs={["codes1", "codes2", "codes3", "codes4", "codes5", "codes6"]}
+          keyName="code"
+          inputs={["code1", "code2", "code3", "code4", "code5", "code6"]}
         />
       </Stack>
 

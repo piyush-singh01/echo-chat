@@ -5,6 +5,8 @@ const initialState = {
   isLoggedIn: false,
   token: "",
   isLoading: false,
+  email: "",
+  error: false,
 };
 
 const slice = createSlice({
@@ -12,14 +14,20 @@ const slice = createSlice({
   initialState,
   reducers: {
     loginUser(state, action) {
-      state.isLoggedIn = action.payload.isLoggedIn;
+      state.isLoggedIn = action.payload.isLoggedIn; // TODO: make it true hardcode, not from the action
       state.token = action.payload.token; // TODO: are we storing jwt tokens in redux store?
     },
     logoutUser(state, action) {
       state.isLoggedIn = false;
       state.token = "";
     },
-    resetPassword(state, action) {},
+    updateIsLoading(state, action) {
+      state.error = action.payload.error;
+      state.isLoading = action.payload.isLoading;
+    },
+    updateRegisterEmail(state, action) {
+      state.email = action.payload.email;
+    },
   },
 });
 
@@ -110,5 +118,76 @@ export function ResetPassword(formInputs) {
         );
       })
       .catch((err) => console.log(err));
+  };
+}
+
+export function RegisterUser(formInputs) {
+  return async (dispatch, getState) => {
+    dispatch(slice.actions.updateIsLoading({ isLoading: true, error: false }));
+    await axios
+      .post(
+        "/auth/register",
+        {
+          ...formInputs,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+        dispatch(
+          slice.actions.updateRegisterEmail({ email: formInputs.email })
+        );
+        dispatch(
+          slice.actions.updateIsLoading({ isLoading: false, error: false })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(
+          slice.actions.updateIsLoading({ isLoading: false, error: true })
+        );
+      })
+      .finally(() => {
+        //? can also use the useNavigate hook by passing it as a call back function and then calling it here. The definition of the callback function is passed and defined inside the react component from where this THUNK is called. But for now do this.
+        if (!getState().auth.error) {
+          window.location.href = "/auth/verify"; // can not use the useNavigate hook here as it is not a react component, but a
+        }
+      });
+  };
+}
+
+export function VerifyEmail(formInputs) {
+  console.log(formInputs);
+  return async (dispatch, getState) => {
+    await axios
+      .post(
+        "/auth/verify-otp",
+        {
+          ...formInputs,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        console.log("here");
+        console.log(res);
+        dispatch(
+          slice.actions.loginUser({
+            isLoggedIn: true,
+            token: res.data.token,
+          })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {});
   };
 }

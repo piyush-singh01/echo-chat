@@ -14,12 +14,12 @@ const app = express();
 app.use(express.json({ limit: "10kb" }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(helmet());
+app.use(helmet());
 
 // log only if in production mode.
-// if (process.env.NODE_ENV === "development") {
-//   app.use(morgan());
-// }
+app.use(morgan('dev'));
+if (process.env.NODE_ENV === "development") {
+}
 
 const limiter = rateLimit({
   max: 3000,
@@ -38,8 +38,8 @@ app.use(
   })
 ); // to allow cross origin resource sharing
 
-// app.use(expressMongoSanitize());
-// app.use(xss);
+app.use(expressMongoSanitize());
+// app.use(xss);  //fix this
 
 app.use(routes);
 

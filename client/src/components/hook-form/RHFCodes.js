@@ -50,6 +50,7 @@ const RHFCodes = ({ keyName = "", inputs = [], ...other }) => {
               {...field}
               error={!!error}
               autoFocus={idx === 0}
+              value={field.value}
               placeholder="_"
               onChange={(e) => {
                 handleChangeToNextField(e, field.onChange); // see field is useful here, we can get the onChange event of the field from here.

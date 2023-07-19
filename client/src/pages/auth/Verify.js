@@ -5,7 +5,7 @@ import { CaretLeft, User } from "phosphor-react";
 import VerifyForm from "../../sections/auth/VerifyForm";
 
 const Verify = () => {
-  const email = "example@email.com"; // get it from the store
+  const email = "xatine4392@sparkroi.com"; // get it from the store
   return (
     <>
       <Stack spacing={2} sx={{ mb: 4, position: "relative" }}>
@@ -16,10 +16,10 @@ const Verify = () => {
           Enter the 6 digit verification OTP sent to{" "}
           <Typography
             sx={{
-              display: "inline",
               color: "text.primary",
               fontFamily: "Arial",
             }}
+            component={'span'}
             variant="subtitle2"
           >
             {email}
@@ -42,7 +42,7 @@ const Verify = () => {
           Go back to the Sign In page
         </Link>
       </Stack>
-      <VerifyForm />
+      <VerifyForm email={email} />
     </>
   );
 };

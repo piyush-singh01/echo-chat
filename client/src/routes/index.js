@@ -37,6 +37,8 @@ export default function Router() {
         { path: "register", element: <RegisterPage /> },
         { path: "reset-password", element: <ResetPasswordPage /> },
         { path: "new-password", element: <NewPasswordPage /> }, // TODO: Change this to reset-password and above to forgot-password
+        // TODO: can not randomly access this, only when we have sent an email
+        { path: "verify", element: <Verify /> },
       ],
     },
 
@@ -75,6 +77,8 @@ const ResetPasswordPage = Loadable(
 const NewPasswordPage = Loadable(
   lazy(() => import("../pages/auth/NewPassword"))
 );
+
+const Verify = Loadable(lazy(() => import("../pages/auth/Verify")));
 
 const GroupPage = Loadable(lazy(() => import("../pages/dashboard/Group")));
 

@@ -25,3 +25,19 @@ export const updateMe = async (req, res, next) => {
     message: "Profile update successfully",
   });
 };
+
+// get firstname, lastname and _id of all verified users
+export const getUsers = async (req, res, next) => {
+  const all_users = await User.find({
+    verified: true,
+  }).select("firstname lastname _id");
+
+  const this_user = req.user; // The protect middleware will be called before this. comes from there.
+  const other_users = all_users.filter(
+    (user) =>
+      !this_user.friends.includes(user._id) &&
+      user._id.toString() !== req.user._id.toString()
+  ); // returns only those users that are not our friends already. second condition excludes self.
+
+  
+};

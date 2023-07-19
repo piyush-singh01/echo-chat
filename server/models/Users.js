@@ -71,6 +71,17 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+
+  socket_id: {
+    type: String,
+  },
+
+  friends: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 // ! see this

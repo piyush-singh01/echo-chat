@@ -12,6 +12,7 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
+// Creating a server and integrating socket.io
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -20,12 +21,14 @@ const io = new Server(server, {
   },
 });
 
+// Extracting db_uri and port number from environment variables
 const DB_URI = process.env.MONGO_URI.replace(
   "<password>",
   process.env.MONGO_PASSWORD
 );
 const PORT = process.env.PORT || 5000;
 
+// connect db
 mongoose
   .connect(DB_URI, {
     useNewUrlParser: true,
@@ -41,10 +44,11 @@ mongoose
     console.log(err);
   });
 
+// on a socket connection
 io.on("connection", async (socket) => {
-  console.log(socket.handshake);
-  const user_id = socket.handshake.query("user_id");
+  const { user_id } = socket.handshake.query; // socket.handshake is an object that contain details about the handshake that happens at the beggining of the socket.io session. query is the query string. ...?user_id=123weq
   const socket_id = socket.id;
+
   console.log(`User ${user_id} connected to ${socket_id}`);
   if (user_id) {
     await User.findByIdAndUpdate(user_id, { socket_id });

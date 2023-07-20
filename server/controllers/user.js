@@ -42,14 +42,14 @@ export const getUsers = async (req, res, next) => {
 };
 
 export const getFriends = async (req, res, next) => {
-  const friends = await User.findById(req.user._id).populate(
+  const curr_user = await User.findById(req.user._id).populate(
     "friends",
     "_id firstName lastName"
   ); // populate the friends field with their _id firstName and lastName, the field originally contain only the reference to the friends via their object id. nice abstraction of join
 
   res.status(200).json({
     status: "success",
-    data: friends,
+    data: curr_user.friends,
     message: "All friends fetched successfully",
   });
 };
@@ -59,7 +59,7 @@ export const getFriendRequests = async (req, res, next) => {
   // find all objects in which the user is the reciepient and populate the sender field to find out who sent these requests.
   const requests = await FriendRequest.find({
     recipient: req.user._id,
-  }).populate("sender", "_id firstName lastName");
+  }).populate("sender").select("_id firstName lastName");
 
   res.status(200).json({
     status: "success",

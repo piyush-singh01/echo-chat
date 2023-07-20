@@ -1,15 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "../../utils/axios";
 
 const initialState = {
-    sidebar: {
-        open: false,
-        type: "CONTACT", //The sidebar will open contact info by default, so setting it as initial state
-    },
-    snackbar: {
-      open: false,
-      message: null,
-      severity: null,
-    },
+  sidebar: {
+    open: false,
+    type: "CONTACT", //The sidebar will open contact info by default, so setting it as initial state
+  },
+  snackbar: {
+    open: false,
+    message: null,
+    severity: null,
+  },
+  users: [],
+  friends: [],
+  friendRequests: [],
 };
 
 const slice = createSlice({
@@ -33,6 +37,15 @@ const slice = createSlice({
       state.snackbar.open = false;
       state.snackbar.message = null;
       state.snackbar.severity = null;
+    },
+    updateUsers(state, action) {
+      state.users = action.payload.users;
+    },
+    updateFriends(state, action) {
+      state.friends = action.payload.friends;
+    },
+    updateFriendRequests(state, action) {
+      state.friendRequests = action.payload.friendRequests;
     },
   },
 });
@@ -65,5 +78,65 @@ export function showSnackBar({ severity, message }) {
 export function collapseSnackBar() {
   return async (dispatch, getState) => {
     dispatch(slice.actions.closeSnackBar());
+  };
+}
+
+// ? storing all user data in redux store. If we have a large number of friends, it is not feasable to store all of then in redux store. need to employ a combination of server-side filtering, pagination, and client side caching. filter and render only a subset of all friends.
+export function FetchUsers() {
+  return async (dispatch, getState) => {
+    await axios
+      .get("/user/get-users", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        dispatch(slice.actions.updateUsers({ users: res.data.data }));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+}
+
+export function FetchFriends() {
+  return async (dispatch, getState) => {
+    await axios
+      .get("/user/get-friends", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        dispatch(slice.actions.updateFriends({ friends: res.data.data }));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+}
+
+export function FetchFriendRequests() {
+  return async (dispatch, getState) => {
+    await axios
+      .get("/user/get-friend-requests", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getState().auth.token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        dispatch(
+          slice.actions.updateFriendRequests({ friendRequests: res.data.data })
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 }

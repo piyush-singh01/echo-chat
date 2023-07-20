@@ -48,7 +48,6 @@ const VerifyForm = ({ email }) => {
   const onSubmit = async (data) => {
     try {
       // make an api call to server
-      console.log("dispatching email");
       dispatch(
         VerifyEmail({
           // TODO: encapsulate this otp soup with some higher order logic

@@ -59,6 +59,7 @@ export function LoginUser(formInputs) {
             token: res.data.token,
           })
         );
+        window.localStorage.setItem("user_id", res.data.user_id); // TODO: should we not do the same with reset password, since it also sends back the token
         dispatch(
           showSnackBar({ severity: "success", message: res.data.message })
         );
@@ -75,6 +76,7 @@ export function LoginUser(formInputs) {
 export function LogoutUser(formInputs) {
   return async (dispatch, getState) => {
     dispatch(slice.actions.logoutUser());
+    window.localStorage.removeItem("user_id");
   };
 }
 
@@ -181,7 +183,6 @@ export function VerifyEmail(formInputs) {
         }
       )
       .then((res) => {
-        console.log("here");
         console.log(res);
         dispatch(
           slice.actions.loginUser({
@@ -189,6 +190,7 @@ export function VerifyEmail(formInputs) {
             token: res.data.token,
           })
         );
+        window.localStorage.setItem("user_id", res.data.user_id);
       })
       .catch((err) => {
         console.log(err);

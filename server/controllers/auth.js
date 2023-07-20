@@ -136,6 +136,7 @@ export const verifyOTP = async (req, res, next) => {
       status: "OK",
       message: "OTP Verification Succesful",
       token, //token is sent along
+      user_id: user._id,
     });
   } catch (ex) {
     next(ex);
@@ -182,6 +183,7 @@ export const login = async (req, res, next) => {
       status: "OK",
       message: "Succesfully logged in",
       token, //token is sent along
+      user_id: user._id,
     });
   } catch (ex) {
     console.log(ex);
@@ -282,7 +284,7 @@ export const forgotPassword = async (req, res, next) => {
     user.passwordResetToken = undefined;
     user.passwordResetExpire = undefined;
     await user.save({ new: true, validateModifiedOnly: true });
-    
+
     res.status(500).json({
       status: "Error",
       message: "There was an error sending the email, please try again later.",

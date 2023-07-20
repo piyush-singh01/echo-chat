@@ -82,6 +82,10 @@ const userSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+  status: {
+    type: String,
+    enum: ["online", "offline"],
+  },
 });
 
 // ! see this

@@ -1,11 +1,11 @@
 import app from "./app.js";
 import mongoose from "mongoose";
+import path from "path";
 import http from "http";
 import { Server } from "socket.io";
 import "dotenv/config";
 import User from "./models/Users.js";
 import FriendRequest from "./models/friendRequest.js";
-
 // graceful termination in case on any error
 process.on("uncaughtException", (err) => {
   console.log(err);
@@ -52,7 +52,7 @@ io.on("connection", async (socket) => {
 
   console.log(`User ${user_id} connected to ${socket_id}`);
   if (Boolean(user_id)) {
-    await User.findByIdAndUpdate(user_id, { socket_id });
+    await User.findByIdAndUpdate(user_id, { socket_id, status: "online" });
   }
 
   //* THE FRIEND REQUEST EVENT
@@ -105,11 +105,42 @@ io.on("connection", async (socket) => {
     });
   });
 
+  //* To handle text and link messages,
+  socket.on("text_message", async (data) => {
+    console.log("Recieved message", data);
+    // data: {to, from , text}; // send data in this way from the client side
+    // create a new conversation if it doesn't exists
+    // save to db
+    // emit 'incoming_message' -> to the sender of the text message
+    // emit 'outgoing_message' -> to the reciever of the text message
+  });
+
+  socket.on("file_message", async (data) => {
+    console.log("Recieved message", data);
+    // data: {to, from, text, file}
+    // get the file extension
+    const fileExtension = path.extname(data.file.name);
+    //generate an arbitrary file name
+    const fileName = `${Date.now()}_${Math.floor(
+      Math.random() * 10000
+    )}${fileExtension}`;
+    //upload this file to aws s3
+
+    // create a new conversation if it doesn't exists
+    // save to db
+    // emit 'incoming_message' -> to the sender of the text message
+    // emit 'outgoing_message' -> to the reciever of the text message
+  });
   // initiate from the client side to end the connection. //? 'disconnect' won't work?
-  socket.on('end', function() {
-    console.log("Closing connection")
+  socket.on("end", async (data) => {
+    if (data.user_id) {
+      await User.findByIdAndUpdate(data.user_id, { status: "offline" });
+    }
+
+    // TODO: braodcast to all that this user has disconnected
+    console.log("Closing connection");
     socket.disconnect(0);
-  })
+  });
 });
 
 process.on("unhandledRejection", (err) => {

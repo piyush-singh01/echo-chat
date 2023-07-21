@@ -16,13 +16,15 @@ import {
   MagnifyingGlass,
   Users,
 } from "phosphor-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChatList } from "../../data";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import StyledBadge from "../../components/StyledBadge";
 import Friends from "../../sections/main/Friends";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { SelectConversation } from "../../redux/slices/app";
+import { socket } from "../../socket";
+import conversation from "../../redux/slices/conversation";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -118,6 +120,18 @@ const ChatElement = (props) => {
 
 const Chats = () => {
   const theme = useTheme();
+  const user_id = window.localStorage.getItem("user_id");
+
+  useEffect(() => {
+    socket.emit(
+      "get_direct_conversations",
+      ({ user_id },
+      (data) => {
+        // data is the exisiting conversation, this call back is passed to the socket event listerner in the server.
+      })
+    );
+  }, []);
+
   const [isOpenDialogueBox, setIsOpenDialogueBox] = useState(false);
   const handleCloseDialogueBox = () => {
     setIsOpenDialogueBox(false);
@@ -125,6 +139,10 @@ const Chats = () => {
   const handleOpenDialogueBox = () => {
     setIsOpenDialogueBox(true);
   };
+
+  const { conversations } = useSelector(
+    (state) => state.conversation.direct_chat
+  );
 
   return (
     <>
@@ -187,7 +205,7 @@ const Chats = () => {
               direction={"column"}
               sx={{ flexGrow: 1, height: "100%" }}
             >
-              <Stack spacing={2.4}>
+              {/* <Stack spacing={2.4}>
                 <Typography
                   variant="subtitle2"
                   sx={{ color: theme.palette.text.default }}
@@ -197,7 +215,7 @@ const Chats = () => {
                 {ChatList.filter((ele) => ele.pinned).map((ele) => {
                   return <ChatElement {...ele} />;
                 })}
-              </Stack>
+              </Stack> */}
               {/**/}
               <Stack spacing={2.4}>
                 <Typography
@@ -206,7 +224,7 @@ const Chats = () => {
                 >
                   All Chats
                 </Typography>
-                {ChatList.filter((ele) => !ele.pinned).map((ele) => {
+                {conversations.filter((ele) => !ele.pinned).map((ele) => {
                   return <ChatElement {...ele} />;
                 })}
               </Stack>

@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 import "dotenv/config";
 import User from "./models/Users.js";
 import FriendRequest from "./models/friendRequest.js";
+import DirectMessage from "./models/DirectMessage.js";
 // graceful termination in case on any error
 process.on("uncaughtException", (err) => {
   console.log(err);
@@ -105,6 +106,16 @@ io.on("connection", async (socket) => {
     });
   });
 
+  // ? do we really need a socket event to send the dm chats?, can we not fetch them with a get method? which is better?
+  socket.on("get_direct_conversation", async ({ user_ud }, callback) => {
+    const exisiting_conversation = await DirectMessage.find({
+      participants: { $all: [user_id] }, // all doc objects in which i am a participant
+    }).populate("participants", "_id firstName lastName email status");
+
+    console.log(exisiting_conversation);
+    callback(exisiting_conversation);
+  });
+
   //* To handle text and link messages,
   socket.on("text_message", async (data) => {
     console.log("Recieved message", data);
@@ -131,6 +142,7 @@ io.on("connection", async (socket) => {
     // emit 'incoming_message' -> to the sender of the text message
     // emit 'outgoing_message' -> to the reciever of the text message
   });
+
   // initiate from the client side to end the connection. //? 'disconnect' won't work?
   socket.on("end", async (data) => {
     if (data.user_id) {

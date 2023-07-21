@@ -75,6 +75,7 @@ export const FriendRequestComponent = ({
   request_id,
 }) => {
   const theme = useTheme();
+  const user_id = window.localStorage.getItem("user_id");
   const name = `${firstName} ${lastName}`;
   return (
     <Box
@@ -128,6 +129,7 @@ export const FriendRequestComponent = ({
 
 export const FriendComponent = ({ firstName, lastName, _id, online, img }) => {
   const theme = useTheme();
+  const user_id = window.localStorage.getItem("user_id");
   const name = `${firstName} ${lastName}`;
   return (
     <Box
@@ -165,7 +167,7 @@ export const FriendComponent = ({ firstName, lastName, _id, online, img }) => {
         <Stack direction={"row"} spacing={2} alignItems={"center"}>
           <IconButton
             onClick={() => {
-              // Start/open conversation
+              socket.emit("start_conversation", { to: _id, from: user_id });
             }}
           >
             <Chat />

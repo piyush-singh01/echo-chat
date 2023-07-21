@@ -116,6 +116,30 @@ io.on("connection", async (socket) => {
     callback(exisiting_conversation);
   });
 
+  socket.on("start_conversation", async (data) => {
+    // get to and from, from the data
+    const { to, from } = data;
+    //check if a convo exists already
+    const exisiting_conversation = await DirectMessage.find({
+      participants: { $size: 2, $all: [to, from] }, // only 2 participants and all those should have these to and from field.
+    }).populate("participants", "firstName lastName _id email status");
+    console.log(exisiting_conversation[0], "Exisiting conversation"); // the find query returns a list.
+
+    if (exisiting_conversation.length === 0) {
+      let new_chat = await DirectMessage.create({
+        participants: [to, from],
+      });
+      new_chat = await DirectMessage.findById(new_chat._id).populate(
+        "participants",
+        "firstName lastName _id email status"
+      );
+      console.log(new_chat);
+      socket.emit('start_conversation', new_chat)
+    } else {
+      socket.emit('start_conversation', exisiting_conversation[0]);
+    }
+  });
+
   //* To handle text and link messages,
   socket.on("text_message", async (data) => {
     console.log("Recieved message", data);

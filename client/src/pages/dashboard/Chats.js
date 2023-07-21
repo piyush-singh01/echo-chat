@@ -21,6 +21,8 @@ import { ChatList } from "../../data";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import StyledBadge from "../../components/StyledBadge";
 import Friends from "../../sections/main/Friends";
+import { useDispatch } from "react-redux";
+import { SelectConversation } from "../../redux/slices/app";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -53,6 +55,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const ChatElement = (props) => {
   const theme = useTheme();
+  const dispatch = useDispatch();
 
   return (
     <Box
@@ -65,6 +68,9 @@ const ChatElement = (props) => {
             : "#FFF",
       }}
       p={2}
+      onClick={() => {
+        dispatch(SelectConversation({ room_id: props._id })); // write now this id comes from fake data in ChatList
+      }}
     >
       <Stack
         direction={"row"}

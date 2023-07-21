@@ -15,6 +15,11 @@ import {
   FetchFriends,
   FetchUsers,
 } from "../../redux/slices/app";
+import {
+  FriendComponent,
+  FriendRequestComponent,
+  UserComponent,
+} from "../../components/Friends";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -28,9 +33,9 @@ const UserList = () => {
   const { users } = useSelector((state) => state.app);
   return (
     <>
-      <h1>Hello</h1>
-      {users.map((user, idx) => {
-        return <>{user}</>; // TODO: Render User Component here
+      {users?.map((user, idx) => {
+        // user contains _id firstName, lastName, email, password?  // ? no need to send all right? TODO: send only required data
+        return <UserComponent key={user._id} {...user} />;
       })}
     </>
   );
@@ -44,9 +49,9 @@ const FriendList = () => {
   const { friends } = useSelector((state) => state.app);
   return (
     <>
-      <h1>Hello</h1>
-      {friends.map((friend, idx) => {
-        return <>{friend}</>; // TODO: Render User Component here
+      {friends?.map((friend, idx) => {
+        // {friend: {_id, firstName, lastName...}}
+        return <FriendComponent key={friend._id} {...friend} />; // TODO: Render User Component here
       })}
     </>
   );
@@ -60,9 +65,13 @@ const FriendRequestList = () => {
   const { friendRequests } = useSelector((state) => state.app);
   return (
     <>
-      <h1>Hello</h1>
-      {friendRequests.map((friendRequest, idx) => {
-        return <>{friendRequest}</>; // TODO: Render User Component here
+      {friendRequests?.map((friendRequest, idx) => {
+        return (
+          <FriendRequestComponent
+            key={friendRequest._id}
+            {...friendRequest.sender}
+          />
+        ); // TODO: Render User Component here
       })}
     </>
   );

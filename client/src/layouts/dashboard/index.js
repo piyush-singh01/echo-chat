@@ -11,6 +11,7 @@ import { showSnackBar } from "../../redux/slices/app";
 const DashboardLayout = () => {
   const dispatch = useDispatch();
   const { isLoggedIn } = useSelector((state) => state.auth);
+  const {conversations} = useSelector((state) => state.conversation.direct_chat);
 
   // ? Sure, get it from local storage?
   const user_id = window.localStorage.getItem("user_id");
@@ -42,11 +43,20 @@ const DashboardLayout = () => {
       dispatch(showSnackBar({ severity: "success", message: data.message }));
     });
 
+    // socket.on('start_chat', (data) => {
+    //   console.log(data);
+    //   const exisiting_conversation = conversations.find((el) => el.id === data._id)
+    //   if(exisiting_conversation) {
+    //     dispatch(UpdateDirectConversation({conversation:data}));
+    //   }
+    // })
+
     // a clean up function, returned by useEffect hook, runs when any value in dependency array changes or when a component, mounted to the useEffect, unmounts.
     return () => {
-      socket.off('new_friend_request');
-      socket.off('request_accepted');
-      socket.off('request_sent');
+      socket?.off('new_friend_request');
+      socket?.off('request_accepted');
+      socket?.off('request_sent');
+      socket?.off('start_chat');
     }
   }, [isLoggedIn, socket]); // call when login state changes or socket changes
 

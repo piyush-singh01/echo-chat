@@ -1,9 +1,5 @@
 import {
-  Avatar,
-  Box,
   Button,
-  Divider,
-  IconButton,
   Stack,
   Typography,
   Dialog,
@@ -14,26 +10,9 @@ import {
   Slide,
   Grid,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import {
-  Bell,
-  CaretRight,
-  Phone,
-  Prohibit,
-  Star,
-  Trash,
-  VideoCamera,
-  X,
-} from "phosphor-react";
-import React, { useState } from "react";
-import Scrollbars from "react-custom-scrollbars-2";
+import React from "react";
 
 const list = [
-  // {
-  //   key: 0,
-  //   title: "Mark as unread",
-  //   combination: ["CTRL", "SHIFT", "U"],
-  // },
   {
     key: 1,
     title: "Mute",

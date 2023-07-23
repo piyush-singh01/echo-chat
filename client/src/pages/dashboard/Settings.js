@@ -1,4 +1,12 @@
 import React, { useState } from "react";
+import Scrollbars from "react-custom-scrollbars-2";
+import Shortcuts from "../../sections/settings/Shortcuts";
+import { useNavigate } from "react-router-dom";
+
+// Assets Import
+import Setting from "../../assets/Illustration/Setting.svg";
+
+// MUI and Phosphor imports
 import {
   Avatar,
   Box,
@@ -7,7 +15,6 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-
 import {
   CaretLeft,
   Bell,
@@ -19,26 +26,29 @@ import {
   Keyboard,
   Info,
 } from "phosphor-react";
-
 import { useTheme } from "@mui/material/styles";
 import { faker } from "@faker-js/faker";
-import Scrollbars from "react-custom-scrollbars-2";
-import Shortcuts from "../../sections/settings/Shortcuts";
-import { useNavigate } from "react-router-dom";
+import ThemeDialogue from "../../sections/settings/ThemeDialogue";
 
 const Settings = () => {
   const theme = useTheme();
   const navigate = useNavigate();
 
   const [isShortcutDialogOpen, setIsShortcutDialogOpen] = useState(false);
-
   const handleOpenShortcut = () => {
     setIsShortcutDialogOpen(true);
   };
-
   const handleCloseShortcut = () => {
     setIsShortcutDialogOpen(false);
   };
+
+  const [isThemeDialogueOpen, setIsThemeDialogueOpen] = useState(false);
+  const handleOpenTheme = () => {
+    setIsThemeDialogueOpen(true);
+  }
+  const handleCloseTheme = () => {
+    setIsThemeDialogueOpen(false);
+  }
 
   const list = [
     {
@@ -63,7 +73,7 @@ const Settings = () => {
       key: 3,
       icon: <PencilCircle size={20} />,
       title: "Theme",
-      // onclick: handleOpenTheme,
+      onclick: handleOpenTheme,
     },
     {
       key: 4,
@@ -96,7 +106,6 @@ const Settings = () => {
       <Stack direction={"row"} sx={{ width: "100%" }}>
         <Box
           sx={{
-            // overflowY: "scroll",
             height: "100vh",
             width: "320px",
             backgroundColor:
@@ -111,7 +120,7 @@ const Settings = () => {
             <Stack p={4} spacing={3}>
               {/* Header */}
               <Stack direction="row" alignItems={"center"} spacing={3}>
-                <IconButton onClick={() => navigate('/app')} >
+                <IconButton onClick={() => navigate("/app")}>
                   <CaretLeft size={24} color={"#4B4B4B"} />
                 </IconButton>
 
@@ -169,7 +178,19 @@ const Settings = () => {
                 : theme.palette.background.paper,
             borderBottom: "6px solid #0162C4",
           }}
-        ></Box>
+        >
+          <Stack
+            alignItems={"center"}
+            justifyContent={"center"}
+            sx={{ height: "100%", width: "100%" }}
+          >
+            <img
+              src={Setting}
+              alt={"settings logo"}
+              style={{ height: "400px", width: "400px" }}
+            />
+          </Stack>
+        </Box>
       </Stack>
       <Shortcuts
         open={isShortcutDialogOpen}
@@ -177,6 +198,7 @@ const Settings = () => {
           handleCloseShortcut();
         }}
       />
+      <ThemeDialogue open={isThemeDialogueOpen} handleClose={handleCloseTheme} />
     </>
   );
 };

@@ -5,8 +5,6 @@ import { CaretLeft } from "phosphor-react";
 import ProfileForm from "../../sections/main/ProfileForm";
 import { useNavigate } from "react-router-dom";
 
-
-// TODO: Upon navigate (back to app), the box selected should change to app.
 const Profile = () => {
   const navigate = useNavigate();
   const theme = useTheme();
@@ -31,7 +29,7 @@ const Profile = () => {
             <Stack direction="row" alignItems={"center"} spacing={3}>
               <IconButton
                 onClick={() => {
-                  navigate('/app');
+                  navigate("/app");
                 }}
               >
                 <CaretLeft size={24} color={"#4B4B4B"} />
@@ -54,7 +52,7 @@ const Profile = () => {
                 : theme.palette.background.paper,
             borderBottom: "6px solid #0162C4",
           }}
-        ></Box>
+        />
       </Stack>
     </>
   );

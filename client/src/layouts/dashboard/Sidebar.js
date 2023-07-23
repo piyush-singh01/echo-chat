@@ -161,7 +161,6 @@ const Sidebar = () => {
               )}
               <Divider sx={{ width: "48px" }} />
 
-              {/*From Phosphor react library*/}
               {selected === 3 ? (
                 <Box
                   p={1}
@@ -195,7 +194,6 @@ const Sidebar = () => {
           </Stack>
 
           <Stack spacing={4} alignItems={"center"}>
-            {/* <AntSwitch onChange={() => onToggleMode()} defaultChecked /> */}
             <Box
               sx={{
                 display: "flex",

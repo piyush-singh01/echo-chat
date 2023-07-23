@@ -18,14 +18,14 @@ const DashboardLayout = () => {
 
   useEffect(() => {
     // ! Why are we even doing this? why reload 
-    window.onload = function () {
+    // window.onload = function () {
       // this logic here ensures that page is reloaded only once
-      if (!window.location.hash) {
-        window.location = window.location + "#loaded";
-        window.location.reload();
-      }
-    };
-    window.onload(); // ? why tf are we calling an event listener
+    //   if (!window.location.hash) {
+    //     window.location = window.location + "#loaded";
+    //     window.location.reload();
+    //   }
+    // };
+    // window.onload(); // ? why tf are we calling an event listener
 
     if (!socket) {
       connectSocket(user_id);

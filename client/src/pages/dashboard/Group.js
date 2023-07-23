@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import { Scrollbars } from "react-custom-scrollbars-2";
+
+// MUI and Phosphor Imports
 import {
   Box,
   Stack,
@@ -12,41 +15,17 @@ import {
 } from "@mui/material";
 import { useTheme, styled, alpha } from "@mui/material/styles";
 import { CircleDashed, MagnifyingGlass, Plus } from "phosphor-react";
-import { Scrollbars } from "react-custom-scrollbars-2";
+
+// Component Imports
 import StyledBadge from "../../components/StyledBadge";
 import { ChatList } from "../../data";
 import CreateGroup from "../../sections/main/CreateGroup";
+import SearchBar from "../../components/SearchBar";
+import Conversation from "../../components/Conversation";
+import EmptyRightPane from "../../components/EmptyRightPane";
+import { useSelector } from "react-redux";
 
-// TODO: make it in a common file, in a new folder called Search in components and import
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: 20,
-  border: "thin solid", // TODO: Need to add this here while refactoring
-  backgroundColor: alpha(theme.palette.background.paper, 1),
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  position: "absolute",
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  pointerEvent: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(${theme.spacing(4)} + 1em)`,
-    width: "100%",
-  },
-}));
-
+// TODO: Send this chat element to components
 const ChatElement = (props) => {
   const theme = useTheme();
   return (
@@ -115,6 +94,9 @@ const Group = () => {
   const handleCloseGroupDialogue = () => {
     setIsOpenNewGroupDialogue(false);
   };
+
+  const { room_id, chat_type } = useSelector((state) => state.app);
+
   return (
     <>
       <Stack direction="row" sx={{ width: "100%" }}>
@@ -144,14 +126,7 @@ const Group = () => {
             </Stack>
 
             {/* *********** */}
-            <Stack sx={{ width: "100%" }}>
-              <Search>
-                <SearchIconWrapper>
-                  <MagnifyingGlass color="#709CE6" />
-                </SearchIconWrapper>
-                <StyledInputBase placeholder="Search..." />
-              </Search>
-            </Stack>
+            <SearchBar />
             {/* *********** */}
             <Stack spacing={1}>
               <Stack
@@ -220,7 +195,14 @@ const Group = () => {
                 : theme.palette.background.paper,
             borderBottom: "6px solid #0162C4",
           }}
-        ></Box>
+        >
+          {room_id !== null && chat_type === "indivisual" ? (
+            // TODO: what else can be rendered here?
+            <Conversation />
+          ) : (
+            <EmptyRightPane />
+          )}
+        </Box>
       </Stack>
       {isOpenNewGroupDialogue && (
         <CreateGroup

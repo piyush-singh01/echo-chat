@@ -1,17 +1,21 @@
 import React from "react";
-import Chats from "./Chats";
+import { useSelector } from "react-redux";
+
+// MUI Imports
 import { Box, Stack, Typography } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+
+// Component Imports
+import Chats from "./Chats";
 import Conversation from "../../components/Conversation";
 import Contact from "../../components/Contact";
-import { useSelector } from "react-redux";
 import SharedMessages from "../../components/SharedMessages";
 import StarredMessage from "../../components/StarredMessages";
-import NoChatSVG from "../../assets/Illustration/NoChat";
+import EmptyRightPane from "../../components/EmptyRightPane";
 
 const GeneralApp = () => {
   const theme = useTheme();
-  const { sidebar, room_id, chat_type } = useSelector((store) => store.app); //Just using the sidebar from app. Get the 'app' slice from store from useSelector hook. Can access a specific slice from the store this way
+  const { sidebar, room_id, chat_type } = useSelector((store) => store.app);
 
   return (
     <Stack direction={"row"} sx={{ width: "100%" }}>
@@ -24,24 +28,15 @@ const GeneralApp = () => {
             theme.palette.mode === "dark"
               ? theme.palette.background.paper
               : "#F0F4FA",
+          borderBottom: "6px solid #0162C4",
         }}
       >
         {/* Render conversation here, or something else depending on the page */}
         {room_id !== null && chat_type === "indivisual" ? (
+          // TODO: what else can be rendered here?
           <Conversation />
         ) : (
-          <Stack
-            spacing={2}
-            direction={"column"}
-            sx={{ height: "100%", width: "100%" }}
-            alignItems={"center"}
-            justifyContent={"center"}
-          >
-            <NoChatSVG />
-            <Typography variant="subtitle2">
-              Select a conversation or start a new one.
-            </Typography>
-          </Stack>
+          <EmptyRightPane />
         )}
       </Box>
 

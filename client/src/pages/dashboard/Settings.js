@@ -24,9 +24,11 @@ import { useTheme } from "@mui/material/styles";
 import { faker } from "@faker-js/faker";
 import Scrollbars from "react-custom-scrollbars-2";
 import Shortcuts from "../../sections/settings/Shortcuts";
+import { useNavigate } from "react-router-dom";
 
 const Settings = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const [isShortcutDialogOpen, setIsShortcutDialogOpen] = useState(false);
 
@@ -109,7 +111,7 @@ const Settings = () => {
             <Stack p={4} spacing={3}>
               {/* Header */}
               <Stack direction="row" alignItems={"center"} spacing={3}>
-                <IconButton>
+                <IconButton onClick={() => navigate('/app')} >
                   <CaretLeft size={24} color={"#4B4B4B"} />
                 </IconButton>
 

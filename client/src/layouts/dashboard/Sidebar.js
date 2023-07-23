@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
@@ -16,18 +16,16 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { LogoutUser } from "../../redux/slices/auth.js";
 
-// TODO: if someone manually enters a url, then the button is not updated as such.
-
 const Sidebar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // console.log(theme);   // is an object
 
-  const [selected, setSelected] = useState(0); // The idx 0 is the default selected.
+  const [selected, setSelected] = useState(0); 
 
-  const { onToggleMode } = useSettings(); // get onToggleMode from useSetting custom hook
-
+  // get onToggleMode from useSetting custom hook
+  const { onToggleMode } = useSettings(); 
+  
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -36,6 +34,22 @@ const Sidebar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+
+  useEffect(() => {
+    const currLocation = window.location.pathname;
+    if(currLocation === '/app') {
+      setSelected(0);
+    } else if(currLocation === '/group') {
+      setSelected(1);
+    } else if(currLocation === '/call') {
+      setSelected(2);
+    } else if(currLocation === '/settings' || currLocation === '/profile') {
+      setSelected(3);
+    } else {
+      setSelected(0);
+    }
+  }, [])
 
   const getPath = (index) => {
     switch (index) {
@@ -77,7 +91,6 @@ const Sidebar = () => {
           width: 100,
         }}
       >
-        {/* Stack is a container having flex properties */}
         <Stack
           direction="column"
           alignItems={"center"}
@@ -85,8 +98,6 @@ const Sidebar = () => {
           justifyContent={"space-between"}
           spacing={3}
         >
-          {/*Take 100% of the width available to it. */}
-
           <Stack
             alignItems={"center"}
             spacing={4}
@@ -97,7 +108,7 @@ const Sidebar = () => {
                 backgroundColor: theme.palette.primary.main,
                 width: 64,
                 height: 64,
-                borderRadius: 1.5, //any numerical value borderradius will be multiplied by 8, as 8 is the default spacing in material ui. so 12/8=1.5
+                borderRadius: 1.5,
               }}
             >
               <img src={Logo} alt="Logo" />
@@ -235,7 +246,8 @@ const Sidebar = () => {
                     key={i}
                     onClick={() => {
                       handleClick(i);
-                      if(i === 2) { // TODO: Replace this 2 with a constant.
+                      if (i === 2) {
+                        // TODO: Replace this 2 with a constant.
                         dispatch(LogoutUser());
                       } else {
                         navigate(getMenuPath(i));

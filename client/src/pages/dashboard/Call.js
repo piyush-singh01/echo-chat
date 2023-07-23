@@ -17,37 +17,12 @@ import StyledBadge from "../../components/StyledBadge";
 import { CallList } from "../../data";
 import CallLogElement from "../../components/CallLogElement";
 import StartCall from "../../sections/main/StartCall";
+import SearchBar from "../../components/SearchBar";
+import { useSelector } from "react-redux";
+import EmptyRightPane from "../../components/EmptyRightPane";
+import Conversation from "../../components/Conversation";
 
-// TODO: make it in a common file, in a new folder called Search in components and import
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: 20,
-  backgroundColor: alpha(theme.palette.background.paper, 1),
-  border: "thin solid", // TODO: Need to add this here while refactoring
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  position: "absolute",
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  pointerEvent: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(${theme.spacing(4)} + 1em)`,
-    width: "100%",
-  },
-}));
-
+// TODO: Create a seperate component for this chat element
 const ChatElement = (props) => {
   const theme = useTheme();
   return (
@@ -107,6 +82,8 @@ const Call = () => {
     setIsStartCallDialogueOpen(false);
   };
 
+  const { room_id, chat_type } = useSelector((state) => state.app);
+
   return (
     <>
       <Stack direction="row" sx={{ width: "100%" }}>
@@ -136,14 +113,7 @@ const Call = () => {
             </Stack>
 
             {/* *********** */}
-            <Stack sx={{ width: "100%" }}>
-              <Search>
-                <SearchIconWrapper>
-                  <MagnifyingGlass color="#709CE6" />
-                </SearchIconWrapper>
-                <StyledInputBase placeholder="Search..." />
-              </Search>
-            </Stack>
+            <SearchBar />
             {/* *********** */}
             <Stack spacing={1}>
               <Stack
@@ -194,7 +164,10 @@ const Call = () => {
                 : theme.palette.background.paper,
             borderBottom: "6px solid #0162C4",
           }}
-        ></Box>
+        >
+          {/* We don't need to render a new conversation here. */}
+          <EmptyRightPane />
+        </Box>
       </Stack>
       {isStartCallDialogueOpen && (
         <StartCall

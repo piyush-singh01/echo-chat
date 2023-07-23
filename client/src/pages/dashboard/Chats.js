@@ -25,36 +25,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { SelectConversation } from "../../redux/slices/app";
 import { socket } from "../../socket";
 import conversation from "../../redux/slices/conversation";
+import SearchBar from "../../components/SearchBar";
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: 20,
-  border: "thin solid", // TODO: Need to add this here while refactoring
-  backgroundColor: alpha(theme.palette.background.paper, 1),
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-}));
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  position: "absolute",
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  pointerEvent: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(${theme.spacing(4)} + 1em)`,
-    width: "100%",
-  },
-}));
-
+// The same Chat Element as 
 const ChatElement = (props) => {
   const theme = useTheme();
   const dispatch = useDispatch();
@@ -176,14 +150,7 @@ const Chats = () => {
             </Stack>
           </Stack>
           {/* ***** */}
-          <Stack sx={{ width: "100%" }}>
-            <Search>
-              <SearchIconWrapper>
-                <MagnifyingGlass color="#709CE6" />
-              </SearchIconWrapper>
-              <StyledInputBase placeholder="Search..." />
-            </Search>
-          </Stack>
+          <SearchBar />
           {/* ***** */}
           <Stack spacing={1}>
             <Stack direction={"row"} alignItems={"center"} spacing={1.5}>
@@ -205,7 +172,7 @@ const Chats = () => {
               direction={"column"}
               sx={{ flexGrow: 1, height: "100%" }}
             >
-              {/* <Stack spacing={2.4}>
+              <Stack spacing={2.4}>
                 <Typography
                   variant="subtitle2"
                   sx={{ color: theme.palette.text.default }}
@@ -215,7 +182,7 @@ const Chats = () => {
                 {ChatList.filter((ele) => ele.pinned).map((ele) => {
                   return <ChatElement {...ele} />;
                 })}
-              </Stack> */}
+              </Stack>
               {/**/}
               <Stack spacing={2.4}>
                 <Typography

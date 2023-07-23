@@ -6,11 +6,7 @@ import {
   Stack,
   Typography,
   IconButton,
-  Link,
-  Divider,
-  InputBase,
   Avatar,
-  Badge,
 } from "@mui/material";
 import { useTheme, styled, alpha } from "@mui/material/styles";
 import { faker } from "@faker-js/faker";
@@ -81,17 +77,6 @@ const CallLogElement = (props) => {
                   Yesterday, 10:38
                 </Typography>
               </Stack>
-              {/* <Typography
-                variant="caption"
-                sx={{
-                  maxWidth: "150px",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                Random Message, and long to check for overdlow
-              </Typography> */}
             </Stack>
           </Stack>
           <IconButton size="small">

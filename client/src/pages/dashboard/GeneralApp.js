@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 // MUI Imports
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 
 // Component Imports
@@ -12,6 +12,7 @@ import Contact from "../../components/Contact";
 import SharedMessages from "../../components/SharedMessages";
 import StarredMessage from "../../components/StarredMessages";
 import EmptyRightPane from "../../components/EmptyRightPane";
+
 
 const GeneralApp = () => {
   const theme = useTheme();
@@ -28,12 +29,14 @@ const GeneralApp = () => {
             theme.palette.mode === "dark"
               ? theme.palette.background.paper
               : "#F0F4FA",
-          borderBottom: "6px solid #0162C4",
+              borderBottom:
+              room_id !== null && chat_type === "indivisual"
+                ? "none"
+                : "6px solid #0162C4",
         }}
       >
         {/* Render conversation here, or something else depending on the page */}
         {room_id !== null && chat_type === "indivisual" ? (
-          // TODO: what else can be rendered here?
           <Conversation />
         ) : (
           <EmptyRightPane />

@@ -7,7 +7,6 @@ import DashboardLayout from "../layouts/dashboard";
 // config
 import { DEFAULT_PATH } from "../config";
 import LoadingScreen from "../components/LoadingScreen";
-import { Outlet } from "react-router-dom";
 
 import MainLayout from "../layouts/main";
 
@@ -18,7 +17,6 @@ const Loadable = (Component) => (props) => {
   //Wrap it around Suspense, which excepts a fallback prop.
   return (
     <Suspense fallback={<LoadingScreen />}>
-      {" "}
       {/* fallback till the original component is loading */}
       <Component {...props} /> {/*The original Component (children)*/}
     </Suspense>
@@ -48,14 +46,16 @@ export default function Router() {
       //The rendered children will be wrapped inside the parent element, that is the dashboard layout here.
       children: [
         { element: <Navigate to={DEFAULT_PATH} replace />, index: true }, // refirects to /app. This is an indexed route, it doesn't have a path. Renders by default for '/' (in this case it redirects to '/app'). See index routes for more details. Since
-        { path: "app", element: <GeneralApp /> }, // '/app'
 
-        // Add path for settings
+        // Routes for conversations
+        { path: "app", element: <GeneralApp /> },
+        { path: "group", element: <GroupPage /> },
+        { path: "call", element: <CallPage /> },
+
+        // Routes for settings
         { path: "settings", element: <Settings /> },
         { path: "profile", element: <ProfilePage /> },
 
-        { path: "group", element: <GroupPage /> },
-        { path: "call", element: <CallPage /> },
 
         { path: "404", element: <Page404 /> }, // '/404'
         { path: "*", element: <Navigate to="/404" replace /> }, // go to 404 if any other

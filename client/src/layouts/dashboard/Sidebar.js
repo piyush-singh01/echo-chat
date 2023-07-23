@@ -47,7 +47,7 @@ const Sidebar = () => {
     } else if(currLocation === '/settings' || currLocation === '/profile') {
       setSelected(3);
     } else {
-      setSelected(0);
+      setSelected(-1);
     }
   }, [])
 
@@ -62,7 +62,7 @@ const Sidebar = () => {
       case 3:
         return "/settings";
       default:
-        return "/app";
+        return "/404";
     }
   };
 

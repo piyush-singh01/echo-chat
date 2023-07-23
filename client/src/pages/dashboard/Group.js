@@ -193,11 +193,13 @@ const Group = () => {
               theme.palette.mode === "light"
                 ? "#FFF"
                 : theme.palette.background.paper,
-            borderBottom: "6px solid #0162C4",
+            borderBottom:
+              room_id !== null && chat_type === "group"
+                ? "none"
+                : "6px solid #0162C4",
           }}
         >
-          {room_id !== null && chat_type === "indivisual" ? (
-            // TODO: what else can be rendered here?
+          {room_id !== null && chat_type === "group" ? (
             <Conversation />
           ) : (
             <EmptyRightPane />

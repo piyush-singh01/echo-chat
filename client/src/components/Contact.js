@@ -270,7 +270,6 @@ const Contact = () => {
                 fullWidth
                 startIcon={<Trash />}
                 variant="outlined"
-                // sx={{color:'red', borderColor:'red'}}
                 color="error" // TODO: see the palette, error doesn't sound right.
               >
                 Delete

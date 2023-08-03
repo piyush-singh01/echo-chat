@@ -116,7 +116,7 @@ const RegisterForm = () => {
           },
         }}
       >
-        Login
+        Create Account
       </Button>
     </FormProvider>
   );

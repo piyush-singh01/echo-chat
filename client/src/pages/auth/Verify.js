@@ -3,9 +3,11 @@ import { Stack, Typography, Box, Link } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { CaretLeft, User } from "phosphor-react";
 import VerifyForm from "../../sections/auth/VerifyForm";
+import { useDispatch, useSelector } from "react-redux";
 
 const Verify = () => {
-  const email = "xatine4392@sparkroi.com"; // get it from the store
+  const dispatch = useDispatch();
+  const { email } = useSelector((state) => state.auth); // get it from the store
   return (
     <>
       <Stack spacing={2} sx={{ mb: 4, position: "relative" }}>

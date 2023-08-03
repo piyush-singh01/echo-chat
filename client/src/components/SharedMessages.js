@@ -24,14 +24,9 @@ import {
 } from "phosphor-react";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { ToggleSidebar, UpdateSidebar } from "../redux/slices/app";
+import { UpdateSidebar } from "../redux/slices/app";
 import { faker } from "@faker-js/faker";
-import AntSwitch from "./AntSwitch";
 import Scrollbars from "react-custom-scrollbars-2";
-import {
-  BreakfastDiningOutlined,
-  FormatAlignJustify,
-} from "@mui/icons-material";
 import { Shared_docs, Shared_links } from "../data";
 import { DocumentMessage, LinkMessage } from "./Conversation/MessageTypes";
 

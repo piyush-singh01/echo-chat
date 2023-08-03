@@ -18,7 +18,6 @@ import {
   Phone,
   VideoCamera,
 } from "phosphor-react";
-import { CallList } from "../data";
 
 const CallLogElement = (props) => {
   const theme = useTheme();

@@ -117,18 +117,16 @@ const SharedMessages = () => {
                     </Grid>
                   );
                   // Media
-                  break;
                 case 1:
                   return Shared_links.map((ele) => {
                     return <LinkMessage ele={ele} />;
                   });
-                  break;
+                  // Links
                 case 2:
                   return Shared_docs.map((ele) => {
                     return <DocumentMessage ele={ele} />;
                   });
                   //Docs
-                  break;
                 default:
                   //Media
                   break;

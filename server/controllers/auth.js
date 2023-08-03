@@ -213,14 +213,14 @@ export const forgotPassword = async (req, res) => {
   const resetUrl = `http://localhost:3000/auth/new-password?verify=${resetToken}`;
 
   try {
-    // TODO: send email with reset URL
+    console.log(user);
     mailService
       .sendEmail({
         from: "echochat.automail@gmail.com",
         recipient: user.email,
         subject: "Reset Password link for Echo Chat",
         text: `The reset password link is valid for 10 minutes.`,
-        html: resetPasswordMail(user.name, resetUrl),
+        html: resetPasswordMail(user.firstName + " " + user.lastName, resetUrl),
         attachments: [],
       })
       .then(() => {

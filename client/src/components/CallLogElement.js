@@ -8,7 +8,7 @@ import {
   IconButton,
   Avatar,
 } from "@mui/material";
-import { useTheme, styled, alpha } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import { faker } from "@faker-js/faker";
 
 import StyledBadge from "./StyledBadge";

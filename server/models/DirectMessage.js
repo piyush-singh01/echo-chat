@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 const directMessageSchema = new mongoose.Schema({
     // shouldn't be only sender and receiver for dm?

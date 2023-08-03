@@ -9,15 +9,14 @@ const userSchema = new mongoose.Schema({
     min: 2,
     max: 20,
   },
+
   lastName: {
     type: String,
     require: [true, "Last Name is Required"],
     min: 1,
     max: 20,
   },
-  avatar: {
-    type: String,
-  },
+
   email: {
     type: String,
     require: [true, "Email is Required"],
@@ -36,18 +35,26 @@ const userSchema = new mongoose.Schema({
 
   password: {
     type: String,
+    require: [true, "Password is required"],
   },
 
+  // TODO: should this logic not be implemented on client side?
   confirmPassword: {
+    type: String,
+  },
+
+  avatar: {
     type: String,
   },
 
   passwordChangedAt: {
     type: Date,
   },
+
   passwordResetToken: {
     type: String,
   },
+
   passwordResetExpire: {
     type: Date,
   },
@@ -76,57 +83,48 @@ const userSchema = new mongoose.Schema({
     type: String,
   },
 
+  /* Reference to all the friends of the users */
   friends: [
     {
       type: mongoose.Schema.ObjectId,
       ref: "User",
     },
   ],
+
   status: {
     type: String,
     enum: ["online", "offline"],
   },
 });
 
-// ! see this
-//* dont think need to do this
-/* 
-otp: {
-      type: Number,
-      set: (v) => {
-        const salt = bcrypt.genSaltSync();
-        const hashedOTP = bcrypt.hashSync(v, salt);
-        return hashedOTP;
-      },
-    },
-*/
+/* PRE HOOKS WITH 'SAVE' */
 
-// the pre hook with save.
+// OTP Hash
 userSchema.pre("save", async function (next) {
-  //! should we remove async from here, since we are not returning The await operator is used to wait for a Promise and get its fulfillment value. It can only be used inside an async function or at the top level of a module.2
-  // this will run on every save, so
-  // only run when the otp is modified
   if (this.otp && this.isModified("otp")) {
-    // hash the otp
     const salt = await bcrypt.genSalt(10);
-    this.otp = await bcrypt.hash(this.otp.toString(), salt); // this 12 is the salt(?)
+    this.otp = await bcrypt.hash(this.otp.toString(), salt);
   }
-
   next();
 });
 
+// Password Hash
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password.toString(), salt); //Hash the password every time password is updated or is created for the first time.
+    this.password = await bcrypt.hash(this.password.toString(), salt);
   }
   next();
 });
 
+/* METHODS */
+
+// Checks if password changed after the given timestamp
 userSchema.methods.changedPasswordAfter = function (timestamp) {
   return timestamp < this.passwordChangedAt;
 };
 
+// Checks if the provided password is correct
 userSchema.methods.correctPassword = async (
   candidatePassword,
   userPassword
@@ -134,10 +132,12 @@ userSchema.methods.correctPassword = async (
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
+// Checks if the provided OTP is correct
 userSchema.methods.correctOTP = async (candidateOTP, userOTP) => {
   return await bcrypt.compare(candidateOTP, userOTP);
 };
 
+// Creates a reset token for password change
 userSchema.methods.createPasswordResetToken = async function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
   this.passwordResetToken = crypto
@@ -150,5 +150,6 @@ userSchema.methods.createPasswordResetToken = async function () {
   return resetToken;
 };
 
+/* EXPORT */
 const User = new mongoose.model("User", userSchema);
 export default User;

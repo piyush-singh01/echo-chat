@@ -5,8 +5,9 @@ import http from "http";
 import { Server } from "socket.io";
 import "dotenv/config";
 import User from "./models/Users.js";
-import FriendRequest from "./models/friendRequest.js";
+import FriendRequest from "./models/FriendRequest.js";
 import DirectMessage from "./models/DirectMessage.js";
+
 // graceful termination in case on any error
 process.on("uncaughtException", (err) => {
   console.log(err);

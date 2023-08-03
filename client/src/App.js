@@ -42,7 +42,6 @@ function App() {
         >
           <Alert
             onClose={() => {
-              console.log("This is clicked");
               dispatch(collapseSnackBar());
             }}
             severity={severity}

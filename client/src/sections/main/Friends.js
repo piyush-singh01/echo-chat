@@ -28,9 +28,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const UserList = () => {
   const dispatch = useDispatch();
   useEffect(() => {
+    console.log("here");
     dispatch(FetchUsers());
   }, []);
   const { users } = useSelector((state) => state.app);
+  console.log("people", users);
   return (
     <>
       {users?.map((user, idx) => {
@@ -94,7 +96,6 @@ const Friends = ({ open, handleClose }) => {
         aria-describedby="alert-dialog-slide-description"
         sx={{ p: 4 }}
       >
-        {/* <DialogTitle>{"Friends"}</DialogTitle> */}
         <Stack p={2} sx={{ width: "100%" }}>
           <Tabs value={value} onChange={handleChange} centered>
             <Tab label="Explore" />

@@ -4,32 +4,36 @@ import axios from "../../utils/axios";
 const initialState = {
   sidebar: {
     open: false,
-    type: "CONTACT", //The sidebar will open contact info by default, so setting it as initial state
+    type: "CONTACT",    //The sidebar will open contact info by default, so setting it as initial state
   },
   snackbar: {
     open: false,
     message: null,
     severity: null,
   },
-  users: [],
-  friends: [],
-  friendRequests: [],
-  chat_type: null, // the chat type: group or dm
-  room_id: null, // each convo will have a room id
+  users: [],           // users who are not friends and are not requested
+  all_users: [],        // complete list of users
+  friends: [],          // friends
+  friendRequests: [],   // friend requests
+  chat_type: null,      // the chat type: group or dm
+  room_id: null,        // each convo will have a room id
 };
 
+
+// REDUX SLICE
 const slice = createSlice({
   name: "app",
   initialState,
   reducers: {
-    // Toggle Sidebar.
+    // Sidebar
     toggleSidebar(state, action) {
       state.sidebar.open = !state.sidebar.open;
     },
-
     updateSidebar(state, action) {
       state.sidebar.type = action.payload.type;
     },
+
+    // Snack Bar
     openSnackBar(state, action) {
       state.snackbar.open = true;
       state.snackbar.message = action.payload.message;
@@ -40,6 +44,11 @@ const slice = createSlice({
       state.snackbar.message = null;
       state.snackbar.severity = null;
     },
+
+    // Users and Friends
+    updateAllUsers(state, action) {
+      state.all_users = action.payload.all_users;
+    },
     updateUsers(state, action) {
       state.users = action.payload.users;
     },
@@ -49,6 +58,8 @@ const slice = createSlice({
     updateFriendRequests(state, action) {
       state.friendRequests = action.payload.friendRequests;
     },
+
+    // Conversations
     selectConversation(state, action) {
       state.chat_type = "indivisual";
       state.room_id = action.payload.room_id;
@@ -56,9 +67,12 @@ const slice = createSlice({
   },
 });
 
-export default slice.reducer; //Only export the reducer from slice.
+// Reducers
+export default slice.reducer;
 
-// THUNK FUNCTIONS
+
+// THUNK FUNCTIONS ------------------------------------
+// Sidebar
 export function ToggleSidebar() {
   return async (dispatch, getState) => {
     dispatch(slice.actions.toggleSidebar());
@@ -71,6 +85,7 @@ export function UpdateSidebar(type) {
   };
 }
 
+// Snackbar 
 export function showSnackBar({ severity, message }) {
   return async (dispatch, getState) => {
     dispatch(slice.actions.openSnackBar({ message, severity }));
@@ -87,7 +102,8 @@ export function collapseSnackBar() {
   };
 }
 
-// ? storing all user data in redux store. If we have a large number of friends, it is not feasable to store all of then in redux store. need to employ a combination of server-side filtering, pagination, and client side caching. filter and render only a subset of all friends.
+
+// Fetch Lists
 export function FetchUsers() {
   return async (dispatch, getState) => {
     await axios

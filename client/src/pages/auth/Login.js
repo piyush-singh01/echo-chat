@@ -8,7 +8,7 @@ const LoginPage = () => {
   return (
     <>
       <Stack spacing={1} sx={{ mb: 4, position: "relative" }}>
-        <Typography variant="h4">Login to Tawk</Typography>
+        <Typography variant="h4">Login to Echo Chat</Typography>
         <Stack direction="row" spacing={0.5}>
           <Typography variant="body2">New user?</Typography>
           <Link

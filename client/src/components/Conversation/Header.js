@@ -7,10 +7,10 @@ import {
   IconButton,
   Divider,
 } from "@mui/material";
-import { useTheme, styled } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import { faker } from "@faker-js/faker";
 import { CaretDown, MagnifyingGlass, Phone, VideoCamera } from "phosphor-react";
-import StyledBadge from "../StyledBadge";
+import StyledBadge from "../ui-components/StyledBadge";
 import { ToggleSidebar } from "../../redux/slices/app";
 import { useDispatch } from "react-redux";
 

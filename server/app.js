@@ -8,6 +8,7 @@ import xss from "xss";
 import cors from "cors";
 import "dotenv/config";
 import routes from "./routes/index.js";
+import errorHandler from "./utils/errorHandler.js";
 
 const app = express();
 
@@ -27,7 +28,7 @@ const limiter = rateLimit({
   message: "Too many requests. Please try again later",
 });
 
-app.use("/echo", limiter); // for any path starting with tawk, this middleware will be implemented.
+app.use("/echo", limiter); // for any path starting with '/echo', this middleware will be implemented.
 app.use(express.urlencoded({ extended: true }));
 
 app.use(
@@ -42,5 +43,6 @@ app.use(expressMongoSanitize());
 // app.use(xss);  //fix this
 
 app.use(routes);
+app.use(errorHandler);
 
 export default app;

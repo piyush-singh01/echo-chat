@@ -27,7 +27,7 @@ function App() {
   return (
     <>
       <ThemeProvider>
-        {/* <ThemeSettings> */} <Router /> {/* </ThemeSettings> */}
+        <Router />
       </ThemeProvider>
       {message && open ? (
         <Snackbar

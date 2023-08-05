@@ -11,7 +11,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { faker } from "@faker-js/faker";
 
-import StyledBadge from "./StyledBadge";
+import StyledBadge from "./ui-components/StyledBadge";
 import {
   ArrowDownLeft,
   ArrowUpRight,

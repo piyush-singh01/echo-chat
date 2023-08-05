@@ -1,6 +1,6 @@
 import React from "react";
 import { Stack, Typography } from "@mui/material";
-import EmptyChatBox2 from "../assets/EmptyChatBox2.svg";
+import EmptyChatBox2 from "../../assets/EmptyChatBox2.svg";
 
 const EmptyRightPane = () => {
   return (

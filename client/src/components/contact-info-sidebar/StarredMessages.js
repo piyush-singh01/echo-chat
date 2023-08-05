@@ -1,46 +1,24 @@
 import {
-  Avatar,
   Box,
-  Button,
-  Divider,
   IconButton,
   Stack,
   Typography,
-  Tabs,
-  Tab,
-  Grid,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import {
-  Bell,
   CaretLeft,
-  CaretRight,
-  Phone,
-  Prohibit,
-  Star,
-  Trash,
-  VideoCamera,
-  X,
 } from "phosphor-react";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { ToggleSidebar, UpdateSidebar } from "../redux/slices/app";
-import { faker } from "@faker-js/faker";
-import AntSwitch from "./AntSwitch";
+import { UpdateSidebar } from "../../redux/slices/app";
 import Scrollbars from "react-custom-scrollbars-2";
-import {
-  BreakfastDiningOutlined,
-  FormatAlignJustify,
-} from "@mui/icons-material";
-import { Shared_docs, Shared_links } from "../data";
-import { DocumentMessage, LinkMessage } from "./Conversation/MessageTypes";
-import Message from "./Conversation/Message";
+import Message from "../Conversation/Message";
 
 const StarredMessage = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

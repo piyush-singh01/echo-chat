@@ -26,9 +26,9 @@ import {
 } from "phosphor-react";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { ToggleSidebar, UpdateSidebar } from "../redux/slices/app";
+import { ToggleSidebar, UpdateSidebar } from "../../redux/slices/app";
 import { faker } from "@faker-js/faker";
-import AntSwitch from "./ui-components/AntSwitch";
+import AntSwitch from "../ui-components/AntSwitch";
 import Scrollbars from "react-custom-scrollbars-2";
 
 const BlockDialogue = ({ open, handleClose }) => {

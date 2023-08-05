@@ -1,8 +1,5 @@
 import {
-  Avatar,
   Box,
-  Button,
-  Divider,
   IconButton,
   Stack,
   Typography,
@@ -12,23 +9,15 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import {
-  Bell,
   CaretLeft,
-  CaretRight,
-  Phone,
-  Prohibit,
-  Star,
-  Trash,
-  VideoCamera,
-  X,
 } from "phosphor-react";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { UpdateSidebar } from "../redux/slices/app";
+import { UpdateSidebar } from "../../redux/slices/app";
 import { faker } from "@faker-js/faker";
 import Scrollbars from "react-custom-scrollbars-2";
-import { Shared_docs, Shared_links } from "../data";
-import { DocumentMessage, LinkMessage } from "./Conversation/MessageTypes";
+import { Shared_docs, Shared_links } from "../../data";
+import { DocumentMessage, LinkMessage } from "../Conversation/MessageTypes";
 
 const SharedMessages = () => {
   const theme = useTheme();

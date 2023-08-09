@@ -110,6 +110,21 @@ const userSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.ObjectId,
         ref: "DirectMessaging",
+
+        mute_status: {
+          type: Boolean,
+          default: false,
+        },
+
+        archived: {
+          type: Boolean,
+          default: false,
+        },
+
+        pinned: {
+          type: Boolean,
+          default: false,
+        },
       },
     ],
 

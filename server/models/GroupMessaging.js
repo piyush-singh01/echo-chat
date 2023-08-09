@@ -18,6 +18,7 @@ const groupMessagingSchema = new mongoose.Schema(
       type: String,
     },
 
+    
     // should remove the messages schema 
     // messages: [
     //   {

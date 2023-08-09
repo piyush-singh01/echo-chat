@@ -6,6 +6,7 @@ const directMessageSchema = new mongoose.model(
       type: mongoose.Schema.ObjectId,
       ref: "DirectMessaging",
       require: [true, "room_id reference can not be empty"],
+      index: true,
     },
 
     messageType: {
@@ -18,6 +19,7 @@ const directMessageSchema = new mongoose.model(
     sender: {
       type: mongoose.Schema.ObjectId,
       require: [true, "sender can not be null"],
+      index: true,
     },
 
     reciever: {

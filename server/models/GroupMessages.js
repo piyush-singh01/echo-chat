@@ -6,6 +6,7 @@ const groupMessagesSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "GroupMessaging",
       require: [true, "group_id reference can not be empty"],
+      index: true,
     },
 
     messageType: {
@@ -19,6 +20,7 @@ const groupMessagesSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       require: [true, "sender can not be null"],
       ref: "User",
+      index: true,
     },
 
     messageSentAt: {

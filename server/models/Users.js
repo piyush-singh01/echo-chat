@@ -1,7 +1,6 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { triggerAsyncId } from "async_hooks";
 
 const userSchema = new mongoose.Schema(
   {
@@ -47,13 +46,13 @@ const userSchema = new mongoose.Schema(
       require: [true, "Password is required"],
     },
 
-    // TODO: should this logic not be implemented on client side?
-    // confirmPassword: {
-    //   type: String,
-    // },
-
     profilePicture: {
       type: String,
+    },
+
+    about: {
+      type: String,
+      max: [60, "max 60 charachters limit for about section"],
     },
 
     passwordLastUpdatedAt: {
@@ -98,7 +97,7 @@ const userSchema = new mongoose.Schema(
       require: true,
     },
 
-    /* Reference to all the friends of the users */
+    // Reference to all the friends of the users
     friends: [
       {
         type: mongoose.Schema.ObjectId,
@@ -106,10 +105,18 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
+    // Reference to all the DMs, the user is a part of
     directMessageRooms: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "DirectMessaging",
+
+        starredMessages: [
+          {
+            type: mongoose.Schema.ObjectId,
+            ref: "DirectMessages",
+          }
+        ],
 
         mute_status: {
           type: Boolean,
@@ -128,27 +135,36 @@ const userSchema = new mongoose.Schema(
       },
     ],
 
+    // Reference to all the groups the user is a part of
     groupMessageRooms: [
       {
         type: mongoose.Schema.ObjectId,
         ref: "GroupMessaging",
+        
+        starredMessages: [
+          {
+            type: mongoose.Schema.ObjectId,
+            ref: "GroupMessages",
+          },
+        ],
+
+        mute_status: {
+          type: Boolean,
+          default: false,
+        },
+
+        archived: {
+          type: Boolean,
+          default: false,
+        },
+
+        pinned: {
+          type: Boolean,
+          default: false,
+        },
       },
     ],
-
-    starredMessagesGroup: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "GroupMessages",
-      },
-    ],
-
-    starredMessagesDirect: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "DirectMessages",
-      },
-    ],
-
+    
     calls: [
       {
         type: mongoose.Schema.ObjectId,

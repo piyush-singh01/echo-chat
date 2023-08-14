@@ -46,6 +46,11 @@ const userSchema = new mongoose.Schema(
       require: [true, "Password is required"],
     },
 
+    isBanned: {
+      type: Boolean,
+      default: false,
+    },
+
     profilePicture: {
       type: String,
     },
@@ -90,6 +95,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: ["online", "offline"],
+      default: "offline",
     },
 
     lastSeen: {
@@ -115,7 +121,7 @@ const userSchema = new mongoose.Schema(
           {
             type: mongoose.Schema.ObjectId,
             ref: "DirectMessages",
-          }
+          },
         ],
 
         mute_status: {
@@ -140,7 +146,7 @@ const userSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.ObjectId,
         ref: "GroupMessaging",
-        
+
         starredMessages: [
           {
             type: mongoose.Schema.ObjectId,
@@ -164,7 +170,7 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
-    
+
     calls: [
       {
         type: mongoose.Schema.ObjectId,
@@ -217,7 +223,10 @@ userSchema.methods.correctOTP = async (candidateOTP, userOTP) => {
 
 // Creates a reset token for password change
 userSchema.methods.createPasswordResetToken = async function () {
+  // Generate a random token
   const resetToken = crypto.randomBytes(32).toString("hex");
+
+  // Hash the reset token before storing it in database (for security)
   this.passwordResetToken = crypto
     .createHash("sha256")
     .update(resetToken)

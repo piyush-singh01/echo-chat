@@ -4,14 +4,9 @@ import RHFTextField from "../../components/forms/RHFTextField";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Alert,
-  Button,
-  Stack,
-} from "@mui/material";
+import { Alert, Button, Stack } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { ForgotPassword } from "../../redux/slices/auth.js";
-
 
 const ForgotPasswordForm = () => {
   const dispatch = useDispatch();

@@ -1,6 +1,6 @@
 import React from "react";
-import FormProvider from "../../components/hook-form/FormProvider"; // import from that index js file?
-import RHFTextField from "../../components/hook-form/RHFTextField";
+import FormProvider from "../../components/forms/FormProvider"; // import from that index js file?
+import RHFTextField from "../../components/forms/RHFTextField";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link as RouterLink } from "react-router-dom";
@@ -92,7 +92,7 @@ const LoginForm = () => {
       <Stack alignItems="flex-end" sx={{ my: 2 }}>
         <Link
           component={RouterLink}
-          to="/auth/reset-password"
+          to="/auth/forgot-password"
           variant="body2"
           color="inherit"
           underline="always"

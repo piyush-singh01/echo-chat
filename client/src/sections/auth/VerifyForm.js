@@ -1,12 +1,11 @@
 import React from "react";
-import FormProvider from "../../components/hook-form/FormProvider"; // import from that index js file?
-import RHFTextField from "../../components/hook-form/RHFTextField";
+import FormProvider from "../../components/forms/FormProvider"; // import from that index js file?
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert, Button, Stack, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
-import RHFCodes from "../../components/hook-form/RHFCodes";
+import RHFCodes from "../../components/forms/RHFCodes";
 import { VerifyEmail } from "../../redux/slices/auth";
 
 // TODO: This verify page should not be visible if we have not send any OTP.

@@ -1,9 +1,9 @@
 import React from "react";
-import FormProvider from "../../components/hook-form/FormProvider"; // import from that index js file?
-import RHFTextField from "../../components/hook-form/RHFTextField";
+import FormProvider from "../../components/forms/FormProvider"; // import from that index js file?
+import RHFTextField from "../../components/forms/RHFTextField";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link as RouterLink } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -11,24 +11,33 @@ import {
   Button,
   IconButton,
   InputAdornment,
-  Link,
   Stack,
 } from "@mui/material";
 import { Eye, EyeSlash } from "phosphor-react";
 import { useDispatch } from "react-redux";
-import { ForgotPassword } from "../../redux/slices/auth.js";
+import { ResetPassword } from "../../redux/slices/auth";
 
 const ResetPasswordForm = () => {
+  const [queryParams] = useSearchParams();
   const dispatch = useDispatch();
+  const [showPassword, setShowPassword] = useState(false);
 
   const ResetPasswordSchema = Yup.object().shape({
-    email: Yup.string()
-      .required("Email is Required")
-      .email("Not a valid email address"),
+    password: Yup.string()
+      .min(6, "Password must at least 6 characters")
+      .max(20, "Password must be at most 20 characters")
+      .required("Password is Required"),
+    confirmPassword: Yup.string()
+      .required("Password is Required")
+      .oneOf(
+        [Yup.ref("password"), null],
+        "Confirm Password and Password do not match"
+      ),
   });
 
   const defaultValues = {
     email: "",
+    password: "",
   };
 
   const methods = useForm({
@@ -46,7 +55,7 @@ const ResetPasswordForm = () => {
   const onSubmit = async (data) => {
     try {
       // make an api call to server
-      dispatch(ForgotPassword(data));
+      dispatch(ResetPassword({ ...data, token: queryParams.get("verify") }));
     } catch (err) {
       console.log(err);
       reset();
@@ -64,8 +73,43 @@ const ResetPasswordForm = () => {
           <Alert severity="error">{errors.afterSubmit.message}</Alert>
         )}
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField
+          name="password"
+          label="New Password"
+          type={showPassword ? "text" : "password"}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <Eye /> : <EyeSlash />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        <RHFTextField
+          name="confirmPassword"
+          label="Confirm Password"
+          type={showPassword ? "text" : "password"}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <Eye /> : <EyeSlash />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
       </Stack>
+
       <Button
         fullWidth
         color="inherit"
@@ -83,7 +127,7 @@ const ResetPasswordForm = () => {
           },
         }}
       >
-        Send Verification Email
+        Reset Password
       </Button>
     </FormProvider>
   );

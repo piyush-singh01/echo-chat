@@ -2,6 +2,7 @@
 // Module Imports
 import jwt from "jsonwebtoken";
 import { promisify } from "util";
+import { Schema } from "mongoose";
 import crypto from "crypto";
 import "dotenv/config";
 
@@ -11,17 +12,23 @@ import User from "../models/Users.js";
 // Mail service imports
 import * as mailService from "../services/mailer.js";
 import otpMail from "../mails/otpMail.js";
-import resetPasswordMail from "../mails/resetPasswordMail.js";
+import forgotPasswordMail from "../mails/forgotPasswordMail.js";
 
 // Custom Utils imports
 import filterObj from "../utils/filterObj.js";
 import OTP from "../utils/OTPGenerator.js";
+import CustomError from "../utils/CustomError.js";
+import informPasswordMail from "../mails/informPasswordResetMail.js";
 
 /* FUNCTIONS */
-// Wrapper function which signs and returns the JWT token
+/**
+ * Wrapper function which signs and returns the JWT token
+ * @param {Schema.Types.ObjectId} userId The ._id of the user for which the token is being generated
+ * @returns {*} The generated user JWT Token
+ */
 const signToken = (userId) => {
   const signOptions = {
-    expiresIn: "1d",
+    expiresIn: process.env.JWT_EXPIRES_IN || "1d",
     algorithm: "HS512",
   };
   return jwt.sign({ userId }, process.env.JWT_SECRET_KEY, signOptions);
@@ -64,14 +71,13 @@ export const login = async (req, res, next) => {
     const token = signToken(user._id);
     res.status(200).json({
       status: "OK",
-      message: "Succesfully logged in",
+      message: "Successfully logged in",
       token,
       user_id: user._id,
     });
-
   } catch (ex) {
-    console.log(ex);
-    next(ex);
+    const err = new CustomError("Server Error: Error Logging In", 500, ex);
+    next(err);
   }
 };
 
@@ -88,7 +94,7 @@ export const register = async (req, res, next) => {
 
     const existing_user = await User.findOne({ email: email });
     if (existing_user && existing_user.verified) {
-      // if already exisiting
+      // if already existing
       res.status(400).json({
         status: "error",
         message: "Email already in use. Please Login",
@@ -110,44 +116,62 @@ export const register = async (req, res, next) => {
       next();
     }
   } catch (ex) {
-    next(ex);
+    const err = new CustomError(
+      "Server Error: Error Creating Account",
+      500,
+      ex
+    );
+    next(err);
   }
 };
 
 // Mounted next to register, as well as standalone(to resend OTP)
-export const sendOTP = async (req, res) => {
+export const sendOTP = async (req, res, next) => {
   const { userId } = req;
   const { firstName, lastName } = req.body;
   const newOTP = new OTP();
-
   const user = await User.findById(userId);
-  user.otpExpiryTime = newOTP.expiryTime;
-  user.otp = newOTP.OTP.toString();
-  await user.save({ new: true, validateModifiedOnly: true });
 
-  mailService
-    .sendEmail({
-      from: "echochat.automail@gmail.com",
-      recipient: user.email,
-      subject: "Login OTP for Echo Chat",
-      text: `Your OTP is ${newOTP.OTP} and is valid for 10 minutes.`,
-      html: otpMail(firstName + " " + lastName, newOTP.OTP),
-      attachments: [],
-    })
-    .then(() => {
-      console.log(`Sent Mail to ${user.email}`);
-    })
-    .catch((err) => {
-      console.log(err);
+  try {
+    user.otpExpiryTime = newOTP.expiryTime;
+    user.otp = newOTP.OTP.toString();
+    await user.save({ new: true, validateModifiedOnly: true });
+
+    mailService
+      .sendEmail({
+        from: "echochat.automail@gmail.com",
+        recipient: user.email,
+        subject: "Login OTP for Echo Chat",
+        text: `Your OTP is ${newOTP.OTP} and is valid for 10 minutes.`,
+        html: otpMail(firstName + " " + lastName, newOTP.OTP),
+        attachments: [],
+      })
+      .then(() => {
+        console.log(`Sent Mail to ${user.email}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    res.status(200).json({
+      status: "Success",
+      message: "OTP Sent successfully",
     });
+  } catch (ex) {
+    user.otpExpiryTime = undefined;
+    user.otp = undefined;
+    await user.save({ new: true, validateModifiedOnly: true });
 
-  res.status(200).json({
-    status: "Success",
-    message: "OTP Sent succesfully",
-  });
+    const err = new CustomError(
+      "Error sending mail, please try again later",
+      500,
+      ex
+    );
+    next(err);
+  }
 };
 
-export const verifyOTP = async (req, res, next) => {
+export const verifyOTP = async (req, res) => {
   try {
     // verify OTP and update user record accordingly.
     const { email, otp } = req.body;
@@ -191,26 +215,28 @@ export const verifyOTP = async (req, res, next) => {
 
     res.status(200).json({
       status: "success",
-      message: "OTP Verification Succesful",
+      message: "OTP Verification Successful",
       token,
       user_id: user._id,
     });
   } catch (ex) {
-    next(ex);
+    const err = new CustomError("Error sending OTP", 500, ex);
+    next(err);
   }
 };
 
 export const forgotPassword = async (req, res) => {
-  const user = await User.findOne({ email: req.body.email }); // What if no email in user body? do we need to have some checks for that?
+  const user = await User.findOne({ email: req.body.email });
   if (!user) {
     res.status(400).json({
       status: "error",
       message: "No user with the given email address",
     });
+    return;
   }
 
   const resetToken = await user.createPasswordResetToken();
-  const resetUrl = `http://localhost:3000/auth/new-password?verify=${resetToken}`;
+  const resetUrl = `http://localhost:3000/auth/reset-password?verify=${resetToken}`;
 
   try {
     console.log(user);
@@ -220,7 +246,10 @@ export const forgotPassword = async (req, res) => {
         recipient: user.email,
         subject: "Reset Password link for Echo Chat",
         text: `The reset password link is valid for 10 minutes.`,
-        html: resetPasswordMail(user.firstName + " " + user.lastName, resetUrl),
+        html: forgotPasswordMail(
+          user.firstName + " " + user.lastName,
+          resetUrl
+        ),
         attachments: [],
       })
       .then(() => {
@@ -234,35 +263,35 @@ export const forgotPassword = async (req, res) => {
       status: "success",
       message: "Reset password link sent",
     });
-
   } catch (ex) {
-    // !similar catch block for all others?
     user.passwordResetToken = undefined;
-    user.passwordResetExpire = undefined;
+    user.passwordResetTokenExpire = undefined;
     await user.save({ new: true, validateModifiedOnly: true });
 
-    res.status(500).json({
-      status: "Error",
-      message: "There was an error sending the email, please try again later.",
-    });
+    const err = new CustomError(
+      "There was an error sending the email, please try again later.",
+      500,
+      ex
+    );
+    next(err);
   }
 };
 
-export const resetPassword = async (req, res, next) => {
-  //* 1) Get the user based on token
+export const resetPassword = async (req, res) => {
+  console.log(req.body);
+  // Get the reset token from the request body and hash it
   const hashedToken = crypto
     .createHash("sha256")
-    .update(req.body.token)
-    .digest("hex"); // we will be getting it as a param, why?
+    .update(req.body.resetToken)
+    .digest("hex");
 
-  // ? Are we querying with the hashed token, really?
+  // Find the user based on the hashed token
   const user = await User.findOne({
     passwordResetToken: hashedToken,
-    passwordResetExpire: { $gt: Date.now() },
+    passwordResetTokenExpire: { $gt: Date.now() },
   });
 
-  //* 2)
-
+  // Not Found
   if (!user) {
     res.status(400).json({
       status: "Error",
@@ -271,33 +300,51 @@ export const resetPassword = async (req, res, next) => {
     return;
   }
 
-  //* 3)
+  // Found
   user.password = req.body.password;
-  user.confirmPassword = undefined; //! shuold this not be on client side, besides where are we even comparing it with the password?
   user.passwordResetToken = undefined;
-  user.passwordResetExpire = undefined;
+  user.passwordResetTokenExpire = undefined;
 
   await user.save({ new: true, validateModifiedOnly: true });
 
-  //* 4) Log in and send JWT.
-  // TODO: Send an email to user informing about password reset
+  mailService
+    .sendEmail({
+      from: "echochat.automail@gmail.com",
+      recipient: user.email,
+      subject: "Confirmation: Password for you account changed.",
+      text: `Account password changed recently`,
+      html: informPasswordMail(user.firstName + " " + user.lastName), // TODO: Send time as well.
+      attachments: [],
+    })
+    .then(() => {
+      console.log(
+        `Sent confirmation mail for password change to ${user.email}`
+      );
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
   const token = signToken(user._id);
   res.status(200).json({
     status: "success",
-    message: "Password Reseted Successfully",
+    message: "Password reset successful",
     token,
   });
 };
 
-
-
-
-// PROTECTOR
-//* Signup => Register => sendotp => verifyotp
-//* Types of routes -> Protected(only authorized or logged in users can access this) and Unprotected routes, anyone with the address...
-//authorization checks basically
+/**
+ * PROTECTOR
+ * Middleware for protecting routes by enforcing JWT authentication
+ *
+ * @param {Object} req Express Request Object
+ * @param {Object} res Express Response Object
+ * @param {Function} next Callback function to pass control to the next middleware
+ *
+ * @throws Throws an error if any check fails.
+ */
 export const protect = async (req, res, next) => {
-  //* 1)Get the token JWT from the client side.
+  // Get the token JWT from the client side.
   let token;
   if (
     req.headers.authorization &&
@@ -314,30 +361,35 @@ export const protect = async (req, res, next) => {
     return;
   }
 
-  //* 2) verification of token
+  // Verification of token
   const decoded = await promisify(jwt.verify)(
     token,
     process.env.JWT_SECRET_KEY
-  ); // await works with promises only(?)
+  );
 
-  //* 3) check if the user still exists. if the user deleted account or the user is logged in from more than allowed devices or the user was banned
-  const this_user = await User.findById(decoded.userId); // the name should be same because { userId }
+  // Check if the user still exists and is not banned
+  const this_user = await User.findById(decoded.userId);
   if (!this_user) {
     res.status(400).json({
       status: "error",
       message: "The user doesn't exists",
     });
     return;
+  } else if (this_user.isBanned && this_user.isBanned === true) {
+    res.status(400).json({
+      status: "error",
+      message: "The user is not authorized to view this page",
+    });
+    return;
   }
 
-  //* 4) Check if user changed their password after token was issued
+  // Check if user changed their password after token was issued
   if (this_user.changedPasswordAfter(decoded.iat)) {
     res.status(400).json({
       status: "error",
       message: "password was changed recently, please login again",
     });
     return;
-    // ! shuold we not return?
   }
   req.user = this_user;
   next();

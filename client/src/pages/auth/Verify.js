@@ -1,17 +1,21 @@
 import React from "react";
-import { Stack, Typography, Box, Link } from "@mui/material";
+import { Stack, Typography, Link } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import { CaretLeft, User } from "phosphor-react";
+import { CaretLeft } from "phosphor-react";
+import { useSelector } from "react-redux";
+import { Navigate } from "react-router-dom";
 import VerifyForm from "../../sections/auth/VerifyForm";
-import { useDispatch, useSelector } from "react-redux";
 
 const Verify = () => {
-  const dispatch = useDispatch();
-  const { email } = useSelector((state) => state.auth); // get it from the store
+  const { email } = useSelector((state) => state.auth);
+
+  if (!email) {
+    return <Navigate to='/auth/login' />;
+  }
   return (
     <>
       <Stack spacing={2} sx={{ mb: 4, position: "relative" }}>
-        <Typography variant="h3" paragraph={true}>
+        <Typography variant='h3' paragraph={true}>
           Verify
         </Typography>
         <Typography sx={{ color: "text.secondary", mb: 5 }}>
@@ -21,17 +25,17 @@ const Verify = () => {
               color: "text.primary",
               fontFamily: "Arial",
             }}
-            component={'span'}
-            variant="subtitle2"
+            component={"span"}
+            variant='subtitle2'
           >
             {email}
           </Typography>
         </Typography>
         <Link
           component={RouterLink}
-          to="/auth/login"
-          color="inherit"
-          variant="subtitle2"
+          to='/auth/login'
+          color='inherit'
+          variant='subtitle2'
           sx={{
             mt: 3,
             mx: "auto",

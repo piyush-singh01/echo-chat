@@ -9,80 +9,19 @@ import {
   IconButton,
   Link,
   Divider,
-  InputBase,
-  Avatar,
-  Badge,
 } from "@mui/material";
-import { useTheme, styled, alpha } from "@mui/material/styles";
-import { CircleDashed, MagnifyingGlass, Plus } from "phosphor-react";
+import { useTheme } from "@mui/material/styles";
+import { CircleDashed, Plus } from "phosphor-react";
 
 // Component Imports
-import StyledBadge from "../../components/StyledBadge";
+import ChatElement from "../../components/ChatElement";
 import { ChatList } from "../../data";
 import CreateGroup from "../../sections/main/CreateGroup";
-import SearchBar from "../../components/SearchBar";
-import Conversation from "../../components/Conversation";
-import EmptyRightPane from "../../components/EmptyRightPane";
+import SearchBar from "../../components/ui-components/SearchBar";
+import Conversation from "../../components/conversation";
+import EmptyRightPane from "../../components/misc/EmptyRightPane";
 import { useSelector } from "react-redux";
 
-// TODO: Send this chat element to components
-const ChatElement = (props) => {
-  const theme = useTheme();
-  return (
-    <Box
-      sx={{
-        width: "100%",
-        borderRadius: 1,
-        backgroundColor:
-          theme.palette.mode === "dark"
-            ? theme.palette.background.paper
-            : "#FFF",
-      }}
-      p={2}
-    >
-      <Stack
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent="space-between"
-      >
-        <Stack direction={"row"} spacing={2}>
-          {props.online ? (
-            <StyledBadge
-              overlap="circular"
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              variant="dot"
-            >
-              <Avatar src={props.img} />
-            </StyledBadge>
-          ) : (
-            <Avatar src={props.img} />
-          )}
-
-          <Stack spacing={0.3}>
-            <Typography variant="subtitle2">{props.name}</Typography>
-            <Typography
-              variant="caption"
-              sx={{
-                maxWidth: "150px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {props.msg}
-            </Typography>
-          </Stack>
-        </Stack>
-        <Stack spacing={2} alignItems={"center"}>
-          <Typography sx={{ fontWeight: 600 }} variant="caption">
-            {props.time}
-          </Typography>
-          <Badge color="primary" badgeContent={props.unread} />
-        </Stack>
-      </Stack>
-    </Box>
-  );
-};
 
 const Group = () => {
   const theme = useTheme();

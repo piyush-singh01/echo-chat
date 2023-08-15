@@ -423,16 +423,13 @@ const Message_options = [
     title: "Reply",
   },
   {
-    title: "React to message",
+    title: "Info"
   },
   {
     title: "Forward message",
   },
   {
     title: "Star message",
-  },
-  {
-    title: "Report",
   },
   {
     title: "Delete Message",

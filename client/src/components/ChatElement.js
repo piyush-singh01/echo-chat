@@ -7,7 +7,6 @@ import { useTheme } from "@mui/material/styles";
 // Component Imports
 import StyledBadge from "./ui-components/StyledBadge";
 
-
 const ChatElement = (props) => {
   const theme = useTheme();
   return (
@@ -15,24 +14,17 @@ const ChatElement = (props) => {
       sx={{
         width: "100%",
         borderRadius: 1,
-        backgroundColor:
-          theme.palette.mode === "dark"
-            ? theme.palette.background.paper
-            : "#FFF",
+        backgroundColor: theme.palette.mode === "dark" ? theme.palette.background.paper : "#FFF",
       }}
       p={2}
     >
-      <Stack
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent="space-between"
-      >
+      <Stack direction={"row"} alignItems={"center"} justifyContent='space-between'>
         <Stack direction={"row"} spacing={2}>
           {props.online ? (
             <StyledBadge
-              overlap="circular"
+              overlap='circular'
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              variant="dot"
+              variant='dot'
             >
               <Avatar src={props.img} />
             </StyledBadge>
@@ -41,9 +33,9 @@ const ChatElement = (props) => {
           )}
 
           <Stack spacing={0.3}>
-            <Typography variant="subtitle2">{props.name}</Typography>
+            <Typography variant='subtitle2'>{props.name}</Typography>
             <Typography
-              variant="caption"
+              variant='caption'
               sx={{
                 maxWidth: "150px",
                 overflow: "hidden",
@@ -56,10 +48,10 @@ const ChatElement = (props) => {
           </Stack>
         </Stack>
         <Stack spacing={2} alignItems={"center"}>
-          <Typography sx={{ fontWeight: 600 }} variant="caption">
+          <Typography sx={{ fontWeight: 600 }} variant='caption'>
             {props.time}
           </Typography>
-          <Badge color="primary" badgeContent={props.unread} />
+          <Badge color='primary' badgeContent={props.unread} />
         </Stack>
       </Stack>
     </Box>

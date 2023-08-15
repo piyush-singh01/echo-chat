@@ -7,11 +7,11 @@ import { useTheme } from "@mui/material/styles";
 
 // Component Imports
 import Chats from "./Chats";
-import Conversation from "../../components/Conversation";
-import Contact from "../../components/Contact";
-import SharedMessages from "../../components/SharedMessages";
-import StarredMessage from "../../components/StarredMessages";
-import EmptyRightPane from "../../components/EmptyRightPane";
+import Conversation from "../../components/conversation";
+import ContactInfo from "../../components/contact-info-sidebar/ContactInfo";
+import SharedMessages from "../../components/contact-info-sidebar/SharedMessages";
+import StarredMessage from "../../components/contact-info-sidebar/StarredMessages";
+import EmptyRightPane from "../../components/misc/EmptyRightPane";
 
 
 const GeneralApp = () => {
@@ -48,13 +48,13 @@ const GeneralApp = () => {
         (() => {
           switch (sidebar.type) {
             case "CONTACT":
-              return <Contact />;
+              return <ContactInfo />;
             case "STARRED":
               return <StarredMessage />;
             case "SHARED":
               return <SharedMessages />;
             default:
-              return <Contact />;
+              return <ContactInfo />;
           }
         })()}
     </Stack>

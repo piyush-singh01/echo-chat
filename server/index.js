@@ -5,8 +5,6 @@ import http from "http";
 import { Server } from "socket.io";
 import "dotenv/config";
 import User from "./models/Users.js";
-import FriendRequest from "./models/FriendRequest.js";
-import DirectMessage from "./models/DirectMessage.js";
 
 // graceful termination in case on any error
 process.on("uncaughtException", (err) => {
@@ -47,138 +45,138 @@ mongoose
     console.log(err);
   });
 
-// on a socket connection
-io.on("connection", async (socket) => {
-  const { user_id } = socket.handshake.query; // socket.handshake is an object that contain details about the handshake that happens at the beggining of the socket.io session. query is the query string. ...?user_id=123weq
-  const socket_id = socket.id;
+// // on a socket connection
+// io.on("connection", async (socket) => {
+//   const { user_id } = socket.handshake.query; // socket.handshake is an object that contain details about the handshake that happens at the beggining of the socket.io session. query is the query string. ...?user_id=123weq
+//   const socket_id = socket.id;
 
-  console.log(`User ${user_id} connected to ${socket_id}`);
-  if (Boolean(user_id)) {
-    await User.findByIdAndUpdate(user_id, { socket_id, status: "online" });
-  }
+//   console.log(`User ${user_id} connected to ${socket_id}`);
+//   if (Boolean(user_id)) {
+//     await User.findByIdAndUpdate(user_id, { socket_id, status: "online" });
+//   }
 
-  //* THE FRIEND REQUEST EVENT
-  // Custom socket event listeners the 'on' event here is initiated from the client side
-  // socket is the connection b/w the server and that client. (unique for each ordered pair).
-  socket.on("friend_request", async (data) => {
-    console.log(data.to);
-    const to = await User.findById(data.to).select("socket_id"); //socket id of receiver  output --> {socket_id: .}
-    const from = await User.findById(data.from).select("socket_id"); //socket id of sender
+//   //* THE FRIEND REQUEST EVENT
+//   // Custom socket event listeners the 'on' event here is initiated from the client side
+//   // socket is the connection b/w the server and that client. (unique for each ordered pair).
+//   socket.on("friend_request", async (data) => {
+//     console.log(data.to);
+//     const to = await User.findById(data.to).select("socket_id"); //socket id of receiver  output --> {socket_id: .}
+//     const from = await User.findById(data.from).select("socket_id"); //socket id of sender
 
-    await FriendRequest.create({
-      sender: data.from,
-      recipient: data.to,
-    });
+//     await FriendRequest.create({
+//       sender: data.from,
+//       recipient: data.to,
+//     });
 
-    // io is the server side instance
-    // emit an event new friend request
-    io.to(to.socket_id).emit("new_friend_request", {
-      message: "New Friend Request from ...",
-    });
+//     // io is the server side instance
+//     // emit an event new friend request
+//     io.to(to.socket_id).emit("new_friend_request", {
+//       message: "New Friend Request from ...",
+//     });
 
-    io.to(from.socket_id).emit("request_sent", {
-      message: "Friend Request Sent to ...",
-    });
-  });
+//     io.to(from.socket_id).emit("request_sent", {
+//       message: "Friend Request Sent to ...",
+//     });
+//   });
 
-  socket.on("accept_request", async (data) => {
-    // data will come from client side and will contain request_id (_id of the entry in FriendRequest Schema);
-    const request = await FriendRequest.findById(data.request_id);
-    const sender = await User.findById(request.sender);
-    const receiver = await User.findById(request.recipient);
+// socket.on("accept_request", async (data) => {
+//   // data will come from client side and will contain request_id (_id of the entry in FriendRequest Schema);
+//   const request = await FriendRequest.findById(data.request_id);
+//   const sender = await User.findById(request.sender);
+//   const receiver = await User.findById(request.recipient);
 
-    // push in each others friends array
-    sender.friends.push(request.recipient);
-    receiver.friends.push(request.sender);
+//   // push in each others friends array
+//   sender.friends.push(request.recipient);
+//   receiver.friends.push(request.sender);
 
-    await sender.save({ new: true, validateModifiedOnly: true });
-    await receiver.save({ new: true, validateModifiedOnly: true });
+//   await sender.save({ new: true, validateModifiedOnly: true });
+//   await receiver.save({ new: true, validateModifiedOnly: true });
 
-    // Only unacknowledged requests are in the FriendRequests.  //? should it not be better to mark them as acknowledged
-    await FriendRequest.findByIdAndDelete(data.request_id);
+//   // Only unacknowledged requests are in the FriendRequests.  //? should it not be better to mark them as acknowledged
+//   await FriendRequest.findByIdAndDelete(data.request_id);
 
-    io.to(sender.socket_id).emit("request_accepted", {
-      // ! Not needed i think? no need to acknowledge the client again?
-      message: "Friend Request Accepted",
-    });
+//     io.to(sender.socket_id).emit("request_accepted", {
+//       // ! Not needed i think? no need to acknowledge the client again?
+//       message: "Friend Request Accepted",
+//     });
 
-    io.to(receiver.socket_id).emit("request_accepted", {
-      message: "Friend Request Accepted",
-    });
-  });
+//     io.to(receiver.socket_id).emit("request_accepted", {
+//       message: "Friend Request Accepted",
+//     });
+//   });
 
-  // ? do we really need a socket event to send the dm chats?, can we not fetch them with a get method? which is better?
-  socket.on("get_direct_conversation", async ({ user_ud }, callback) => {
-    const exisiting_conversation = await DirectMessage.find({
-      participants: { $all: [user_id] }, // all doc objects in which i am a participant
-    }).populate("participants", "_id firstName lastName email status");
+//   // ? do we really need a socket event to send the dm chats?, can we not fetch them with a get method? which is better?
+//   socket.on("get_direct_conversation", async ({ user_ud }, callback) => {
+//     const exisiting_conversation = await DirectMessaging.find({
+//       participants: { $all: [user_id] }, // all doc objects in which i am a participant
+//     }).populate("participants", "_id firstName lastName email status");
 
-    console.log(exisiting_conversation);
-    callback(exisiting_conversation);
-  });
+//     console.log(exisiting_conversation);
+//     callback(exisiting_conversation);
+//   });
 
-  socket.on("start_conversation", async (data) => {
-    // get to and from, from the data
-    const { to, from } = data;
-    //check if a convo exists already
-    const exisiting_conversation = await DirectMessage.find({
-      participants: { $size: 2, $all: [to, from] }, // only 2 participants and all those should have these to and from field.
-    }).populate("participants", "firstName lastName _id email status");
-    console.log(exisiting_conversation[0], "Exisiting conversation"); // the find query returns a list.
+//   socket.on("start_conversation", async (data) => {
+//     // get to and from, from the data
+//     const { to, from } = data;
+//     //check if a convo exists already
+//     const exisiting_conversation = await DirectMessage.find({
+//       participants: { $size: 2, $all: [to, from] }, // only 2 participants and all those should have these to and from field.
+//     }).populate("participants", "firstName lastName _id email status");
+//     console.log(exisiting_conversation[0], "Exisiting conversation"); // the find query returns a list.
 
-    if (exisiting_conversation.length === 0) {
-      let new_chat = await DirectMessage.create({
-        participants: [to, from],
-      });
-      new_chat = await DirectMessage.findById(new_chat._id).populate(
-        "participants",
-        "firstName lastName _id email status"
-      );
-      console.log(new_chat);
-      socket.emit('start_conversation', new_chat)
-    } else {
-      socket.emit('start_conversation', exisiting_conversation[0]);
-    }
-  });
+//     if (exisiting_conversation.length === 0) {
+//       let new_chat = await DirectMessage.create({
+//         participants: [to, from],
+//       });
+//       new_chat = await DirectMessage.findById(new_chat._id).populate(
+//         "participants",
+//         "firstName lastName _id email status"
+//       );
+//       console.log(new_chat);
+//       socket.emit('start_conversation', new_chat)
+//     } else {
+//       socket.emit('start_conversation', exisiting_conversation[0]);
+//     }
+//   });
 
-  //* To handle text and link messages,
-  socket.on("text_message", async (data) => {
-    console.log("Recieved message", data);
-    // data: {to, from , text}; // send data in this way from the client side
-    // create a new conversation if it doesn't exists
-    // save to db
-    // emit 'incoming_message' -> to the sender of the text message
-    // emit 'outgoing_message' -> to the reciever of the text message
-  });
+//   //* To handle text and link messages,
+//   socket.on("text_message", async (data) => {
+//     console.log("Recieved message", data);
+//     // data: {to, from , text}; // send data in this way from the client side
+//     // create a new conversation if it doesn't exists
+//     // save to db
+//     // emit 'incoming_message' -> to the sender of the text message
+//     // emit 'outgoing_message' -> to the reciever of the text message
+//   });
 
-  socket.on("file_message", async (data) => {
-    console.log("Recieved message", data);
-    // data: {to, from, text, file}
-    // get the file extension
-    const fileExtension = path.extname(data.file.name);
-    //generate an arbitrary file name
-    const fileName = `${Date.now()}_${Math.floor(
-      Math.random() * 10000
-    )}${fileExtension}`;
-    //upload this file to aws s3
+//   socket.on("file_message", async (data) => {
+//     console.log("Recieved message", data);
+//     // data: {to, from, text, file}
+//     // get the file extension
+//     const fileExtension = path.extname(data.file.name);
+//     //generate an arbitrary file name
+//     const fileName = `${Date.now()}_${Math.floor(
+//       Math.random() * 10000
+//     )}${fileExtension}`;
+//     //upload this file to aws s3
 
-    // create a new conversation if it doesn't exists
-    // save to db
-    // emit 'incoming_message' -> to the sender of the text message
-    // emit 'outgoing_message' -> to the reciever of the text message
-  });
+//     // create a new conversation if it doesn't exists
+//     // save to db
+//     // emit 'incoming_message' -> to the sender of the text message
+//     // emit 'outgoing_message' -> to the reciever of the text message
+//   });
 
-  // initiate from the client side to end the connection. //? 'disconnect' won't work?
-  socket.on("end", async (data) => {
-    if (data.user_id) {
-      await User.findByIdAndUpdate(data.user_id, { status: "offline" });
-    }
+//   // initiate from the client side to end the connection. //? 'disconnect' won't work?
+//   socket.on("end", async (data) => {
+//     if (data.user_id) {
+//       await User.findByIdAndUpdate(data.user_id, { status: "offline" });
+//     }
 
-    // TODO: braodcast to all that this user has disconnected
-    console.log("Closing connection");
-    socket.disconnect(0);
-  });
-});
+//     // TODO: braodcast to all that this user has disconnected
+//     console.log("Closing connection");
+//     socket.disconnect(0);
+//   });
+// });
 
 process.on("unhandledRejection", (err) => {
   console.log(err);

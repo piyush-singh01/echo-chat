@@ -7,7 +7,7 @@ import {
   Avatar,
   Button,
 } from "@mui/material";
-import StyledBadge from "./StyledBadge";
+import StyledBadge from "./ui-components/StyledBadge";
 import { socket } from "../socket";
 import { useTheme } from "@mui/material/styles";
 import { Chat } from "phosphor-react";

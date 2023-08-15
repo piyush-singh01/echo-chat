@@ -1,15 +1,26 @@
+/* IMPORTS */
+// React Imports
 import React, { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
-import IconButton from "@mui/material/IconButton";
-import { Divider, Avatar, Menu, MenuItem } from "@mui/material";
+
+// MUI, Phosphor and faker Imports
+import {
+  Box,
+  Stack,
+  IconButton,
+  Divider,
+  Avatar,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
-import Logo from "../../assets/Images/logo.ico";
-import { Nav_Buttons, Profile_Menu } from "../../data/index";
 import { Gear } from "phosphor-react";
 import { faker } from "@faker-js/faker";
+
+// Assets and Data Imports
+import Logo from "../../assets/Images/logo.ico";
+import { Nav_Buttons, Profile_Menu } from "../../data/index";
 
 import useSettings from "../../hooks/useSettings";
 import { useNavigate } from "react-router-dom";
@@ -21,11 +32,11 @@ const Sidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [selected, setSelected] = useState(0); 
+  const [selected, setSelected] = useState(0);
 
   // get onToggleMode from useSetting custom hook
-  const { onToggleMode } = useSettings(); 
-  
+  const { onToggleMode } = useSettings();
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -35,21 +46,20 @@ const Sidebar = () => {
     setAnchorEl(null);
   };
 
-
+  const currLocation = window.location.pathname;
   useEffect(() => {
-    const currLocation = window.location.pathname;
-    if(currLocation === '/app') {
+    if (currLocation === "/app") {
       setSelected(0);
-    } else if(currLocation === '/group') {
+    } else if (currLocation === "/group") {
       setSelected(1);
-    } else if(currLocation === '/call') {
+    } else if (currLocation === "/call") {
       setSelected(2);
-    } else if(currLocation === '/settings' || currLocation === '/profile') {
+    } else if (currLocation === "/settings" || currLocation === "/profile") {
       setSelected(3);
     } else {
       setSelected(-1);
     }
-  }, [])
+  }, [currLocation]);
 
   const getPath = (index) => {
     switch (index) {
@@ -73,7 +83,7 @@ const Sidebar = () => {
       case 1:
         return "/settings";
       case 2:
-        return "/auth/login"; //TODO: update token and set isAuthenticated to false
+        return "/auth/login";
       default:
         break;
     }
@@ -81,9 +91,8 @@ const Sidebar = () => {
 
   return (
     <>
-      {/* The SideBar */}
       <Box
-        p={2} // 2 means 2*8 = 16px
+        p={2}
         sx={{
           backgroundColor: theme.palette.background.paper,
           boxShadow: "0px 0px 2px rgba(0,0,0,0.25)",
@@ -120,9 +129,7 @@ const Sidebar = () => {
               alignItems={"center"}
               spacing={3}
             >
-              {/*For max-content means in text that the item will be its full width, even if the container is smaller */}
               {Nav_Buttons.map((ele) =>
-                // Wrap it around a box, for selected icon.
                 ele.index === selected ? (
                   <Box
                     key={ele.index}
@@ -245,7 +252,6 @@ const Sidebar = () => {
                     onClick={() => {
                       handleClick(i);
                       if (i === 2) {
-                        // TODO: Replace this 2 with a constant.
                         dispatch(LogoutUser());
                       } else {
                         navigate(getMenuPath(i));

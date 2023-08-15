@@ -4,7 +4,11 @@ import { Stack, Typography } from "@mui/material";
 
 const Page404 = () => {
   return (
-    <Stack sx={{ height: "100%", width: "100%" }} alignItems={'center'} justifyContent={'center'}>
+    <Stack
+      sx={{ position: "absolute", height: "100%", width: "100%" }}
+      alignItems={"center"}
+      justifyContent={"center"}
+    >
       <img
         src={PageNotFound}
         alt="404 Not Found"

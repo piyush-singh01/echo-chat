@@ -2,7 +2,6 @@ import {
   Avatar,
   Box,
   Button,
-  Divider,
   IconButton,
   Stack,
   Typography,
@@ -10,34 +9,18 @@ import {
   DialogActions,
   DialogTitle,
   DialogContent,
-  DialogContentText,
   Slide,
   InputBase,
-  Badge,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import {
-  Bell,
-  CaretRight,
   MagnifyingGlass,
-  Phone,
   PhoneCall,
-  Prohibit,
-  Star,
-  Trash,
   VideoCamera,
-  X,
 } from "phosphor-react";
-import React, { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Link as RouterLink } from "react-router-dom";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
-import FormProvider from "../../components/hook-form/FormProvider";
-import RHFTextField from "../../components/hook-form/RHFTextField";
-import RHFAutoComplete from "../../components/hook-form/RHFAutoComplete";
-import StyledBadge from "../../components/StyledBadge";
-import { styled, alpha } from "@mui/material/styles";
+import React from "react";
+import StyledBadge from "../../components/ui-components/StyledBadge";
+import { styled } from "@mui/material/styles";
 import { faker } from "@faker-js/faker";
 
 // TODO: make it in a common file, in a new folder called Search in components and import

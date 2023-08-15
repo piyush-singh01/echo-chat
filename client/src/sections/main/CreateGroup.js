@@ -1,9 +1,5 @@
 import {
-  Avatar,
-  Box,
   Button,
-  Divider,
-  IconButton,
   Stack,
   Typography,
   Dialog,
@@ -13,26 +9,15 @@ import {
   DialogContentText,
   Slide,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import {
-  Bell,
-  CaretRight,
-  Phone,
-  Prohibit,
-  Star,
-  Trash,
-  VideoCamera,
-  X,
-} from "phosphor-react";
-import React, { useState } from "react";
+import { Bell, CaretRight, Phone, Prohibit, Star, Trash, VideoCamera, X } from "phosphor-react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { Link as RouterLink } from "react-router-dom";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Scrollbars from "react-custom-scrollbars-2";
-import FormProvider from "../../components/hook-form/FormProvider";
-import RHFTextField from "../../components/hook-form/RHFTextField";
-import RHFAutoComplete from "../../components/hook-form/RHFAutoComplete";
+import FormProvider from "../../components/forms/FormProvider";
+import RHFTextField from "../../components/forms/RHFTextField";
+import RHFAutoComplete from "../../components/forms/RHFAutoComplete";
 
 const MEMBERS = [
   "Toy Story 3",
@@ -93,7 +78,7 @@ const CreateGroupForm = ({ handleClose }) => {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3} m={1}>
-        <RHFTextField name="title" label="Group Name" />
+        <RHFTextField name='title' label='Group Name' />
         <RHFAutoComplete
           name={"members"}
           label={"Members"}
@@ -110,17 +95,17 @@ const CreateGroupForm = ({ handleClose }) => {
 const CreateGroup = ({ open, handleClose }) => {
   // TODO: Create a reusable component
   const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
+    return <Slide direction='up' ref={ref} {...props} />;
   });
   return (
     <Dialog
       fullWidth
-      maxWidth="xs"
+      maxWidth='xs'
       open={open}
       TransitionComponent={Transition}
       keepMounted
       onClose={handleClose}
-      aria-describedby="alert-dialog-slide-description"
+      aria-describedby='alert-dialog-slide-description'
       sx={{ p: 4 }}
     >
       <DialogTitle>{"Create Group"}</DialogTitle>
@@ -131,10 +116,10 @@ const CreateGroup = ({ open, handleClose }) => {
       </DialogContent>
       <DialogActions>
         <Stack spacing={2} direction={"row-reverse"} alignItems={"center"}>
-          <Button type="submit" variant="contained">
+          <Button type='submit' variant='contained'>
             Create
           </Button>
-          <Button type="submit" variant="outlined" onClick={handleClose}>
+          <Button type='submit' variant='outlined' onClick={handleClose}>
             Cancel
           </Button>
         </Stack>

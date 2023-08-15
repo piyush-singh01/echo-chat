@@ -1,23 +1,15 @@
-import {
-  Box,
-  IconButton,
-  Stack,
-  Typography,
-  Tabs,
-  Tab,
-  Grid,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import {
-  CaretLeft,
-} from "phosphor-react";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { UpdateSidebar } from "../../redux/slices/app";
-import { faker } from "@faker-js/faker";
 import Scrollbars from "react-custom-scrollbars-2";
+
+import { Box, IconButton, Stack, Typography, Tabs, Tab, Grid } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { CaretLeft } from "phosphor-react";
+import { faker } from "@faker-js/faker";
+
+import { DocumentMessage, LinkMessage } from "../conversation/MessageTypes";
 import { Shared_docs, Shared_links } from "../../data";
-import { DocumentMessage, LinkMessage } from "../Conversation/MessageTypes";
 
 const SharedMessages = () => {
   const theme = useTheme();
@@ -34,10 +26,7 @@ const SharedMessages = () => {
       <Stack
         sx={{
           height: "100%",
-          backgroundColor:
-            theme.palette.mode === "light"
-              ? "#F8FAFF"
-              : theme.palette.background.paper,
+          backgroundColor: theme.palette.mode === "light" ? "#F8FAFF" : theme.palette.background.paper,
         }}
       >
         {/* Header */}
@@ -51,10 +40,7 @@ const SharedMessages = () => {
             sx={{
               height: "100%",
               p: 2,
-              backgroundColor:
-                theme.palette.mode === "light"
-                  ? "#F8FAFF"
-                  : theme.palette.background.default,
+              backgroundColor: theme.palette.mode === "light" ? "#F8FAFF" : theme.palette.background.default,
             }}
             direction={"row"}
             alignItems={"center"}
@@ -64,13 +50,13 @@ const SharedMessages = () => {
             <IconButton onClick={() => dispatch(UpdateSidebar("CONTACT"))}>
               <CaretLeft />
             </IconButton>
-            <Typography variant="subtitle2">Shared Messages</Typography>
+            <Typography variant='subtitle2'>Shared Messages</Typography>
           </Stack>
         </Box>
         <Tabs value={value} onChange={handleChange} centered>
-          <Tab label="Media" />
-          <Tab label="Links" />
-          <Tab label="Docs" />
+          <Tab label='Media' />
+          <Tab label='Links' />
+          <Tab label='Docs' />
         </Tabs>
 
         {/* BODY */}
@@ -80,10 +66,7 @@ const SharedMessages = () => {
               //   height: "100%",
               position: "relative",
               flexGrow: 1,
-              backgroundColor:
-                theme.palette.mode === "light"
-                  ? "#F8FAFF"
-                  : theme.palette.background.paper,
+              backgroundColor: theme.palette.mode === "light" ? "#F8FAFF" : theme.palette.background.paper,
             }}
             p={2}
             spacing={2}
@@ -96,26 +79,23 @@ const SharedMessages = () => {
                       {[0, 1, 2, 3, 4, 5, 6, 7].map((el) => {
                         return (
                           <Grid item xs={4}>
-                            <img
-                              src={faker.image.avatar()}
-                              alt={faker.name.fullName()}
-                            ></img>
+                            <img src={faker.image.avatar()} alt={faker.name.fullName()}></img>
                           </Grid>
                         );
                       })}
                     </Grid>
                   );
-                  // Media
+                // Media
                 case 1:
                   return Shared_links.map((ele) => {
                     return <LinkMessage ele={ele} />;
                   });
-                  // Links
+                // Links
                 case 2:
                   return Shared_docs.map((ele) => {
                     return <DocumentMessage ele={ele} />;
                   });
-                  //Docs
+                //Docs
                 default:
                   //Media
                   break;

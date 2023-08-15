@@ -20,7 +20,8 @@ const slice = createSlice({
     },
     logoutUser(state, action) {
       state.isLoggedIn = false;
-      state.token = "";
+      state.token = null;
+      state.email = null;
     },
     updateIsLoading(state, action) {
       state.error = action.payload.error;
@@ -72,10 +73,10 @@ export function LoginUser(formInputs) {
 }
 
 // TODO: Look more on the logout logic, sure only this much needs to be done?
-
-export function LogoutUser(formInputs) {
+export function LogoutUser() {
   return async (dispatch, getState) => {
     dispatch(slice.actions.logoutUser());
+    
     window.localStorage.removeItem("user_id");
   };
 }

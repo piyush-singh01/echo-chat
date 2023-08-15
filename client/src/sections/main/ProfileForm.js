@@ -1,21 +1,14 @@
 import React, { useCallback } from "react";
-import FormProvider from "../../components/hook-form/FormProvider"; // import from that index js file?
-import RHFTextField from "../../components/hook-form/RHFTextField";
-import { useState } from "react";
+import FormProvider from "../../components/forms/FormProvider"; // import from that index js file?
+import RHFTextField from "../../components/forms/RHFTextField";
 import { useForm } from "react-hook-form";
-import { Link as RouterLink } from "react-router-dom";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Alert,
   Button,
-  IconButton,
-  InputAdornment,
-  Link,
   Stack,
 } from "@mui/material";
-import { Eye, EyeSlash } from "phosphor-react";
-import Scrollbars from "react-custom-scrollbars-2";
 
 const ProfileForm = () => {
   const ProfileSchema = Yup.object().shape({

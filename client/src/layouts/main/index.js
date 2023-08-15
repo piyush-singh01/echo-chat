@@ -1,3 +1,5 @@
+/* Auth Routes dashboard layout */
+
 import React from "react";
 import { Container, Stack } from "@mui/material";
 import { Navigate, Outlet } from "react-router-dom";

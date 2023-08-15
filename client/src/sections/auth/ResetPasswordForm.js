@@ -55,7 +55,7 @@ const ResetPasswordForm = () => {
   const onSubmit = async (data) => {
     try {
       // make an api call to server
-      dispatch(ResetPassword({ ...data, token: queryParams.get("verify") }));
+      dispatch(ResetPassword({ ...data, resetToken: queryParams.get("verify") }));
     } catch (err) {
       console.log(err);
       reset();

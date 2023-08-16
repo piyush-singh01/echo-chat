@@ -1,50 +1,4 @@
 import { faker } from "@faker-js/faker";
-import {
-  ChatCircleDots,
-  Gear,
-  GearSix,
-  Phone,
-  SignOut,
-  User,
-  Users,
-} from "phosphor-react";
-
-const Profile_Menu = [
-  {
-    title: "Profile",
-    icon: <User />,
-  },
-  {
-    title: "Settings",
-    icon: <Gear />,
-  },
-  {
-    title: "Logout",
-    icon: <SignOut />,
-  },
-];
-
-const Nav_Buttons = [
-  {
-    index: 0,
-    icon: <ChatCircleDots />,
-  },
-  {
-    index: 1,
-    icon: <Users />,
-  },
-  {
-    index: 2,
-    icon: <Phone />,
-  },
-];
-
-const Nav_Setting = [
-  {
-    index: 3,
-    icon: <GearSix />,
-  },
-];
 
 const ChatList = [
   {
@@ -418,32 +372,10 @@ const Shared_links = [
 ];
 
 
-const Message_options = [
-  {
-    title: "Reply",
-  },
-  {
-    title: "Info"
-  },
-  {
-    title: "Forward message",
-  },
-  {
-    title: "Star message",
-  },
-  {
-    title: "Delete Message",
-  },
-];
-
 export {
-  Profile_Menu,
-  Nav_Setting,
-  Nav_Buttons,
   ChatList,
   CallList,
   Chat_History,
-  Message_options,
   Shared_docs,
   Shared_links
 };

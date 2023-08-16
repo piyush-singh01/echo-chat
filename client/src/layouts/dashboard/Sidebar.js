@@ -20,12 +20,43 @@ import { faker } from "@faker-js/faker";
 
 // Assets and Data Imports
 import Logo from "../../assets/Images/logo.ico";
-import { Nav_Buttons, Profile_Menu } from "../../data/index";
 
 import useSettings from "../../hooks/useSettings";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { LogoutUser } from "../../redux/slices/auth.js";
+
+
+const profileMenu = [
+  {
+    title: "Profile",
+    icon: <User />,
+  },
+  {
+    title: "Settings",
+    icon: <Gear />,
+  },
+  {
+    title: "Logout",
+    icon: <SignOut />,
+  },
+];
+
+const navButtons = [
+  {
+    index: 0,
+    icon: <ChatCircleDots />,
+  },
+  {
+    index: 1,
+    icon: <Users />,
+  },
+  {
+    index: 2,
+    icon: <Phone />,
+  },
+];
+
 
 const Sidebar = () => {
   const theme = useTheme();
@@ -129,7 +160,7 @@ const Sidebar = () => {
               alignItems={"center"}
               spacing={3}
             >
-              {Nav_Buttons.map((ele) =>
+              {navButtons.map((ele) =>
                 ele.index === selected ? (
                   <Box
                     key={ele.index}
@@ -245,7 +276,7 @@ const Sidebar = () => {
                 vertical: "bottom",
               }}
             >
-              {Profile_Menu.map((ele, i) => {
+              {profileMenu.map((ele, i) => {
                 return (
                   <MenuItem
                     key={i}

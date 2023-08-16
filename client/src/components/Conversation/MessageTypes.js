@@ -11,7 +11,25 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { DotsThreeVertical, DownloadSimple, Image } from "phosphor-react";
 import React, { useState } from "react";
-import { Message_options } from "../../data/index";
+
+const messageOptions = [
+  {
+    title: "Reply",
+  },
+  {
+    title: "Info"
+  },
+  {
+    title: "Forward message",
+  },
+  {
+    title: "Star message",
+  },
+  {
+    title: "Delete Message",
+  },
+];
+
 
 const MessageOptions = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -39,7 +57,7 @@ const MessageOptions = () => {
         }}
 
       >
-        {Message_options.map((ele, i) => {
+        {messageOptions.map((ele, i) => {
           return (
             <MenuItem key={i} onClick={handleClose}>
               {ele.title}

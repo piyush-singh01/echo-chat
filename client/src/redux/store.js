@@ -7,13 +7,13 @@ import { rootPersistConfig, rootReducer } from './rootReducer';
 const store = configureStore({
     reducer: persistReducer(rootPersistConfig, rootReducer), 
     middleware: (getDefaultMiddleWare) => getDefaultMiddleWare({
-        serializableCheck: false,   // Doesn't check if the dispatched action are searlizable(that is they can be converted to JSON). false to skip this check. Useful when dealing with non searalizable values such as functions or promises.
-        immutableCheck: false,      // Skips immutablity check, that is if the state has been mutated directly or not. helpful when we have libraries that garantee immutablity. Redux uses Immer.
+        serializableCheck: false,   // Doesn't check if the dispatched action are serializable(that is they can be converted to JSON). false to skip this check. Useful when dealing with non serializable values such as functions or promises.
+        immutableCheck: false,      // Skips immutability check, that is if the state has been mutated directly or not. helpful when we have libraries that guarantee immutability. Redux uses Immer.
     })
 })
 
 
-// TO make our state persistable, we need to wrap it around persistStore.
+// TO make our state persistent, we need to wrap it around persistStore.
 const persistor = persistStore(store);
 
 const { dispatch } = store;                     // configurestore returns this...

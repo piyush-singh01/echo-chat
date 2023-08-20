@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "../../utils/axios.js";
-import { showSnackBar } from "./app.js";
+import { showSnackBar } from "./snackbar.js";
 
 const initialState = {
   isLoggedIn: false,
@@ -61,9 +61,7 @@ export function LoginUser(formInputs) {
           })
         );
         window.localStorage.setItem("user_id", res.data.user_id); // TODO: should we not do the same with reset password, since it also sends back the token
-        dispatch(
-          showSnackBar({ severity: "success", message: res.data.message })
-        );
+        dispatch(showSnackBar({ severity: "success", message: res.data.message }));
       })
       .catch((err) => {
         console.log(err);
@@ -72,11 +70,12 @@ export function LoginUser(formInputs) {
   };
 }
 
+
 // TODO: Look more on the logout logic, sure only this much needs to be done?
 export function LogoutUser() {
   return async (dispatch, getState) => {
     dispatch(slice.actions.logoutUser());
-    
+
     window.localStorage.removeItem("user_id");
   };
 }
@@ -146,18 +145,12 @@ export function RegisterUser(formInputs) {
       )
       .then((res) => {
         console.log(res);
-        dispatch(
-          slice.actions.updateRegisterEmail({ email: formInputs.email })
-        );
-        dispatch(
-          slice.actions.updateIsLoading({ isLoading: false, error: false })
-        );
+        dispatch(slice.actions.updateRegisterEmail({ email: formInputs.email }));
+        dispatch(slice.actions.updateIsLoading({ isLoading: false, error: false }));
       })
       .catch((err) => {
         console.log(err);
-        dispatch(
-          slice.actions.updateIsLoading({ isLoading: false, error: true })
-        );
+        dispatch(slice.actions.updateIsLoading({ isLoading: false, error: true }));
       })
       .finally(() => {
         //? can also use the useNavigate hook by passing it as a call back function and then calling it here. The definition of the callback function is passed and defined inside the react component from where this THUNK is called. But for now do this.
@@ -199,3 +192,6 @@ export function VerifyEmail(formInputs) {
       .finally(() => {});
   };
 }
+
+
+

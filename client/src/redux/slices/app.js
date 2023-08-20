@@ -1,24 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "../../utils/axios";
+import { showSnackBar } from "./snackbar";
 
 const initialState = {
   sidebar: {
     open: false,
-    type: "CONTACT",    //The sidebar will open contact info by default, so setting it as initial state
+    type: "CONTACT", //The sidebar will open contact info by default, so setting it as initial state
   },
-  snackbar: {
-    open: false,
-    message: null,
-    severity: null,
-  },
-  users: [],           // users who are not friends and are not requested
-  all_users: [],        // complete list of users
-  friends: [],          // friends
-  friendRequests: [],   // friend requests
-  chat_type: null,      // the chat type: group or dm
-  room_id: null,        // each convo will have a room id
+  // snackbar: {
+  //   open: false,
+  //   message: null,
+  //   severity: null,
+  // },
+  users: [], // users who are not friends and are not requested
+  all_users: [], // complete list of users
+  friends: [], // friends
+  friendRequests: [], // friend requests
+  chat_type: null, // the chat type: group or dm
+  room_id: null, // each convo will have a room id
 };
-
 
 // REDUX SLICE
 const slice = createSlice({
@@ -61,7 +61,7 @@ const slice = createSlice({
 
     // Conversations
     selectConversation(state, action) {
-      state.chat_type = "indivisual";
+      state.chat_type = "individual";
       state.room_id = action.payload.room_id;
     },
   },
@@ -69,7 +69,6 @@ const slice = createSlice({
 
 // Reducers
 export default slice.reducer;
-
 
 // THUNK FUNCTIONS ------------------------------------
 // Sidebar
@@ -85,23 +84,22 @@ export function UpdateSidebar(type) {
   };
 }
 
-// Snackbar 
-export function showSnackBar({ severity, message }) {
-  return async (dispatch, getState) => {
-    dispatch(slice.actions.openSnackBar({ message, severity }));
+// Snackbar
+// export function showSnackBar({ severity, message }) {
+//   return async (dispatch, getState) => {
+//     dispatch(slice.actions.openSnackBar({ message, severity }));
 
-    setTimeout(() => {
-      dispatch(slice.actions.closeSnackBar());
-    }, 3000);
-  };
-}
+//     setTimeout(() => {
+//       dispatch(slice.actions.closeSnackBar());
+//     }, 3000);
+//   };
+// }
 
-export function collapseSnackBar() {
-  return async (dispatch, getState) => {
-    dispatch(slice.actions.closeSnackBar());
-  };
-}
-
+// export function collapseSnackBar() {
+//   return async (dispatch, getState) => {
+//     dispatch(slice.actions.closeSnackBar());
+//   };
+// }
 
 // Fetch Lists
 export function FetchUsers() {
@@ -153,9 +151,7 @@ export function FetchFriendRequests() {
       })
       .then((res) => {
         console.log(res);
-        dispatch(
-          slice.actions.updateFriendRequests({ friendRequests: res.data.data })
-        );
+        dispatch(slice.actions.updateFriendRequests({ friendRequests: res.data.data }));
       })
       .catch((err) => {
         console.log(err);
@@ -163,8 +159,34 @@ export function FetchFriendRequests() {
   };
 }
 
-export function SelectConversation({room_id}) {
+export function SelectConversation({ room_id }) {
   return (dispatch, getState) => {
-    dispatch(slice.actions.selectConversation({room_id}));
-  }
+    dispatch(slice.actions.selectConversation({ room_id }));
+  };
+}
+
+// Update Profile
+export function UpdateProfile(formInputs) {
+  return async (dispatch, getState) => {
+    await axios
+      .patch(
+        "/user/update-me",
+        {
+          ...formInputs,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${getState().auth.token}`,
+          },
+        }
+      )
+      .then((res) => {
+        dispatch(showSnackBar({ severity: "success", message: res.data.message }));
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch(showSnackBar({ severity: "error", message: err.message }));
+      });
+  };
 }

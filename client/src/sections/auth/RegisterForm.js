@@ -15,9 +15,11 @@ import {
 import { Eye, EyeSlash } from "phosphor-react";
 import { useDispatch } from "react-redux";
 import { RegisterUser } from "../../redux/slices/auth";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
@@ -53,8 +55,8 @@ const RegisterForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      // make an api call to server
-      dispatch(RegisterUser(data));
+      // making an api call to server
+      dispatch(RegisterUser(data, navigateToVerifyOTPPage));
     } catch (err) {
       console.log(err);
       reset();
@@ -64,6 +66,10 @@ const RegisterForm = () => {
       });
     }
   };
+
+  const navigateToVerifyOTPPage = () => {
+    navigate('/auth/verify');
+  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

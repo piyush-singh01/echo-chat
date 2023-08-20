@@ -6,20 +6,16 @@ import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Alert,
-  Button,
-  IconButton,
-  InputAdornment,
-  Stack,
-} from "@mui/material";
+import { Alert, Button, IconButton, InputAdornment, Stack } from "@mui/material";
 import { Eye, EyeSlash } from "phosphor-react";
 import { useDispatch } from "react-redux";
 import { ResetPassword } from "../../redux/slices/auth";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 const ResetPasswordForm = () => {
   const [queryParams] = useSearchParams();
   const dispatch = useDispatch();
+  const [_, setUserID, __ ] = useLocalStorage('user_id');
   const [showPassword, setShowPassword] = useState(false);
 
   const ResetPasswordSchema = Yup.object().shape({
@@ -29,10 +25,7 @@ const ResetPasswordForm = () => {
       .required("Password is Required"),
     confirmPassword: Yup.string()
       .required("Password is Required")
-      .oneOf(
-        [Yup.ref("password"), null],
-        "Confirm Password and Password do not match"
-      ),
+      .oneOf([Yup.ref("password"), null], "Confirm Password and Password do not match"),
   });
 
   const defaultValues = {
@@ -55,7 +48,7 @@ const ResetPasswordForm = () => {
   const onSubmit = async (data) => {
     try {
       // make an api call to server
-      dispatch(ResetPassword({ ...data, resetToken: queryParams.get("verify") }));
+      dispatch(ResetPassword({ ...data, resetToken: queryParams.get("verify")}, setUserID));
     } catch (err) {
       console.log(err);
       reset();
@@ -69,9 +62,7 @@ const ResetPasswordForm = () => {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3} mb={5}>
-        {!!errors.afterSubmit && (
-          <Alert severity="error">{errors.afterSubmit.message}</Alert>
-        )}
+        {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
         <RHFTextField
           name="password"
@@ -80,10 +71,7 @@ const ResetPasswordForm = () => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
+                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                   {showPassword ? <Eye /> : <EyeSlash />}
                 </IconButton>
               </InputAdornment>
@@ -98,10 +86,7 @@ const ResetPasswordForm = () => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
+                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                   {showPassword ? <Eye /> : <EyeSlash />}
                 </IconButton>
               </InputAdornment>
@@ -118,12 +103,10 @@ const ResetPasswordForm = () => {
         variant="contained"
         sx={{
           bgcolor: "text.primary",
-          color: (theme) =>
-            theme.palette.mode === "light" ? "common.white" : "grey.800",
+          color: (theme) => (theme.palette.mode === "light" ? "common.white" : "grey.800"),
           "&:hover": {
             bgcolor: "text.primary",
-            color: (theme) =>
-              theme.palette.mode === "light" ? "common.white" : "grey.800",
+            color: (theme) => (theme.palette.mode === "light" ? "common.white" : "grey.800"),
           },
         }}
       >

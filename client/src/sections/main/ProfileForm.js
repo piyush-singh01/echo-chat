@@ -4,22 +4,23 @@ import RHFTextField from "../../components/forms/RHFTextField";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Alert,
-  Button,
-  Stack,
-} from "@mui/material";
+import { Alert, Button, Stack } from "@mui/material";
+import { useDispatch } from "react-redux";
+import { UpdateProfile } from "../../redux/slices/app";
 
 const ProfileForm = () => {
+  const dispatch = useDispatch();
+
   const ProfileSchema = Yup.object().shape({
-    name: Yup.string().required("Name is Required"),
+    firstName: Yup.string().required("Name is Required"),
+    lastName: Yup.string(),
     about: Yup.string().required("About can not be empty"),
 
-    avatarUrl: Yup.string().required("Avatar is required").nullable(true), // Note this is also a string. This can be null
+    // avatarUrl: Yup.string().required("Avatar is required").nullable(true), // Note this is also a string. This can be null
   });
 
   const defaultValues = {
-    name: "",
+    firstName: "",
     about: "",
   };
 
@@ -57,9 +58,9 @@ const ProfileForm = () => {
   );
 
   const onSubmit = async (data) => {
+    console.log(data);
     try {
-      // make a call to server
-      console.log(data);
+      dispatch(UpdateProfile(data));
     } catch (err) {
       console.log(err);
       reset();
@@ -73,22 +74,19 @@ const ProfileForm = () => {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3} mb={4}>
-        {!!errors.afterSubmit && (
-          <Alert severity="error">{errors.afterSubmit.message}</Alert>
-        )}
-
-        <RHFTextField
-          name="name"
-          label="Name"
-          helperText={"This name is public"}
-        />
+        {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
+        <Stack direction={"row"} spacing={2}>
+          <RHFTextField name="firstName" label="First Name" helperText={"This name is public"} />
+          <RHFTextField name="lastName" label="Last Name" />
+        </Stack>
         <RHFTextField
           multiline
-          rows={3} // 3 rows will be visible
-          maxRows={5} // max rows that can be visible, this will be techincally overwritten by the fixed number of rows that is 3 here.
+          minRows={3}
+          maxRows={5}
           inputProps={{ maxLength: 100 }}
           name="about"
           label="About"
+          helperText={"This is visible to everyone."}
         />
       </Stack>
 
@@ -100,12 +98,10 @@ const ProfileForm = () => {
         variant="contained"
         sx={{
           bgcolor: "text.primary",
-          color: (theme) =>
-            theme.palette.mode === "light" ? "common.white" : "grey.800",
+          color: (theme) => (theme.palette.mode === "light" ? "common.white" : "grey.800"),
           "&:hover": {
             bgcolor: "text.primary",
-            color: (theme) =>
-              theme.palette.mode === "light" ? "common.white" : "grey.800",
+            color: (theme) => (theme.palette.mode === "light" ? "common.white" : "grey.800"),
           },
         }}
       >

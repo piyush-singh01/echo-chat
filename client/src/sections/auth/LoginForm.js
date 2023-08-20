@@ -17,9 +17,11 @@ import {
 import { Eye, EyeSlash } from "phosphor-react";
 import { LoginUser } from "../../redux/slices/auth.js";
 import { useDispatch } from "react-redux";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
+  const [_, setUserID, __] = useLocalStorage('user_id')
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -50,7 +52,8 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     try {
       // make an api call to server
-      dispatch(LoginUser(data));
+      console.log("here");
+      dispatch(LoginUser(data, setUserID));
     } catch (err) {
       console.log(err);
       reset();

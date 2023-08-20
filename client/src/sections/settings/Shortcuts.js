@@ -116,7 +116,7 @@ const Shortcuts = ({ open, handleClose }) => {
             <Grid container spacing={3}>
               {list.map(({ key, title, combination }) => {
                 return (
-                  <Grid item xs={6}>
+                  <Grid key={key} item xs={6}>
                     <Stack
                       sx={{ width: "100%" }}
                       justifyContent="space-between"
@@ -129,9 +129,10 @@ const Shortcuts = ({ open, handleClose }) => {
                         {title}
                       </Typography>
                       <Stack spacing={2} direction="row">
-                        {combination.map((el) => {
+                        {combination.map((el, idx) => {
                           return (
                             <Button
+                              key={idx}
                               size="small"
                               sx={{ color: "#212121"}}
                               disabled

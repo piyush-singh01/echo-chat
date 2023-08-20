@@ -1,25 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-  Slide,
-  Stack,
-  Tab,
-  Tabs,
-  Button,
-  DialogActions,
-} from "@mui/material";
+import { Dialog, DialogContent, Slide, Stack, Tab, Tabs, Button, DialogActions, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  FetchFriendRequests,
-  FetchFriends,
-  FetchUsers,
-} from "../../redux/slices/app";
-import {
-  FriendComponent,
-  FriendRequestComponent,
-  UserComponent,
-} from "../../components/Friends";
+import { FetchFriendRequests, FetchFriends, FetchUsers } from "../../redux/slices/app";
+import { FriendComponent, FriendRequestComponent, UserComponent } from "../../components/Friends";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -28,15 +11,14 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const UserList = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log("here");
     dispatch(FetchUsers());
   }, []);
+
   const { users } = useSelector((state) => state.app);
-  console.log("people", users);
+
   return (
     <>
-      {users?.map((user, idx) => {
-        // user contains _id firstName, lastName, email, password?  // ? no need to send all right? TODO: send only required data
+      {users?.map((user) => {
         return <UserComponent key={user._id} {...user} />;
       })}
     </>
@@ -68,12 +50,7 @@ const FriendRequestList = () => {
   return (
     <>
       {friendRequests?.map((friendRequest, idx) => {
-        return (
-          <FriendRequestComponent
-            key={friendRequest._id}
-            {...friendRequest.sender}
-          />
-        ); // TODO: Render User Component here
+        return <FriendRequestComponent key={friendRequest._id} {...friendRequest.sender} />; // TODO: Render User Component here
       })}
     </>
   );

@@ -7,10 +7,12 @@ import { Alert, Button, Stack, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
 import RHFCodes from "../../components/forms/RHFCodes";
 import { VerifyEmail } from "../../redux/slices/auth";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 // TODO: This verify page should not be visible if we have not send any OTP.
 const VerifyForm = ({ email }) => {
   const dispatch = useDispatch();
+  const [_, setUserID, __] = useLocalStorage("user_id");
 
   // ? should this not better be an array?
   const VerifyFormSchema = Yup.object().shape({
@@ -48,11 +50,14 @@ const VerifyForm = ({ email }) => {
     try {
       // make an api call to server
       dispatch(
-        VerifyEmail({
-          // TODO: encapsulate this otp soup with some higher order logic
-          email: email,
-          otp: `${data.code1}${data.code2}${data.code3}${data.code4}${data.code5}${data.code6}`,
-        })
+        VerifyEmail(
+          {
+            // TODO: encapsulate this otp soup with some higher order logic
+            email: email,
+            otp: `${data.code1}${data.code2}${data.code3}${data.code4}${data.code5}${data.code6}`,
+          },
+          setUserID
+        )
       );
     } catch (err) {
       console.log(err);
@@ -67,14 +72,9 @@ const VerifyForm = ({ email }) => {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3} mb={5}>
-        {!!errors.afterSubmit && (
-          <Alert severity="error">{errors.afterSubmit.message}</Alert>
-        )}
+        {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
         {/* Add a custom OTP input instead of a Text Field */}
-        <RHFCodes
-          keyName="code"
-          inputs={["code1", "code2", "code3", "code4", "code5", "code6"]}
-        />
+        <RHFCodes keyName="code" inputs={["code1", "code2", "code3", "code4", "code5", "code6"]} />
       </Stack>
 
       <Button
@@ -85,12 +85,10 @@ const VerifyForm = ({ email }) => {
         variant="contained"
         sx={{
           bgcolor: "text.primary",
-          color: (theme) =>
-            theme.palette.mode === "light" ? "common.white" : "grey.800",
+          color: (theme) => (theme.palette.mode === "light" ? "common.white" : "grey.800"),
           "&:hover": {
             bgcolor: "text.primary",
-            color: (theme) =>
-              theme.palette.mode === "light" ? "common.white" : "grey.800",
+            color: (theme) => (theme.palette.mode === "light" ? "common.white" : "grey.800"),
           },
         }}
       >

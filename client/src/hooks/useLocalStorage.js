@@ -1,36 +1,17 @@
-import { useState, useEffect } from 'react';
-
-// ----------------------------------------------------------------------
-
-export default function useLocalStorage(key, defaultValue) {
-  const [value, setValue] = useState(() => {
-    const storedValue = localStorage.getItem(key);
-
-    return storedValue === null ? defaultValue : JSON.parse(storedValue);
-  });
-
-  useEffect(() => {
-    const listener = (e) => {
-      if (e.storageArea === localStorage && e.key === key) {
-        setValue(JSON.parse(e.newValue));
-      }
-    };
-    window.addEventListener('storage', listener);
-
-    return () => {
-      window.removeEventListener('storage', listener);
-    };
-  }, [key, defaultValue]);
-
-  const setValueInLocalStorage = (newValue) => {
-    setValue((currentValue) => {
-      const result = typeof newValue === 'function' ? newValue(currentValue) : newValue;
-
-      localStorage.setItem(key, JSON.stringify(result));
-
-      return result;
-    });
+const useLocalStorage = () => {
+  const getUserID = () => {
+    return window.localStorage.getItem("user_id");
   };
 
-  return [value, setValueInLocalStorage];
-}
+  const setUserID = (data) => {
+    window.localStorage.setItem("user_id", data);
+  };
+
+  const removeUserID = () => {
+    window.localStorage.removeItem("user_id");
+  };
+
+  return { getUserID, setUserID, removeUserID };
+};
+
+export default useLocalStorage;

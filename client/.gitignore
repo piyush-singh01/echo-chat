@@ -28,8 +28,6 @@ yarn-error.log*
 /src/components/Cat.js
 /src/components/LoadingScreen.js
 
-/src/hooks
-
 /src/theme/overrides
 /src/theme/shadows.js
 /src/theme/typography.js

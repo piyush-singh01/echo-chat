@@ -78,7 +78,7 @@ const Call = () => {
             height: "100%",
             width: "calc(100vw - 420px )",
             backgroundColor: theme.palette.mode === "light" ? "#FFF" : theme.palette.background.paper,
-            borderBottom: "6px solid #0162C4",
+            
           }}
         >
           {/* We don't need to render a new conversation here. */}

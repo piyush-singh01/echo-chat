@@ -29,10 +29,10 @@ const GeneralApp = () => {
             theme.palette.mode === "dark"
               ? theme.palette.background.paper
               : "#F0F4FA",
-              borderBottom:
-              room_id !== null && chat_type === "indivisual"
-                ? "none"
-                : "6px solid #0162C4",
+              // borderBottom:
+              // room_id !== null && chat_type === "indivisual"
+              //   ? "none"
+              //   : "6px solid #0162C4",
         }}
       >
         {/* Render conversation here, or something else depending on the page */}

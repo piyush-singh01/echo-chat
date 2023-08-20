@@ -146,6 +146,7 @@ const Settings = () => {
                   return (
                     <>
                       <Stack
+                        key={key}
                         onClick={onclick}
                         sx={{ cursor: "pointer" }}
                         spacing={2}

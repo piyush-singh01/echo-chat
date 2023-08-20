@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from "@mui/material/styles";
 import { Box, Typography, Stack, IconButton, Button, Divider, Avatar, Badge } from "@mui/material";
-import { ArchiveBox, CircleDashed, Users } from "phosphor-react";
+import { ArchiveBox, CircleDashed, Plus, Users } from "phosphor-react";
 import { ChatList } from "../../data";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import StyledBadge from "../../components/ui-components/StyledBadge";
@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { SelectConversation } from "../../redux/slices/app";
 import { socket } from "../../socket";
 import SearchBar from "../../components/ui-components/SearchBar";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 const ChatElement = (props) => {
   const theme = useTheme();
@@ -21,19 +22,22 @@ const ChatElement = (props) => {
         width: "100%",
         borderRadius: 1,
         backgroundColor: theme.palette.mode === "dark" ? theme.palette.background.paper : "#FFF",
+        "&:hover": {
+          cursor: "pointer",
+        },
       }}
       p={2}
       onClick={() => {
         dispatch(SelectConversation({ room_id: props._id })); // write now this id comes from fake data in ChatList
       }}
     >
-      <Stack direction={"row"} alignItems={"center"} justifyContent='space-between'>
+      <Stack direction={"row"} alignItems={"center"} justifyContent="space-between">
         <Stack direction={"row"} spacing={2}>
           {props.online ? (
             <StyledBadge
-              overlap='circular'
+              overlap="circular"
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              variant='dot'
+              variant="dot"
             >
               <Avatar src={props.img} />
             </StyledBadge>
@@ -42,9 +46,9 @@ const ChatElement = (props) => {
           )}
 
           <Stack spacing={0.3}>
-            <Typography variant='subtitle2'>{props.name}</Typography>
+            <Typography variant="subtitle2">{props.name}</Typography>
             <Typography
-              variant='caption'
+              variant="caption"
               sx={{
                 maxWidth: "150px",
                 overflow: "hidden",
@@ -57,10 +61,10 @@ const ChatElement = (props) => {
           </Stack>
         </Stack>
         <Stack spacing={2} alignItems={"center"}>
-          <Typography sx={{ fontWeight: 600 }} variant='caption'>
+          <Typography sx={{ fontWeight: 600 }} variant="caption">
             {props.time}
           </Typography>
-          <Badge color='primary' badgeContent={props.unread} />
+          <Badge color="primary" badgeContent={props.unread} />
         </Stack>
       </Stack>
     </Box>
@@ -69,7 +73,7 @@ const ChatElement = (props) => {
 
 const Chats = () => {
   const theme = useTheme();
-  const user_id = window.localStorage.getItem("user_id");
+  const [user_id, _, __] = useLocalStorage('user_id')
 
   useEffect(() => {
     socket.emit(
@@ -105,8 +109,8 @@ const Chats = () => {
         <Stack spacing={2} p={3} sx={{ height: "100vh" }}>
           {/*Put it in an even bigger container and padding of 3*/}
           <Stack direction={"row"} alignItems={"center"} justifyContent={"space-between"}>
-            <Typography variant='h5'>Chats</Typography>
-            <Stack direction='row' alignItems={"center"} spacing={1}>
+            <Typography variant="h5">Chats</Typography>
+            <Stack direction="row" alignItems={"center"} spacing={1}>
               <IconButton onClick={handleOpenDialogueBox}>
                 <Users />
               </IconButton>
@@ -119,33 +123,32 @@ const Chats = () => {
           <SearchBar />
           {/* ***** */}
           <Stack spacing={1}>
-            <Stack direction={"row"} alignItems={"center"} spacing={1.5}>
-              <ArchiveBox size={24} />
-              <Button /* For full widthsx={{width:"100%"}}*/>Archive</Button>
-            </Stack>
+              <Button sx={{ width: "100%" }} onClick={handleOpenDialogueBox}>
+                Start new Conversation
+              </Button>
             <Divider />
           </Stack>
           {/* **** */}
 
-          <Scrollbars className='scroll-bars' autoHide autoHideTimeout={500} autoHideDuration={100}>
+          <Scrollbars className="scroll-bars" autoHide autoHideTimeout={500} autoHideDuration={100}>
             <Stack spacing={2} direction={"column"} sx={{ flexGrow: 1, height: "100%" }}>
               <Stack spacing={2.4}>
-                <Typography variant='subtitle2' sx={{ color: theme.palette.text.default }}>
+                <Typography variant="subtitle2" sx={{ color: theme.palette.text.default }}>
                   Pinned Chats
                 </Typography>
-                {ChatList.filter((ele) => ele.pinned).map((ele) => {
-                  return <ChatElement {...ele} />;
+                {ChatList.filter((ele) => ele.pinned).map((ele, idx) => {
+                  return <ChatElement key={idx} {...ele} />;
                 })}
               </Stack>
               {/**/}
               <Stack spacing={2.4}>
-                <Typography variant='subtitle2' sx={{ color: theme.palette.text.default }}>
+                <Typography variant="subtitle2" sx={{ color: theme.palette.text.default }}>
                   All Chats
                 </Typography>
                 {conversations
                   .filter((ele) => !ele.pinned)
-                  .map((ele) => {
-                    return <ChatElement {...ele} />;
+                  .map((ele, idx) => {
+                    return <ChatElement key={idx} {...ele} />;
                   })}
               </Stack>
             </Stack>

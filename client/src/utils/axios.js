@@ -5,8 +5,8 @@ import { BASE_URL } from "../config.js";
 
 const axiosInstance = axios.create({ baseURL: BASE_URL });
 
-// a response intercepter
-// takes in two callbacks, one for succesful response, and other for unsuccesful
+// a response interceptor
+// takes in two callbacks, one for successful response, and other for unsuccessful
 axios.interceptors.response.use(
   (response) => response,   //called if successful
   (error) =>

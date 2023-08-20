@@ -1,17 +1,49 @@
-const useLocalStorage = () => {
-  const getUserID = () => {
-    return window.localStorage.getItem("user_id");
+import { useState, useEffect } from "react";
+
+const useLocalStorage = (key, defaultValue) => {
+  const [value, setValue] = useState(() => {
+    try {
+      const storedValue = window.localStorage.getItem("settings");
+      if (storedValue !== null) {
+        return JSON.parse(storedValue);
+      }
+      return defaultValue;
+    } catch {
+      return defaultValue;
+    }
+  });
+
+  useEffect(() => {
+    const listenStorageChangesForKey = (e) => {
+      if(e.storageArea === window.localStorage && e.key === key) {
+        setValue(e.newValue);
+      }
+    };
+    window.addEventListener('storage', listenStorageChangesForKey);
+
+    return () => window.removeEventListener('storage', listenStorageChangesForKey);
+  }, [key, defaultValue]);
+
+  
+  const setValueInLocalStorage = (newValue) => {
+    let result = newValue;
+
+    setValue((currentValue) => {
+      if (typeof newValue === "function") {
+        result = newValue(currentValue);
+      }
+    });
+    window.localStorage.setItem(key, JSON.stringify(result))
+    window.dispatchEvent(new Event('storage'));
+    return result;
   };
 
-  const setUserID = (data) => {
-    window.localStorage.setItem("user_id", data);
+  const clearValueFromLocalStorage = () => {
+    setValue(null);
+    window.localStorage.removeItem(key);
   };
 
-  const removeUserID = () => {
-    window.localStorage.removeItem("user_id");
-  };
-
-  return { getUserID, setUserID, removeUserID };
+  return [value, setValueInLocalStorage, clearValueFromLocalStorage];
 };
 
 export default useLocalStorage;

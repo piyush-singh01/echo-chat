@@ -22,7 +22,7 @@ const directMessageSchema = new mongoose.model(
       index: true,
     },
 
-    reciever: {
+    receiver: {
       type: mongoose.Schema.ObjectId,
       require: [true, "receiver can not be null"],
     },

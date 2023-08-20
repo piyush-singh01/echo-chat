@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema(
 
     lastName: {
       type: String,
-      require: [true, "Last Name is Required"],
+      // require: [true, "Last Name is Required"],
+      default: "",
       lowercase: true,
       trim: true,
       min: 1,
@@ -57,7 +58,7 @@ const userSchema = new mongoose.Schema(
 
     about: {
       type: String,
-      max: [60, "max 60 charachters limit for about section"],
+      max: [60, "max 60 characters limit for about section"],
     },
 
     passwordLastUpdatedAt: {
@@ -209,10 +210,7 @@ userSchema.methods.changedPasswordAfter = function (timestamp) {
 };
 
 // Checks if the provided password is correct
-userSchema.methods.correctPassword = async (
-  candidatePassword,
-  userPassword
-) => {
+userSchema.methods.correctPassword = async (candidatePassword, userPassword) => {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
@@ -227,10 +225,7 @@ userSchema.methods.createPasswordResetToken = async function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
 
   // Hash the reset token before storing it in database (for security)
-  this.passwordResetToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex"); // save the hashed value of reset token in db
+  this.passwordResetToken = crypto.createHash("sha256").update(resetToken).digest("hex"); // save the hashed value of reset token in db
 
   this.passwordResetTokenExpire = Date.now() + 10 * 60 * 1000; // also create a function for this(?)
   await this.save({ new: true, validateModifiedOnly: true });

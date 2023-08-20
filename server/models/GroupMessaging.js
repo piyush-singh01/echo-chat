@@ -17,15 +17,6 @@ const groupMessagingSchema = new mongoose.Schema(
     groupDisplayPicture: {
       type: String,
     },
-
-    
-    // should remove the messages schema 
-    // messages: [
-    //   {
-    //     type: mongoose.Schema.ObjectId,
-    //     ref: "groupMessages",
-    //   },
-    // ],
   },
   {
     timestamps: true,

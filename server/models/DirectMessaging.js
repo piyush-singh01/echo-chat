@@ -9,7 +9,7 @@ const directMessagingSchema = new mongoose.Schema(
         validator: function (participants) {
           return participants.length == 2;
         },
-        message: "one to one chat room should have exaclty two participants",
+        message: "one to one chat room should have exactly two participants",
       },
     },
 

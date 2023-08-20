@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "../../utils/axios.js";
 import { showSnackBar } from "./snackbar.js";
 
+
 const initialState = {
   isLoggedIn: false,
   token: "",
@@ -35,11 +36,9 @@ const slice = createSlice({
 
 export default slice.reducer;
 
-// THUNKS -> we use thunks to perform complex logic, as reducers are supposed to be pure functions.
-// dispatch(fn(action_object)) --> that's why we can call dispatch on functions, which take in data.
-export function LoginUser(formInputs) {
-  // formInputs = {email, password};
-  return async (dispatch, getState) => {
+// THUNKS
+export function LoginUser(formInputs, setUserID) {
+  return async (dispatch) => {
     await axios
       .post(
         "/auth/login",
@@ -60,31 +59,31 @@ export function LoginUser(formInputs) {
             token: res.data.token,
           })
         );
-        window.localStorage.setItem("user_id", res.data.user_id); // TODO: should we not do the same with reset password, since it also sends back the token
+        setUserID(res.data.user_id);
         dispatch(showSnackBar({ severity: "success", message: res.data.message }));
       })
       .catch((err) => {
         console.log(err);
-        dispatch(showSnackBar({ severity: "error", message: err.message }));
+        dispatch(showSnackBar({ severity: "error", message: err.response.data.message }));
       });
   };
 }
 
-// TODO: Look more on the logout logic, sure only this much needs to be done?
-export function LogoutUser() {
-  return async (dispatch, getState) => {
+// TODO: Remove all conversations from redux store upon logout
+export function LogoutUser(removeUserID) {
+  return async (dispatch) => {
     try {
       dispatch(slice.actions.logoutUser());
-      window.localStorage.removeItem("user_id");
+      removeUserID();
       dispatch(showSnackBar({ severity: "success", message: "Successfully Logged Out" }));
     } catch (err) {
-      dispatch(showSnackBar({ severity: "error", message: err.message }));
+      dispatch(showSnackBar({ severity: "error", message: err.response.data.message }));
     }
   };
 }
 
 export function ForgotPassword(formInputs) {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     await axios
       .post(
         "/auth/forgot-password",
@@ -103,13 +102,13 @@ export function ForgotPassword(formInputs) {
       })
       .catch((err) => {
         console.log(err);
-        dispatch(showSnackBar({ severity: "error", message: err.message }));
+        dispatch(showSnackBar({ severity: "error", message: err.response.data.message }));
       });
   };
 }
 
-export function ResetPassword(formInputs) {
-  return async (dispatch, getState) => {
+export function ResetPassword(formInputs, setUserID) {
+  return async (dispatch) => {
     await axios
       .post(
         "/auth/reset-password",
@@ -128,17 +127,18 @@ export function ResetPassword(formInputs) {
             token: res.data.token,
           })
         );
+        setUserID(res.data.user_id);
         dispatch(showSnackBar({ severity: "success", message: res.data.message }));
       })
       .catch((err) => {
         console.log(err);
-        dispatch(showSnackBar({ severity: "error", message: err.message }));
+        dispatch(showSnackBar({ severity: "error", message: err.response.data.message }));
       });
   };
 }
 
-export function RegisterUser(formInputs) {
-  return async (dispatch, getState) => {
+export function RegisterUser(formInputs, navigateToVerifyOTPPage) {
+  return async (dispatch) => {
     dispatch(slice.actions.updateIsLoading({ isLoading: true, error: false }));
     await axios
       .post(
@@ -157,24 +157,19 @@ export function RegisterUser(formInputs) {
         dispatch(slice.actions.updateRegisterEmail({ email: formInputs.email }));
         dispatch(slice.actions.updateIsLoading({ isLoading: false, error: false }));
         dispatch(showSnackBar({ severity: "success", message: res.data.message }));
+        navigateToVerifyOTPPage();
       })
       .catch((err) => {
         console.log(err);
         dispatch(slice.actions.updateIsLoading({ isLoading: false, error: true }));
-        dispatch(showSnackBar({ severity: "error", message: err.message }));
-      })
-      .finally(() => {
-        //? can also use the useNavigate hook by passing it as a call back function and then calling it here. The definition of the callback function is passed and defined inside the react component from where this THUNK is called. But for now do this.
-        if (!getState().auth.error) {
-          window.location.href = "/auth/verify"; // can not use the useNavigate hook here as it is not a react component, but a
-        }
+        dispatch(showSnackBar({ severity: "error", message: err.response.data.message }));
       });
   };
 }
 
-export function VerifyEmail(formInputs) {
+export function VerifyEmail(formInputs, setUserID) {
   console.log(formInputs);
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     await axios
       .post(
         "/auth/verify-otp",
@@ -196,7 +191,7 @@ export function VerifyEmail(formInputs) {
           })
         );
         dispatch(showSnackBar({ severity: "success", message: res.data.message }));
-        window.localStorage.setItem("user_id", res.data.user_id);
+        setUserID(res.data.user_id);
       })
       .catch((err) => {
         console.log(err);

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { faker } from "@faker-js/faker";
-import axios from "../../utils/axios.js";
+
 
 const initialState = {
   direct_chat: {
@@ -11,7 +11,7 @@ const initialState = {
   group_chat: {},
 };
 
-const user_id = window.localStorage.getItem("user_id");
+const user_id = window.localStorage.getItem('user_id'); // TODO: useLocalStorage()
 
 const slice = createSlice({
   name: "conversation",
@@ -19,9 +19,7 @@ const slice = createSlice({
   reducers: {
     fetchDirectConversations(state, actions) {
       const list = actions.payload.conversations.map((el) => {
-        const other_user = el.participants.find(
-          (ele) => ele._id.toString() !== user_id
-        );
+        const other_user = el.participants.find((ele) => ele._id.toString() !== user_id);
         return {
           // data in same format to that in chat list
           id: el._id, // this will also server as the room_id

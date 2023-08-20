@@ -70,13 +70,16 @@ export function LoginUser(formInputs) {
   };
 }
 
-
 // TODO: Look more on the logout logic, sure only this much needs to be done?
 export function LogoutUser() {
   return async (dispatch, getState) => {
-    dispatch(slice.actions.logoutUser());
-
-    window.localStorage.removeItem("user_id");
+    try {
+      dispatch(slice.actions.logoutUser());
+      window.localStorage.removeItem("user_id");
+      dispatch(showSnackBar({ severity: "success", message: "Successfully Logged Out" }));
+    } catch (err) {
+      dispatch(showSnackBar({ severity: "error", message: err.message }));
+    }
   };
 }
 
@@ -96,9 +99,11 @@ export function ForgotPassword(formInputs) {
       )
       .then((res) => {
         console.log(res);
+        dispatch(showSnackBar({ severity: "success", message: res.data.message }));
       })
       .catch((err) => {
         console.log(err);
+        dispatch(showSnackBar({ severity: "error", message: err.message }));
       });
   };
 }
@@ -123,8 +128,12 @@ export function ResetPassword(formInputs) {
             token: res.data.token,
           })
         );
+        dispatch(showSnackBar({ severity: "success", message: res.data.message }));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        dispatch(showSnackBar({ severity: "error", message: err.message }));
+      });
   };
 }
 
@@ -147,10 +156,12 @@ export function RegisterUser(formInputs) {
         console.log(res);
         dispatch(slice.actions.updateRegisterEmail({ email: formInputs.email }));
         dispatch(slice.actions.updateIsLoading({ isLoading: false, error: false }));
+        dispatch(showSnackBar({ severity: "success", message: res.data.message }));
       })
       .catch((err) => {
         console.log(err);
         dispatch(slice.actions.updateIsLoading({ isLoading: false, error: true }));
+        dispatch(showSnackBar({ severity: "error", message: err.message }));
       })
       .finally(() => {
         //? can also use the useNavigate hook by passing it as a call back function and then calling it here. The definition of the callback function is passed and defined inside the react component from where this THUNK is called. But for now do this.
@@ -184,14 +195,13 @@ export function VerifyEmail(formInputs) {
             token: res.data.token,
           })
         );
+        dispatch(showSnackBar({ severity: "success", message: res.data.message }));
         window.localStorage.setItem("user_id", res.data.user_id);
       })
       .catch((err) => {
         console.log(err);
+        dispatch(showSnackBar({ severity: "error", message: err.message }));
       })
       .finally(() => {});
   };
 }
-
-
-

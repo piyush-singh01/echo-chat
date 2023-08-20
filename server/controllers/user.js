@@ -14,7 +14,7 @@ export const updateMe = async (req, res) => {
     "firstName",
     "lastName",
     "about",
-    "avatar"
+    // "avatar"
   );
   
   const updated_user = await User.findByIdAndUpdate(user._id, filteredBody, {
@@ -22,7 +22,7 @@ export const updateMe = async (req, res) => {
     validateModifiedOnly: true,
   });
 
-  res.send(200).json({
+  res.status(200).json({
     status: "success",
     data: updated_user,
     message: "Profile update successfully",
@@ -35,7 +35,7 @@ export const getUsers = async (req, res) => {
 
   const all_users = await User.find({
     verified: true,
-  }).select("firstName lastName _id");
+  }).select("_id firstName lastName status");
 
   
   const this_user = req.user; // The protect middleware will be called before this. comes from there. THis user essentially comes from decoding the jwt token in the localstorage.

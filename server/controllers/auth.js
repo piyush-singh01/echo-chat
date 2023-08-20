@@ -84,13 +84,7 @@ export const login = async (req, res, next) => {
 export const register = async (req, res, next) => {
   try {
     const { email } = req.body;
-    const filteredBody = filterObj(
-      req.body,
-      "firstName",
-      "lastName",
-      "email",
-      "password"
-    );
+    const filteredBody = filterObj(req.body, "firstName", "lastName", "email", "password");
 
     const existing_user = await User.findOne({ email: email });
     if (existing_user && existing_user.verified) {
@@ -116,11 +110,7 @@ export const register = async (req, res, next) => {
       next();
     }
   } catch (ex) {
-    const err = new CustomError(
-      "Server Error: Error Creating Account",
-      500,
-      ex
-    );
+    const err = new CustomError("Server Error: Error Creating Account", 500, ex);
     next(err);
   }
 };
@@ -162,11 +152,7 @@ export const sendOTP = async (req, res, next) => {
     user.otp = undefined;
     await user.save({ new: true, validateModifiedOnly: true });
 
-    const err = new CustomError(
-      "Error sending mail, please try again later",
-      500,
-      ex
-    );
+    const err = new CustomError("Error sending mail, please try again later", 500, ex);
     next(err);
   }
 };
@@ -246,10 +232,7 @@ export const forgotPassword = async (req, res) => {
         recipient: user.email,
         subject: "Reset Password link for Echo Chat",
         text: `The reset password link is valid for 10 minutes.`,
-        html: forgotPasswordMail(
-          user.firstName + " " + user.lastName,
-          resetUrl
-        ),
+        html: forgotPasswordMail(user.firstName + " " + user.lastName, resetUrl),
         attachments: [],
       })
       .then(() => {
@@ -268,11 +251,7 @@ export const forgotPassword = async (req, res) => {
     user.passwordResetTokenExpire = undefined;
     await user.save({ new: true, validateModifiedOnly: true });
 
-    const err = new CustomError(
-      "There was an error sending the email, please try again later.",
-      500,
-      ex
-    );
+    const err = new CustomError("There was an error sending the email, please try again later.", 500, ex);
     next(err);
   }
 };
@@ -280,10 +259,7 @@ export const forgotPassword = async (req, res) => {
 export const resetPassword = async (req, res) => {
   console.log(req.body);
   // Get the reset token from the request body and hash it
-  const hashedToken = crypto
-    .createHash("sha256")
-    .update(req.body.resetToken)
-    .digest("hex");
+  const hashedToken = crypto.createHash("sha256").update(req.body.resetToken).digest("hex");
 
   // Find the user based on the hashed token
   const user = await User.findOne({
@@ -317,9 +293,7 @@ export const resetPassword = async (req, res) => {
       attachments: [],
     })
     .then(() => {
-      console.log(
-        `Sent confirmation mail for password change to ${user.email}`
-      );
+      console.log(`Sent confirmation mail for password change to ${user.email}`);
     })
     .catch((err) => {
       console.log(err);
@@ -330,6 +304,7 @@ export const resetPassword = async (req, res) => {
     status: "success",
     message: "Password reset successful",
     token,
+    user_id: user._id,
   });
 };
 
@@ -346,15 +321,12 @@ export const resetPassword = async (req, res) => {
 export const protect = async (req, res, next) => {
   // Get the token JWT from the client side.
   let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
     token = req.headers.authorization.split(" ")[1]; // the bearer token
-  } else if (req.cookies.jwt) {
+  } else if (req.cookies && req.cookies.jwt) {
     token = req.cookies.jwt;
   } else {
-    req.status(400).json({
+    res.status(400).json({
       status: "error",
       message: "You are not authorized to view this page",
     });
@@ -362,10 +334,7 @@ export const protect = async (req, res, next) => {
   }
 
   // Verification of token
-  const decoded = await promisify(jwt.verify)(
-    token,
-    process.env.JWT_SECRET_KEY
-  );
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
 
   // Check if the user still exists and is not banned
   const this_user = await User.findById(decoded.userId);

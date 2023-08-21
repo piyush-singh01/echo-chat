@@ -7,8 +7,7 @@ import filterObj from "../utils/filterObj.js";
 
 // Update Profile
 export const updateMe = async (req, res) => {
-
-  const { user } = req;
+  const { user } = req; // comes from the protect middleware
   const filteredBody = filterObj(
     req.body,
     "firstName",
@@ -37,8 +36,7 @@ export const getUsers = async (req, res) => {
     verified: true,
   }).select("_id firstName lastName status");
 
-  
-  const this_user = req.user; // The protect middleware will be called before this. comes from there. THis user essentially comes from decoding the jwt token in the localstorage.
+  const this_user = req.user; 
   const other_users = all_users?.filter(
     (user) =>
       !this_user.friends.includes(user._id) &&
@@ -50,6 +48,10 @@ export const getUsers = async (req, res) => {
     data: other_users,
     message: "All users fetched successfully",
   });
+};
+
+export const getNonFriendUsers = async (req, res, next) => {
+  
 };
 
 export const getFriends = async (req, res, next) => {
@@ -65,9 +67,9 @@ export const getFriends = async (req, res, next) => {
   });
 };
 
-// get all friend requests that you have recieved
+// get all friend requests that you have received
 export const getFriendRequests = async (req, res, next) => {
-  // find all objects in which the user is the reciepient and populate the sender field to find out who sent these requests.
+  // find all objects in which the user is the recipient and populate the sender field to find out who sent these requests.
   const requests = await FriendRequest.find({
     recipient: req.user._id,
   })

@@ -360,6 +360,8 @@ export const protect = async (req, res, next) => {
     });
     return;
   }
-  req.user = this_user;
+
+  const userInfoToSend = filterObj(this_user.toObject(), "_id", "firstName", "lastName");
+  req.user = userInfoToSend;
   next();
 };

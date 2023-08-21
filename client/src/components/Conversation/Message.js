@@ -8,22 +8,22 @@ const Message = ({menu}) => {
     <>
       <Box p={3}>
         <Stack spacing={3}>
-          {Chat_History.map((ele) => {
+          {Chat_History.map((ele, idx) => {
             switch (ele.type) {
               case "divider":
-                return <TimeLine {...ele} />
+                return <TimeLine key={idx} {...ele} />
               case "msg":
                 switch (ele.subtype) {
                   case "img":
-                    return <MediaMessage {...ele} menu={menu} />
+                    return <MediaMessage key={idx} {...ele} menu={menu} />
                   case "doc":
-                    return <DocumentMessage {...ele} menu={menu} />
+                    return <DocumentMessage key={idx} {...ele} menu={menu} />
                   case "link":
-                    return <LinkMessage {...ele} menu={menu} />
+                    return <LinkMessage key={idx} {...ele} menu={menu} />
                   case "reply":
-                    return <ReplyMessage {...ele} menu={menu} />
+                    return <ReplyMessage key={idx} {...ele} menu={menu} />
                   default:
-                    return <TextMessage {...ele} menu={menu} />
+                    return <TextMessage key={idx} {...ele} menu={menu} />
                 }
               default:
                 <></>;

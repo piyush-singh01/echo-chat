@@ -93,8 +93,8 @@ const ChatInput = ({ setIsPickerOpen }) => {
           startAdornment: (
             <Stack sx={{ width: "max-content" }}>
               <Stack sx={{ position: "relative" , display: isAttachmentPickerOpen ? "inline-block": "none"}}>
-                {Actions.map((ele) => (
-                  <Tooltip title={ele.title} placement="right">
+                {Actions.map((ele, idx) => (
+                  <Tooltip key={idx} title={ele.title} placement="right">
                     <Fab
                       sx={{
                         position: "absolute",

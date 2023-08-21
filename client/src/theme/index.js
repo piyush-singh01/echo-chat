@@ -23,7 +23,8 @@ ThemeProvider.propTypes = {
 };
 
 export default function ThemeProvider({ children }) {
-  const { themeMode, themeDirection } = useSettings();
+  const { themeMode } = useSettings();
+  const themeDirection = "ltr";
 
   const isLight = themeMode === "light";
 
@@ -41,7 +42,6 @@ export default function ThemeProvider({ children }) {
   );
 
   const theme = createTheme(themeOptions);
-
   theme.components = componentsOverride(theme);
 
   return (

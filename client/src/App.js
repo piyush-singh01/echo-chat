@@ -2,7 +2,7 @@
 // React Imports
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { collapseSnackBar } from "./redux/slices/app";
+import { collapseSnackBar } from "./redux/slices/snackbar";
 // Route Import
 import Router from "./routes";
 // Theme Import
@@ -25,8 +25,7 @@ const Alert = React.forwardRef((props, ref) => (
 
 function App() {
   const dispatch = useDispatch();
-  const { snackbar } = useSelector((state) => state.app);
-  const { open, message, severity } = snackbar;
+  const { open, message, severity } = useSelector((state) => state.snackbar);
   return (
     <>
       <ThemeProvider>

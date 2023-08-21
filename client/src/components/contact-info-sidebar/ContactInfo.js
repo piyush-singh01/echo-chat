@@ -197,8 +197,8 @@ const ContactInfo = () => {
               </Button>
             </Stack>
             <Stack direction={"row"} alignItems="center" spacing={2}>
-              {[1, 2, 3].map((el) => (
-                <Box>
+              {[1, 2, 3].map((el, idx) => (
+                <Box key={idx}>
                   <img
                     src={faker.image.city()}
                     alt={faker.internet.userName()}

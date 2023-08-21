@@ -76,9 +76,9 @@ const SharedMessages = () => {
                 case 0:
                   return (
                     <Grid container spacing={2}>
-                      {[0, 1, 2, 3, 4, 5, 6, 7].map((el) => {
+                      {[0, 1, 2, 3, 4, 5, 6, 7].map((el, idx) => {
                         return (
-                          <Grid item xs={4}>
+                          <Grid key={idx} item xs={4}>
                             <img src={faker.image.avatar()} alt={faker.name.fullName()}></img>
                           </Grid>
                         );
@@ -87,13 +87,13 @@ const SharedMessages = () => {
                   );
                 // Media
                 case 1:
-                  return Shared_links.map((ele) => {
-                    return <LinkMessage ele={ele} />;
+                  return Shared_links.map((ele, idx) => {
+                    return <LinkMessage key={idx} ele={ele} />;
                   });
                 // Links
                 case 2:
-                  return Shared_docs.map((ele) => {
-                    return <DocumentMessage ele={ele} />;
+                  return Shared_docs.map((ele, idx) => {
+                    return <DocumentMessage key={idx} ele={ele} />;
                   });
                 //Docs
                 default:

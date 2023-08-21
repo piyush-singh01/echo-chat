@@ -1,20 +1,18 @@
+// Imports
 import React from "react";
-import {
-  Stack,
-  Box,
-  Typography,
-  IconButton,
-  Avatar,
-  Button,
-} from "@mui/material";
-import StyledBadge from "./ui-components/StyledBadge";
 import { socket } from "../socket";
+// UI Imports
+import { Stack, Box, Typography, IconButton, Avatar, Button } from "@mui/material";
+import StyledBadge from "./ui-components/StyledBadge";
 import { useTheme } from "@mui/material/styles";
 import { Chat } from "phosphor-react";
 
+// Custom Hooks
+import useLocalStorage from "../hooks/useLocalStorage";
+
 export const UserComponent = ({ firstName, lastName, _id, online, img }) => {
   const theme = useTheme();
-  const user_id = window.localStorage.getItem("user_id");
+  const [user_id, _, __] = useLocalStorage('user_id');
   const name = `${firstName} ${lastName}`;
   return (
     <Box
@@ -28,11 +26,7 @@ export const UserComponent = ({ firstName, lastName, _id, online, img }) => {
       }}
       p={2}
     >
-      <Stack
-        direction="row"
-        alignItems={"center"}
-        justifyContent="space-between"
-      >
+      <Stack direction="row" alignItems={"center"} justifyContent="space-between">
         <Stack direction="row" alignItems={"center"} spacing={2}>
           {online ? (
             <StyledBadge
@@ -66,16 +60,9 @@ export const UserComponent = ({ firstName, lastName, _id, online, img }) => {
   );
 };
 
-export const FriendRequestComponent = ({
-  firstName,
-  lastName,
-  _id,
-  online,
-  img,
-  request_id,
-}) => {
+export const FriendRequestComponent = ({ firstName, lastName, _id, online, img, request_id }) => {
   const theme = useTheme();
-  const user_id = window.localStorage.getItem("user_id");
+  const [user_id, _, __] = useLocalStorage('user_id')
   const name = `${firstName} ${lastName}`;
   return (
     <Box
@@ -89,11 +76,7 @@ export const FriendRequestComponent = ({
       }}
       p={2}
     >
-      <Stack
-        direction="row"
-        alignItems={"center"}
-        justifyContent="space-between"
-      >
+      <Stack direction="row" alignItems={"center"} justifyContent="space-between">
         <Stack direction="row" alignItems={"center"} spacing={2}>
           {online ? (
             <StyledBadge
@@ -129,7 +112,7 @@ export const FriendRequestComponent = ({
 
 export const FriendComponent = ({ firstName, lastName, _id, online, img }) => {
   const theme = useTheme();
-  const user_id = window.localStorage.getItem("user_id");
+  const [user_id, _, __] = useLocalStorage('user_id')
   const name = `${firstName} ${lastName}`;
   return (
     <Box
@@ -143,11 +126,7 @@ export const FriendComponent = ({ firstName, lastName, _id, online, img }) => {
       }}
       p={2}
     >
-      <Stack
-        direction="row"
-        alignItems={"center"}
-        justifyContent="space-between"
-      >
+      <Stack direction="row" alignItems={"center"} justifyContent="space-between">
         <Stack direction="row" alignItems={"center"} spacing={2}>
           {online ? (
             <StyledBadge

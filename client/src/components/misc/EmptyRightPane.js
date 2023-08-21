@@ -7,18 +7,12 @@ const EmptyRightPane = () => {
     <>
       <Stack
         direction={"column"}
-        sx={{ height: "100%", width: "100%" }}
+        sx={{ height: "100%", width: "100%", borderBottom: "6px solid #0162C4" }}
         alignItems={"center"}
         justifyContent={"center"}
       >
-        <img
-          src={EmptyChatBox2}
-          alt="No Chat"
-          style={{ height: "320px", width: "320px" }}
-        />
-        <Typography variant="subtitle2">
-          Select a conversation or start a new one.
-        </Typography>
+        <img src={EmptyChatBox2} alt="No Chat" style={{ height: "320px", width: "320px" }} />
+        <Typography variant="subtitle2">Select a conversation or start a new one.</Typography>
       </Stack>
     </>
   );

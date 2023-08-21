@@ -7,8 +7,8 @@ import { Stack } from "@mui/material";
 import Sidebar from "./Sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { connectSocket, socket } from "../../socket";
-import { showSnackBar } from "../../redux/slices/app";
-
+import { showSnackBar } from "../../redux/slices/snackbar";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
@@ -17,9 +17,7 @@ const DashboardLayout = () => {
     (state) => state.conversation.direct_chat
   );
 
-  // TODO: get it from local storage custom hook
-  // ? Sure, get it from local storage?
-  const user_id = window.localStorage.getItem("user_id");
+  const [user_id, _, __] = useLocalStorage('user_id')
 
   useEffect(() => {
     // ! Why are we even doing this? why reload

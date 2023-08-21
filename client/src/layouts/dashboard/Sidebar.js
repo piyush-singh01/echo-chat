@@ -3,19 +3,11 @@
 import React, { useState, useEffect } from "react";
 
 // MUI, Phosphor and faker Imports
-import {
-  Box,
-  Stack,
-  IconButton,
-  Divider,
-  Avatar,
-  Menu,
-  MenuItem,
-} from "@mui/material";
+import { Box, Stack, IconButton, Divider, Avatar, Menu, MenuItem } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
-import { Gear } from "phosphor-react";
+import { ChatCircleDots, Gear, Phone, SignOut, User, Users } from "phosphor-react";
 import { faker } from "@faker-js/faker";
 
 // Assets and Data Imports
@@ -25,7 +17,7 @@ import useSettings from "../../hooks/useSettings";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { LogoutUser } from "../../redux/slices/auth.js";
-
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 const profileMenu = [
   {
@@ -57,11 +49,11 @@ const navButtons = [
   },
 ];
 
-
 const Sidebar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [_, __, removeUserID ] = useLocalStorage('user_id');
 
   const [selected, setSelected] = useState(0);
 
@@ -138,11 +130,7 @@ const Sidebar = () => {
           justifyContent={"space-between"}
           spacing={3}
         >
-          <Stack
-            alignItems={"center"}
-            spacing={4}
-            justifyContent={"space-between"}
-          >
+          <Stack alignItems={"center"} spacing={4} justifyContent={"space-between"}>
             <Box
               sx={{
                 backgroundColor: theme.palette.primary.main,
@@ -154,12 +142,7 @@ const Sidebar = () => {
               <img src={Logo} alt="Logo" />
             </Box>
 
-            <Stack
-              sx={{ width: "max-content" }}
-              direction={"column"}
-              alignItems={"center"}
-              spacing={3}
-            >
+            <Stack sx={{ width: "max-content" }} direction={"column"} alignItems={"center"} spacing={3}>
               {navButtons.map((ele) =>
                 ele.index === selected ? (
                   <Box
@@ -171,10 +154,7 @@ const Sidebar = () => {
                     }}
                   >
                     {/*Key for the Box */}
-                    <IconButton
-                      sx={{ width: "max-content", color: "#fff" }}
-                      key={ele.index}
-                    >
+                    <IconButton sx={{ width: "max-content", color: "#fff" }} key={ele.index}>
                       {ele.icon}
                     </IconButton>
                   </Box>
@@ -183,10 +163,7 @@ const Sidebar = () => {
                     key={ele.index}
                     sx={{
                       width: "max-content",
-                      color:
-                        theme.palette.mode === "dark"
-                          ? theme.palette.text.primary
-                          : "#000",
+                      color: theme.palette.mode === "dark" ? theme.palette.text.primary : "#000",
                     }}
                     onClick={() => {
                       setSelected(ele.index);
@@ -215,10 +192,7 @@ const Sidebar = () => {
                 <IconButton
                   sx={{
                     width: "max-content",
-                    color:
-                      theme.palette.mode === "dark"
-                        ? theme.palette.text.primary
-                        : "#000",
+                    color: theme.palette.mode === "dark" ? theme.palette.text.primary : "#000",
                   }}
                   onClick={() => {
                     setSelected(3);
@@ -244,11 +218,7 @@ const Sidebar = () => {
               }}
             >
               <IconButton onClick={() => onToggleMode()} color="inherit">
-                {theme.palette.mode === "dark" ? (
-                  <Brightness7Icon />
-                ) : (
-                  <Brightness4Icon />
-                )}
+                {theme.palette.mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}
               </IconButton>
             </Box>
 
@@ -283,7 +253,7 @@ const Sidebar = () => {
                     onClick={() => {
                       handleClick(i);
                       if (i === 2) {
-                        dispatch(LogoutUser());
+                        dispatch(LogoutUser(removeUserID));
                       } else {
                         navigate(getMenuPath(i));
                       }

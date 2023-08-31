@@ -13,7 +13,6 @@ import SharedMessages from "../../components/contact-info-sidebar/SharedMessages
 import StarredMessage from "../../components/contact-info-sidebar/StarredMessages";
 import EmptyRightPane from "../../components/misc/EmptyRightPane";
 
-
 const GeneralApp = () => {
   const theme = useTheme();
   const { sidebar, room_id, chat_type } = useSelector((store) => store.app);
@@ -25,22 +24,11 @@ const GeneralApp = () => {
         sx={{
           height: "100%",
           width: sidebar.open ? `calc(100vw - 740px)` : `calc(100vw - 420px)`,
-          backgroundColor:
-            theme.palette.mode === "dark"
-              ? theme.palette.background.paper
-              : "#F0F4FA",
-              // borderBottom:
-              // room_id !== null && chat_type === "indivisual"
-              //   ? "none"
-              //   : "6px solid #0162C4",
+          backgroundColor: theme.palette.mode === "dark" ? theme.palette.background.paper : "#F0F4FA",
         }}
       >
         {/* Render conversation here, or something else depending on the page */}
-        {1 === 1 || room_id !== null && chat_type === "indivisual" ? (
-          <Conversation />
-        ) : (
-          <EmptyRightPane />
-        )}
+        {room_id !== null && chat_type === "individual" ? <Conversation /> : <EmptyRightPane />}
       </Box>
 
       {/* Render the Contact info here now */}

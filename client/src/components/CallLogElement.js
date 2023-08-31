@@ -1,4 +1,3 @@
-//TODO: Similar for chat element as well?
 
 import React from "react";
 import {

@@ -2,7 +2,7 @@ import React from "react";
 import { Stack, Box, Typography, IconButton } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { CaretLeft } from "phosphor-react";
-import ProfileForm from "../../sections/main/ProfileForm";
+import ProfileForm from "../../sections/app/ProfileForm";
 import { useNavigate } from "react-router-dom";
 
 const Profile = () => {

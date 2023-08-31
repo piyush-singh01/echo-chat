@@ -1,4 +1,4 @@
-/* COMMONG DASHBOARD LAYOUT FOR USER ROUTES */
+/* COMMON DASHBOARD LAYOUT FOR USER ROUTES */
 
 // IMPORTS
 import React, { useEffect } from "react";
@@ -13,11 +13,9 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 const DashboardLayout = () => {
   const dispatch = useDispatch();
   const { isLoggedIn } = useSelector((state) => state.auth);
-  const { conversations } = useSelector(
-    (state) => state.conversation.direct_chat
-  );
+  const { conversations } = useSelector((state) => state.conversation.direct_chat);
 
-  const [user_id, _, __] = useLocalStorage('user_id')
+  const [user_id, _, __] = useLocalStorage("user_id");
 
   useEffect(() => {
     // ! Why are we even doing this? why reload

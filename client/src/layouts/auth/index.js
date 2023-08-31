@@ -6,7 +6,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import Logo from "../../assets/Images/logo.ico";
 import { useSelector } from "react-redux";
 
-const MainLayout = () => {
+const AuthLayout = () => {
   const { isLoggedIn } = useSelector((state) => state.auth);
 
   if (isLoggedIn) {
@@ -30,4 +30,4 @@ const MainLayout = () => {
   );
 };
 
-export default MainLayout;
+export default AuthLayout;

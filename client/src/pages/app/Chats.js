@@ -5,7 +5,7 @@ import { ArchiveBox, CircleDashed, Plus, Users } from "phosphor-react";
 import { ChatList } from "../../data";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import StyledBadge from "../../components/ui-components/StyledBadge";
-import Friends from "../../sections/main/Friends";
+import Friends from "../../sections/app/Friends";
 import { useDispatch, useSelector } from "react-redux";
 import { SelectConversation } from "../../redux/slices/app";
 import { socket } from "../../socket";

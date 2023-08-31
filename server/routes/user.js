@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { getFriendRequests, getFriends, getUsers, updateMe } from "../controllers/user.js";
 import { protect } from "../controllers/auth.js";
+
 const router = Router();
 
 router.patch("/update-me", protect, updateMe);

@@ -8,7 +8,7 @@ import { CallList } from "../../data";
 
 // Component Imports
 import CallLogElement from "../../components/CallLogElement";
-import StartCall from "../../sections/main/StartCall";
+import StartCall from "../../sections/app/StartCall";
 import SearchBar from "../../components/ui-components/SearchBar";
 import EmptyRightPane from "../../components/misc/EmptyRightPane";
 

@@ -9,7 +9,7 @@ import { CircleDashed, Plus } from "phosphor-react";
 // Component Imports
 import ChatElement from "../../components/ChatElement";
 import { ChatList } from "../../data";
-import CreateGroup from "../../sections/main/CreateGroup";
+import CreateGroup from "../../sections/app/CreateGroup";
 import SearchBar from "../../components/ui-components/SearchBar";
 import Conversation from "../../components/conversation";
 import EmptyRightPane from "../../components/misc/EmptyRightPane";

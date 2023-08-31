@@ -22,6 +22,7 @@ const io = new Server(server, {
   },
 });
 
+
 // Extracting db_uri and port number from environment variables
 const DB_URI = process.env.MONGO_URI.replace(
   "<password>",
@@ -116,9 +117,9 @@ mongoose
 //   });
 
 //   socket.on("start_conversation", async (data) => {
-//     // get to and from, from the data
+    // get to and from, from the data
 //     const { to, from } = data;
-//     //check if a convo exists already
+    //check if a convo exists already
 //     const exisiting_conversation = await DirectMessage.find({
 //       participants: { $size: 2, $all: [to, from] }, // only 2 participants and all those should have these to and from field.
 //     }).populate("participants", "firstName lastName _id email status");
@@ -142,11 +143,11 @@ mongoose
 //   //* To handle text and link messages,
 //   socket.on("text_message", async (data) => {
 //     console.log("Recieved message", data);
-//     // data: {to, from , text}; // send data in this way from the client side
-//     // create a new conversation if it doesn't exists
-//     // save to db
-//     // emit 'incoming_message' -> to the sender of the text message
-//     // emit 'outgoing_message' -> to the reciever of the text message
+    // data: {to, from , text}; // send data in this way from the client side
+    // create a new conversation if it doesn't exists
+    // save to db
+    // emit 'incoming_message' -> to the sender of the text message
+    // emit 'outgoing_message' -> to the reciever of the text message
 //   });
 
 //   socket.on("file_message", async (data) => {
@@ -177,6 +178,7 @@ mongoose
 //     socket.disconnect(0);
 //   });
 // });
+
 
 process.on("unhandledRejection", (err) => {
   console.log(err);

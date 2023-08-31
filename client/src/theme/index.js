@@ -13,7 +13,7 @@ import useSettings from "../hooks/useSettings.js";
 import palette from "./palette";
 import typography from "./typography";
 import breakpoints from "./breakpoints";
-import componentsOverride from "./overrides";
+import componentsOverride from "./overrides/index.js";
 import shadows, { customShadows } from "./shadows";
 
 // ----------------------------------------------------------------------

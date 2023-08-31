@@ -36,7 +36,7 @@ const GeneralApp = () => {
         }}
       >
         {/* Render conversation here, or something else depending on the page */}
-        {room_id !== null && chat_type === "indivisual" ? (
+        {1 === 1 || room_id !== null && chat_type === "indivisual" ? (
           <Conversation />
         ) : (
           <EmptyRightPane />

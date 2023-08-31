@@ -17,7 +17,7 @@ const initialState = {
 const SettingsContext = createContext(initialState);
 
 const SettingsProvider = ({ children }) => {
-  const [settings, setSettings] = useLocalStorage("settings", {
+  const [settings, setSettings, _] = useLocalStorage("settings", {
     themeMode: initialState.themeMode,
   });
 
@@ -35,7 +35,7 @@ const SettingsProvider = ({ children }) => {
       themeMode: event.target.value,
     });
   };
-
+  
   const onResetSetting = () => {
     setSettings({
       themeMode: initialState.themeMode,

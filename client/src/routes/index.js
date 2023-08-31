@@ -2,8 +2,8 @@
 import { Suspense, lazy } from "react"; // Suspense and lazy for lazy loading
 import { Navigate, useRoutes } from "react-router-dom";
 // LAYOUTS
-import DashboardLayout from "../layouts/dashboard";
-import MainLayout from "../layouts/main";
+import DashboardLayout from "../layouts/app";
+import AuthLayout from "../layouts/auth";
 // CONFIG
 import { DEFAULT_PATH } from "../config";
 import LoadingScreen from "../components/misc/LoadingScreen";
@@ -17,7 +17,7 @@ const Loadable = (Component) => (props) => {
   );
 };
 
-const GeneralApp = Loadable(lazy(() => import("../pages/dashboard/GeneralApp")));
+const GeneralApp = Loadable(lazy(() => import("../pages/app/GeneralApp")));
 
 // Auth Pages
 const LoginPage = Loadable(lazy(() => import("../pages/auth/Login")));
@@ -27,10 +27,10 @@ const ResetPasswordPage = Loadable(lazy(() => import("../pages/auth/ResetPasswor
 const Verify = Loadable(lazy(() => import("../pages/auth/Verify")));
 
 // User Pages
-const GroupPage = Loadable(lazy(() => import("../pages/dashboard/Group")));
-const ProfilePage = Loadable(lazy(() => import("../pages/dashboard/Profile")));
-const Settings = Loadable(lazy(() => import("../pages/dashboard/Settings")));
-const CallPage = Loadable(lazy(() => import("../pages/dashboard/Call")));
+const GroupPage = Loadable(lazy(() => import("../pages/app/Group")));
+const ProfilePage = Loadable(lazy(() => import("../pages/app/Profile")));
+const Settings = Loadable(lazy(() => import("../pages/app/Settings")));
+const CallPage = Loadable(lazy(() => import("../pages/app/Call")));
 
 // 404 Page
 const Page404 = Loadable(lazy(() => import("../pages/Page404")));
@@ -39,7 +39,7 @@ export default function Router() {
   return useRoutes([
     {
       path: "/auth",
-      element: <MainLayout />,
+      element: <AuthLayout />,
       children: [
         { path: "login", element: <LoginPage /> },
         { path: "register", element: <RegisterPage /> },

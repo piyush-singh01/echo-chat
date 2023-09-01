@@ -12,23 +12,12 @@ const directMessagingSchema = new mongoose.Schema(
         message: "one to one chat room should have exactly two participants",
       },
     },
-
-    // should remove the messages field as the DirectMessages schema already has a back reference to the room_id.
-    // messages: [
-    //   {
-    //     type: mongoose.Schema.ObjectId,
-    //     ref: "DirectMessages",
-    //   },
-    // ],
   },
   {
     timestamps: true,
   }
 );
 
-const DirectMessaging = new mongoose.model(
-  "DirectMessaging",
-  directMessagingSchema
-);
+const DirectMessaging = new mongoose.model("DirectMessaging", directMessagingSchema);
 
 export default DirectMessaging;

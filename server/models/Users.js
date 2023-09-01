@@ -15,7 +15,6 @@ const userSchema = new mongoose.Schema(
 
     lastName: {
       type: String,
-      // require: [true, "Last Name is Required"],
       default: "",
       lowercase: true,
       trim: true,

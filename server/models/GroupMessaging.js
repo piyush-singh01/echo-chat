@@ -2,6 +2,17 @@ import mongoose from "mongoose";
 
 const groupMessagingSchema = new mongoose.Schema(
   {
+    participants: {
+      type: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
+      require: [true, "number of participants can not be null in group messaging"],
+      validate: {
+        validator: function (participants) {
+          return participants.length <= 100;
+        },
+        message: "group chat should have no more than 100 participants",
+      },
+    },
+
     groupName: {
       type: String,
       require: [true, "Group name is required"],
@@ -23,9 +34,6 @@ const groupMessagingSchema = new mongoose.Schema(
   }
 );
 
-const GroupMessaging = new mongoose.model(
-  "GroupMessaging",
-  groupMessagingSchema
-);
+const GroupMessaging = new mongoose.model("GroupMessaging", groupMessagingSchema);
 
 export default GroupMessaging;

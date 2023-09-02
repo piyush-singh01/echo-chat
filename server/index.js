@@ -40,10 +40,12 @@ mongoose
   })
   .catch((err) => {
     console.log(err);
+    console.log("Error connecting to the database, shutting down the server...");
+    process.exit(1);
   });
 
 
-  // SOCKET EVENTS
+// SOCKET EVENTS
 io.on("connection", async (socket) => {
   const { user_id } = socket.handshake.query;
   const socket_id = socket.id;
@@ -58,7 +60,6 @@ io.on("connection", async (socket) => {
     await User.findByIdAndUpdate(user_id, { socket_id: null, status: "offline" });
   });
 });
-
 
 process.on("unhandledRejection", (err) => {
   console.log(err);

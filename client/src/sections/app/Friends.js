@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, Slide, Stack, Tab, Tabs, Button, DialogActions, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { FetchFriendRequests, FetchFriends, FetchUsers } from "../../redux/slices/app";
+import { FetchFriendRequests, FetchFriends, FetchAllNonFriends } from "../../redux/slices/app";
 import { FriendComponent, FriendRequestComponent, UserComponent } from "../../components/Friends";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -11,7 +11,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const UserList = () => {
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(FetchUsers());
+    dispatch(FetchAllNonFriends());
   }, []);
 
   const { users } = useSelector((state) => state.app);

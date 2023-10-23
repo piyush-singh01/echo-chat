@@ -16,8 +16,8 @@ const slice = createSlice({
   initialState,
   reducers: {
     loginUser(state, action) {
-      state.isLoggedIn = action.payload.isLoggedIn; // TODO: make it true hardcode, not from the action
-      state.token = action.payload.token; // TODO: are we storing jwt tokens in redux store?
+      state.isLoggedIn = action.payload.isLoggedIn;
+      state.token = action.payload.token;
     },
     logoutUser(state, action) {
       state.isLoggedIn = false;
@@ -69,7 +69,7 @@ export function LoginUser(formInputs, setUserID) {
   };
 }
 
-// TODO: Remove all conversations from redux store upon logout
+// TODO: Remove all conversations and user info from redux store upon logout
 export function LogoutUser(removeUserID) {
   return async (dispatch) => {
     try {

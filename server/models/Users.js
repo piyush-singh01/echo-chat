@@ -124,7 +124,7 @@ const userSchema = new mongoose.Schema(
           },
         ],
 
-        mute_status: {
+        muted: {
           type: Boolean,
           default: false,
         },
@@ -135,6 +135,11 @@ const userSchema = new mongoose.Schema(
         },
 
         pinned: {
+          type: Boolean,
+          default: false,
+        },
+
+        blocked: {
           type: Boolean,
           default: false,
         },
@@ -154,7 +159,7 @@ const userSchema = new mongoose.Schema(
           },
         ],
 
-        mute_status: {
+        muted: {
           type: Boolean,
           default: false,
         },

@@ -32,6 +32,7 @@ const directMessageSchema = new mongoose.model(
       require: [true, "message sent time can not be null"],
     },
 
+    // the message itself
     data: {
       type: String,
     },

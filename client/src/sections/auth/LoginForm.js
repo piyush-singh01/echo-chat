@@ -6,29 +6,22 @@ import { useForm } from "react-hook-form";
 import { Link as RouterLink } from "react-router-dom";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Alert,
-  Button,
-  IconButton,
-  InputAdornment,
-  Link,
-  Stack,
-} from "@mui/material";
+import { Alert, Button, IconButton, InputAdornment, Link, Stack } from "@mui/material";
 import { Eye, EyeSlash } from "phosphor-react";
-import { LoginUser } from "../../redux/slices/auth.js";
+import { LoginUser, LogoutUser } from "../../redux/slices/auth.js";
 import { useDispatch } from "react-redux";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import { GetMyProfile } from "../../redux/slices/app";
+import { FetchAllConversationsList } from "../../redux/slices/conversation";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const [_, setUserID, __] = useLocalStorage('user_id')
+  const [_, setUserID, removeUserID] = useLocalStorage("user_id");
 
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string()
-      .required("Email is Required")
-      .email("Not a valid email address"),
+    email: Yup.string().required("Email is Required").email("Not a valid email address"),
     password: Yup.string().required("Password is Required"), // TODO: see more of this, how can errors be customized, add lenght to password.
   });
 
@@ -52,8 +45,10 @@ const LoginForm = () => {
   const onSubmit = async (data) => {
     try {
       // make an api call to server
-      console.log("here");
-      dispatch(LoginUser(data, setUserID));
+      await Promise.resolve(dispatch(LoginUser(data, setUserID))).then(async () => {
+        await Promise.resolve(dispatch(GetMyProfile()));
+        await Promise.resolve(dispatch(FetchAllConversationsList()));
+      });
     } catch (err) {
       console.log(err);
       reset();
@@ -67,9 +62,7 @@ const LoginForm = () => {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        {!!errors.afterSubmit && (
-          <Alert severity="error">{errors.afterSubmit.message}</Alert>
-        )}
+        {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
         <RHFTextField name="email" label="Email address" />
 
@@ -80,10 +73,7 @@ const LoginForm = () => {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword(!showPassword)}
-                  edge="end"
-                >
+                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                   {showPassword ? <Eye /> : <EyeSlash />}
                 </IconButton>
               </InputAdornment>
@@ -111,12 +101,10 @@ const LoginForm = () => {
         variant="contained"
         sx={{
           bgcolor: "text.primary",
-          color: (theme) =>
-            theme.palette.mode === "light" ? "common.white" : "grey.800",
+          color: (theme) => (theme.palette.mode === "light" ? "common.white" : "grey.800"),
           "&:hover": {
             bgcolor: "text.primary",
-            color: (theme) =>
-              theme.palette.mode === "light" ? "common.white" : "grey.800",
+            color: (theme) => (theme.palette.mode === "light" ? "common.white" : "grey.800"),
           },
         }}
       >

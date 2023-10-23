@@ -7,7 +7,7 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 import StyledBadge from "../../components/ui-components/StyledBadge";
 import Friends from "../../sections/app/Friends";
 import { useDispatch, useSelector } from "react-redux";
-import { SelectConversation } from "../../redux/slices/app";
+import { SET } from "../../redux/slices/conversation";
 import { socket } from "../../socket";
 import SearchBar from "../../components/ui-components/SearchBar";
 import useLocalStorage from "../../hooks/useLocalStorage";
@@ -75,15 +75,16 @@ const Chats = () => {
   const theme = useTheme();
   const [user_id, _, __] = useLocalStorage('user_id')
 
-  useEffect(() => {
-    socket.emit(
-      "get_direct_conversations",
-      ({ user_id },
-      (data) => {
-        // data is the exisiting conversation, this call back is passed to the socket event listerner in the server.
-      })
-    );
-  }, []);
+  // No, we are not gonna use web sockets for fetching dms.
+  // useEffect(() => {
+  //   socket.emit(
+  //     "get_direct_conversations",
+  //     ({ user_id },
+  //     (data) => {
+  //       // data is the exisiting conversation, this call back is passed to the socket event listerner in the server.
+  //     })
+  //   );
+  // }, []);
 
   const [isOpenDialogueBox, setIsOpenDialogueBox] = useState(false);
   const handleCloseDialogueBox = () => {
@@ -136,7 +137,7 @@ const Chats = () => {
                 <Typography variant="subtitle2" sx={{ color: theme.palette.text.default }}>
                   Pinned Chats
                 </Typography>
-                {ChatList.filter((ele) => ele.pinned).map((ele, idx) => {
+                {conversations.filter((ele) => ele.pinned).map((ele, idx) => {
                   return <ChatElement key={idx} {...ele} />;
                 })}
               </Stack>

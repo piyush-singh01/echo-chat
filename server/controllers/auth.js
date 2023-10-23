@@ -320,48 +320,53 @@ export const resetPassword = async (req, res) => {
  */
 export const protect = async (req, res, next) => {
   // Get the token JWT from the client side.
-  let token;
-  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
-    token = req.headers.authorization.split(" ")[1]; // the bearer token
-  } else if (req.cookies && req.cookies.jwt) {
-    token = req.cookies.jwt;
-  } else {
-    res.status(400).json({
-      status: "error",
-      message: "You are not authorized to view this page",
-    });
-    return;
+  try {
+    let token;
+    if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+      token = req.headers.authorization.split(" ")[1]; // the bearer token
+    } else if (req.cookies && req.cookies.jwt) {
+      token = req.cookies.jwt;
+    } else {
+      res.status(400).json({
+        status: "error",
+        message: "You are not authorized to view this page",
+      });
+      return;
+    }
+
+    // Verification of token
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
+
+    // Check if the user still exists and is not banned
+    const this_user = await User.findById(decoded.userId);
+    if (!this_user) {
+      res.status(400).json({
+        status: "error",
+        message: "The user doesn't exists",
+      });
+      return;
+    } else if (this_user.isBanned && this_user.isBanned === true) {
+      res.status(400).json({
+        status: "error",
+        message: "The user is not authorized to view this page",
+      });
+      return;
+    }
+
+    // Check if user changed their password after token was issued
+    if (this_user.changedPasswordAfter(decoded.iat)) {
+      res.status(400).json({
+        status: "error",
+        message: "password was changed recently, please login again",
+      });
+      return;
+    }
+
+    const userInfoToSend = filterObj(this_user.toObject(), "_id", "firstName", "lastName");
+    req.user = userInfoToSend;
+    next();
+  } catch (ex) {
+    const err = new CustomError("Internal Server Error. Please try again later.", 500, ex);
+    next(err);
   }
-
-  // Verification of token
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
-
-  // Check if the user still exists and is not banned
-  const this_user = await User.findById(decoded.userId);
-  if (!this_user) {
-    res.status(400).json({
-      status: "error",
-      message: "The user doesn't exists",
-    });
-    return;
-  } else if (this_user.isBanned && this_user.isBanned === true) {
-    res.status(400).json({
-      status: "error",
-      message: "The user is not authorized to view this page",
-    });
-    return;
-  }
-
-  // Check if user changed their password after token was issued
-  if (this_user.changedPasswordAfter(decoded.iat)) {
-    res.status(400).json({
-      status: "error",
-      message: "password was changed recently, please login again",
-    });
-    return;
-  }
-
-  const userInfoToSend = filterObj(this_user.toObject(), "_id", "firstName", "lastName");
-  req.user = userInfoToSend;
-  next();
 };

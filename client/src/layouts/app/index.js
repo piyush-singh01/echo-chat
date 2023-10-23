@@ -1,7 +1,7 @@
 /* COMMON DASHBOARD LAYOUT FOR USER ROUTES */
 
 // IMPORTS
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { Stack } from "@mui/material";
 import Sidebar from "./Sidebar";
@@ -10,23 +10,28 @@ import { connectSocket, disconnectSocket, socket } from "../../socket";
 import { showSnackBar } from "../../redux/slices/snackbar";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import LoadingSocket from "../../components/misc/LoadingSocket";
+import { GetMyProfile } from "../../redux/slices/app";
 
 const DashboardLayout = () => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.app);
   const { isLoggedIn } = useSelector((state) => state.auth);
-  const { conversations } = useSelector((state) => state.conversation.direct_chat);
+  const { allConversations } = useSelector((state) => state.direct_conversation);
 
   const [user_id, ,] = useLocalStorage("user_id");
+
+  const [currSocket, setCurrSocket] = useState(socket);
 
   useEffect(() => {
     if (!socket && isLoggedIn) {
       connectSocket(user_id);
-      console.log(socket);
+      setCurrSocket(socket);
     }
 
     if (!isLoggedIn) {
       console.log(socket);
       disconnectSocket();
+      setCurrSocket(undefined);
     }
 
     // clean up function
@@ -40,7 +45,7 @@ const DashboardLayout = () => {
   return (
     <Stack direction={"row"}>
       <Sidebar />
-      {socket ? <Outlet /> : <LoadingSocket />}
+      {currSocket ? <Outlet /> : <LoadingSocket />}
     </Stack>
   );
 };

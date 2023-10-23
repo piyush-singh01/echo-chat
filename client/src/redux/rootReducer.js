@@ -21,7 +21,7 @@ const rootPersistConfig = {
 const rootReducer = combineReducers({
   app: appReducer, // appReducer for app
   auth: authReducer,
-  conversation: conversationReducer,
+  direct_conversation: conversationReducer,
   snackbar: snackbarReducer,
 });
 
